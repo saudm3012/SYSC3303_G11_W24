@@ -10,13 +10,14 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class TempDatastructure implements Serializable{} // TODO REMOVE
+//public class TempDatastructure implements Serializable{} // TODO REMOVE
 public class FloorSubsystem implements Runnable
 {
    
    private DatagramPacket sendPacket, receivePacket; // packet sent and received 
    private DatagramSocket sendReceiveSocket; // socket at which data is sent or received
-   private Queue<TempDatastructure> inputQueue; // FIXME change the datatype to the data structure
+   private Queue<ElevatorData> inputQueue; // FIXME change the datatype to the data structure
+    private ElevatorDataPacket packetObj; // Class to convert Elevator data to bytes and back
 
     /**
      * The constructor for this class.
@@ -40,7 +41,7 @@ public class FloorSubsystem implements Runnable
      * @param obj the object to be serialized
      * @return a byte array of the serialized object
      */
-    private static byte[] serialize(TempDatastructure obj) {
+    private static byte[] serialize(ElevatorData obj) {
         try {
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream(); 
             ObjectOutputStream oos = new ObjectOutputStream(byteStream);
@@ -85,9 +86,18 @@ public class FloorSubsystem implements Runnable
      *  Both packet sent and received packet are logged to the console.
      * @param objToSend the data to send to the Scheduler
      */
-    public void sendAndReceive(TempDatastructure objToSend) {
+    public void sendAndReceive(ElevatorData objToSend) {
         // serialize data into byte array
-        byte sendData[] = serialize(objToSend);
+        //byte sendData[] = serialize(objToSend);
+        byte[] sendData = new byte[0];
+        try{
+            sendData = packetObj.elevatordata_to_bytes(objToSend);
+        } catch(IOException e){
+            e.printStackTrace();
+            System.exit(1);
+        } finally {
+            /* Close socket etc as required */
+        }
 
         // Construct a datagram packet that is to be sent to a specified port 
         // on a specified host.
