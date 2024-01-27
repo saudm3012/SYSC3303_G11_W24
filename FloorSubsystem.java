@@ -10,7 +10,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-//public class TempDatastructure implements Serializable{} // TODO REMOVE
 public class FloorSubsystem implements Runnable
 {
    
@@ -35,24 +34,6 @@ public class FloorSubsystem implements Runnable
             System.exit(1);
          } 
     }
-
-    /**
-     * Serializes the object and returns it as a byte array
-     * @param obj the object to be serialized
-     * @return a byte array of the serialized object
-     */
-    private static byte[] serialize(ElevatorData obj) {
-        try {
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream(); 
-            ObjectOutputStream oos = new ObjectOutputStream(byteStream);
-            oos.writeObject(obj);
-            return byteStream.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        return new byte[0]; // shouldn't execute 
-}
 
     /**
      * Outputs sendPacket to the console
@@ -88,16 +69,13 @@ public class FloorSubsystem implements Runnable
      */
     public void sendAndReceive(ElevatorData objToSend) {
         // serialize data into byte array
-        //byte sendData[] = serialize(objToSend);
         byte[] sendData = new byte[0];
         try{
             sendData = packetObj.elevatordata_to_bytes(objToSend);
         } catch(IOException e){
             e.printStackTrace();
             System.exit(1);
-        } finally {
-            /* Close socket etc as required */
-        }
+        } 
 
         // Construct a datagram packet that is to be sent to a specified port 
         // on a specified host.
@@ -109,7 +87,7 @@ public class FloorSubsystem implements Runnable
             System.exit(1);
         }
 
-        // log the datagram to be sent
+        // log the datagram packet to be sent
         printSendingInfo();
 
         // Send the datagram packet to the server via the send/receive socket. 
@@ -144,7 +122,7 @@ public class FloorSubsystem implements Runnable
         while(inputQueue.size() != 0) {
             sendAndReceive(inputQueue.remove());
         }
-        // We're finished, so close the socket.
+        // close the socket.
        sendReceiveSocket.close();
     }
 }
