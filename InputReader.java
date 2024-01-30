@@ -33,7 +33,7 @@ public class InputReader {
         String st;
         // Read all lines until end and store into array list
         while ((st = br.readLine()) != null) {
-            fileData.add(new ArrayList(Arrays.asList(st.split(", "))));
+            fileData.add(new ArrayList(Arrays.asList(st.split(" "))));
         }
     }
 
