@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -5,7 +6,7 @@ import java.util.ArrayList;
  * Object to be sent from floor to scheduler to elevator
  * @Author Jatin Jain
  */
-public class DataPacket {
+public class DataPacket implements Serializable {
     private String time;
     private String floor;
     private String direction;

@@ -17,6 +17,8 @@ public class FloorSubsystem implements Runnable
      */
     public FloorSubsystem () {
         socket = new FloorSocket(this);
+        inputQueue = new LinkedList<>();
+        inputQueue.add(new DataPacket("12:13:49:4242","3","up","1")); // TODO REMOVE
     }
     
     public void processData(DataPacket receivedData) {
@@ -26,7 +28,7 @@ public class FloorSubsystem implements Runnable
 
     public void run() {
         socket.start();
-        while(inputQueue.size() != 0) {
+        while(!inputQueue.isEmpty()) {
             socket.send(inputQueue.remove());
         }
     }
