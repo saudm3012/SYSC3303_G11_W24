@@ -24,6 +24,7 @@ public class FloorSubsystem implements Runnable
     }
 
     public void run() {
+        socket.start();
         while(inputQueue.size() != 0) {
             socket.send(inputQueue.remove());
         }

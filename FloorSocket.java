@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 
-public class FloorSocket implements Runnable
+public class FloorSocket extends Thread
 {
    
    private DatagramPacket sendPacket, receivePacket; // packet sent and received 
