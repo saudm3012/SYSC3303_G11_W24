@@ -1,6 +1,6 @@
 /**
- * The FloorSubsystem thread simulate the arrival of passengers to the elevators and for simulating all button 
- * presses and lamp.
+ * The FloorSubsystem thread simulates the arrival of passengers to the elevators and for simulating all button 
+ * presses and lamps at the floor.
  *
  * @author  Zakariya Khan 101186641
  */
@@ -15,8 +15,8 @@ public class FloorSubsystem implements Runnable
    
    private DatagramPacket sendPacket, receivePacket; // packet sent and received 
    private DatagramSocket sendReceiveSocket; // socket at which data is sent or received
-   private Queue<ElevatorData> inputQueue; // FIXME change the datatype to the data structure
-    private ElevatorDataPacket packetObj; // Class to convert Elevator data to bytes and back
+   private Queue<ElevatorData> inputQueue; // data to send from input file
+   private ElevatorDataPacket packetObj; // Class to convert Elevator data to bytes and back
 
     /**
      * The constructor for this class.
