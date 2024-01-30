@@ -25,7 +25,7 @@ public class InputReader {
      */
     public void loadData(String fileName) throws IOException {
         //Keep data file in src dir
-        File file = new File(ABSOLUTE_PATH + fileName);
+        File file = new File(ABSOLUTE_PATH + "\\" + fileName);
 
         // Open file under buffered reader
         BufferedReader br = new BufferedReader(new FileReader(file));

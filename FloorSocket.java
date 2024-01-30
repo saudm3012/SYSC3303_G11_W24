@@ -77,28 +77,27 @@ public class FloorSocket extends Thread
     /**
      * Outputs sendPacket to the console
      */
-    private void printSendingInfo(){
+    private void printSendingInfo(String dataPacket){
        System.out.println("FloorSubsystem: Sending packet:");
        System.out.println("To host: " + sendPacket.getAddress());
        System.out.println("Destination host port: " + sendPacket.getPort());
        int len = sendPacket.getLength();
        System.out.println("Length: " + len);
        System.out.print("Containing: ");
-       System.out.println(new String(sendPacket.getData(),0,len)); 
+       System.out.println(dataPacket);
     }
 
     /**
      * Outputs receivePacket to the console
      */
-    private void printReceivingInfo(){
+    private void printReceivingInfo(String dataPacket){
        System.out.println("FloorSubsystem: Packet received:");
        System.out.println("From host: " + receivePacket.getAddress());
        System.out.println("Host port: " + receivePacket.getPort());
        int len = receivePacket.getLength();
        System.out.println("Length: " + len);
        System.out.print("Containing: ");
-       String received = new String(receivePacket.getData(),0,len);   
-       System.out.println(received);
+       System.out.println(dataPacket);
     }
     
     /**
@@ -127,7 +126,7 @@ public class FloorSocket extends Thread
         }
 
         // log the datagram packet to be sent
-        printSendingInfo();
+        printSendingInfo(objToSend.toString());
 
         // Send the datagram packet to the server via the send/receive socket. 
         try {
@@ -143,9 +142,9 @@ public class FloorSocket extends Thread
     private void receive() {
         // Construct a DatagramPacket for receiving packets up 
         // to 100 bytes long (the length of the byte array).
-
-        byte receiveData[] = new byte[100];
-        receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        DataPacket receiveData;
+        byte receiveDataBytes[] = new byte[100];
+        receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
 
         try {
             // Block until a datagram is received via sendReceiveSocket.  
@@ -155,11 +154,12 @@ public class FloorSocket extends Thread
             System.exit(1);
         }
 
-        // log the received datagram.
-        printReceivingInfo();
         // convert received data and have floor subsystem process it 
         try {
-            floorSubsystem.processData(bytesToDataPacket(receiveData));
+            receiveData = bytesToDataPacket(receiveDataBytes);
+            // log the received datagram.
+            printReceivingInfo(receiveData.toString());
+            floorSubsystem.processData(receiveData);
         } catch(IOException e){
             e.printStackTrace();
             System.exit(1);

@@ -21,7 +21,7 @@ public class FloorSubsystem implements Runnable
         this.inputFilename = inputFilename;
         socket = new FloorSocket(this);
         inputQueue = new LinkedList<>();
-        inputQueue.add(new DataPacket("12:13:49:4242","3","up","1")); // TODO REMOVE
+        inputData = new ArrayList<>();
     }
 
     /**
@@ -78,6 +78,7 @@ public class FloorSubsystem implements Runnable
         for (int cursor = 1; cursor < inputData.size(); cursor++) {
             // Create the next packet and update the row cursor.
             DataPacket p = this.createPacketFromRow(cursor);
+            //System.out.println("FLOOR READ:" + p.toString()); DEBUG
             inputQueue.add(p);
         }
         socket.start();
