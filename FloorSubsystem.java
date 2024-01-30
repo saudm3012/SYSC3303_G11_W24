@@ -21,6 +21,7 @@ public class FloorSubsystem implements Runnable
     
     public void processData(DataPacket receivedData) {
         // print data
+        System.out.println(receivedData.toString());
     }
 
     public void run() {
