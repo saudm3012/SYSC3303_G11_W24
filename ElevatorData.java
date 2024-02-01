@@ -44,6 +44,7 @@ public class ElevatorData implements Serializable {
             this.floor = temp.floor;
             this.up_button = temp.up_button;
             this.car_button = temp.car_button;
+            in.close();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally {

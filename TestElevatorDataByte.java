@@ -4,6 +4,7 @@ import java.io.IOException;
 
 public class TestElevatorDataByte {
     public static void main(String[] arg) throws IOException {
+        /**
         ElevatorData data = new ElevatorData();
         byte[] packet;
         packet = data.elevatordata_to_bytes();
@@ -14,6 +15,6 @@ public class TestElevatorDataByte {
         System.out.println(data_2.time);
         System.out.println(data);
         System.out.println(data_2);
-
+        */
     }
 }
