@@ -48,7 +48,7 @@ public class SchedulerV1 implements Runnable{
             }
         }
         // Deserialize the received data into ElevatorData
-        ElevatorData receivedData = new ElevatorData();
+        DataPacket receivedData = new DataPacket();
         try {
             receivedData.bytes_to_elevatordata(receivePacket.getData());
         } catch (IOException e) {
@@ -56,11 +56,6 @@ public class SchedulerV1 implements Runnable{
         }
         // Process the received request (add your logic here)
         System.out.println("Received Floor Request: " + receivedData);
-
-        // Add your logic to determine how to handle the request (e.g., assign an elevator)
-
-        // Print a message indicating that the scheduler received the request
-        System.out.println("Scheduler received: " + receivedData);
     }
     //Method send packet to elevator
     public void sendPacketToElevator(){

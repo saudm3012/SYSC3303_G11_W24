@@ -1,4 +1,5 @@
-import java.io.Serializable;
+import java.io.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 /**
@@ -7,11 +8,12 @@ import java.util.ArrayList;
  * @Author Jatin Jain
  */
 public class DataPacket implements Serializable {
-    private String time;
-    private String floor;
-    private String direction;
-    private String car;
+    private LocalTime time;
+    private int floor;
+    private boolean up_direction;
+    private int car;
     private boolean isEmpty;
+
 
     /**
      * Creates a new empty Data packet.
@@ -30,10 +32,12 @@ public class DataPacket implements Serializable {
      * @param car       String, requested car number
      */
     public DataPacket(String time, String floor, String direction, String car){
-        this.time = time;
-        this.floor = floor;
-        this.direction = direction;
-        this.car = car;
+        this.time = LocalTime.parse(time);
+        this.floor = Integer.parseInt(floor);
+        System.out.println(direction);
+        if(direction.equals("Up")){this.up_direction = true;}
+        else if (direction.equals("Down")) {this.up_direction = false;}
+        this.car = Integer.parseInt(car);
         this.isEmpty = false;
     }
 
@@ -41,7 +45,7 @@ public class DataPacket implements Serializable {
      *
      * @return String, time of request
      */
-    public String getTime() {
+    public LocalTime getTime() {
         return this.time;
     }
 
@@ -49,7 +53,7 @@ public class DataPacket implements Serializable {
      * *
      * @return String, floor where request was made
      */
-    public String getFloor() {
+    public int getFloor() {
         return this.floor;
     }
 
@@ -57,15 +61,15 @@ public class DataPacket implements Serializable {
      *
      * @return String, car direction
      */
-    public String getDirection() {
-        return this.direction;
+    public boolean getDirection() {
+        return this.up_direction;
     }
 
     /**
      *
      * @return String, requested car number
      */
-    public String getCarButton() {
+    public int getCarButton() {
         return this.car;
     }
 
@@ -84,8 +88,53 @@ public class DataPacket implements Serializable {
         return "DataPacket { \n" +
                 "\t time: " + this.time + "\n" +
                 "\t floor: " + this.floor + "\n" +
-                "\t floorButton: " + this.direction + "\n" +
+                "\t directionIsUp: " + this.up_direction + "\n" +
                 "\t carButton: " + this.car + "\n" +
                 "}\n";
     }
+    public byte[] elevatordata_to_bytes() throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(bos);
+            out.writeObject(this);
+            out.flush();
+            return bos.toByteArray();
+        } catch(IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        } finally {
+            try {
+                bos.close();
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+        return new byte[0]; /* Should not run */
+    }
+
+    public void bytes_to_elevatordata(byte[] data_packet) throws IOException {
+        ByteArrayInputStream bis = new ByteArrayInputStream(data_packet);
+        ObjectInput in = null;
+        try {
+            in = new ObjectInputStream(bis);
+            DataPacket temp = (DataPacket) in.readObject();
+            this.time = temp.time;
+            this.floor = temp.floor;
+            this.up_direction = temp.up_direction;
+            this.car = temp.car;
+            in.close();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+    }
+
 }

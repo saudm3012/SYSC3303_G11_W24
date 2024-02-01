@@ -1,6 +1,7 @@
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.util.ElementFilter;
 import java.io.IOException;
+import java.time.LocalTime;
 
 public class TestElevatorDataByte {
     public static void main(String[] arg) throws IOException {
@@ -16,5 +17,7 @@ public class TestElevatorDataByte {
         System.out.println(data);
         System.out.println(data_2);
         */
+        LocalTime t = LocalTime.parse("14:05:15.0");
+        System.out.println(t);
     }
 }
