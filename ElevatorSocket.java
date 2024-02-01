@@ -1,17 +1,17 @@
 import java.io.*;
 import java.net.*;
 
-public class FloorSocket extends Thread
+public class ElevatorSocket extends Thread
 {
    
    private DatagramPacket sendPacket, receivePacket; // packet sent and received 
    private DatagramSocket sendReceiveSocket; // socket at which data is sent or received
-   private FloorSubsystem floorSubsystem; // System which will process the received data
+   private Elevator elevator; // System which will process the received data
 
     /**
      * The constructor for this class.
      */
-    public FloorSocket (FloorSubsystem floorSubsystem) {
+    public ElevatorSocket (Elevator elevator) {
         try {
             // Construct a datagram socket and bind it to any available 
             // port on the local host machine. This socket will be used to
@@ -23,14 +23,14 @@ public class FloorSocket extends Thread
             se.printStackTrace();
             System.exit(1);
          }
-         this.floorSubsystem = floorSubsystem; 
+         this.elevator = elevator; 
     }
 
     /**
      * Outputs sendPacket to the console
      */
     private void printSendingInfo(String dataPacket){
-       System.out.println("FloorSubsystem: Sending packet:");
+       System.out.println("Elevator: Sending packet:");
        System.out.println("To host: " + sendPacket.getAddress());
        System.out.println("Destination host port: " + sendPacket.getPort());
        int len = sendPacket.getLength();
@@ -43,7 +43,7 @@ public class FloorSocket extends Thread
      * Outputs receivePacket to the console
      */
     private void printReceivingInfo(String dataPacket){
-       System.out.println("FloorSubsystem: Packet received:");
+       System.out.println("Elevator: Packet received:");
        System.out.println("From host: " + receivePacket.getAddress());
        System.out.println("Host port: " + receivePacket.getPort());
        int len = receivePacket.getLength();
@@ -88,7 +88,7 @@ public class FloorSocket extends Thread
             System.exit(1);
         }
 
-        System.out.println("FloorSubsystem: Packet sent.\n");
+        System.out.println("Elevator: Packet sent.\n");
     }
 
     private void receive() {
@@ -106,12 +106,12 @@ public class FloorSocket extends Thread
             System.exit(1);
         }
 
-        // convert received data and have floor subsystem process it 
+        // convert received data and have elevator process it 
         try {
             receiveData.bytesToDataPacket(receiveDataBytes);
             // log the received datagram.
             printReceivingInfo(receiveData.toString());
-            floorSubsystem.processData(receiveData);
+            elevator.processData(receiveData);
         } catch(IOException e){
             e.printStackTrace();
             System.exit(1);
