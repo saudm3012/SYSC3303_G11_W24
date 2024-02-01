@@ -27,54 +27,6 @@ public class FloorSocket extends Thread
     }
 
     /**
-     * TODO MOVE TO ABSTRACT CLASS THAT RETURNS JUST AN OBJECT
-     * Converts DataPacket class to bytes
-     */
-    public byte[] dataPacketToBytes(DataPacket data) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream(bos);
-            out.writeObject(data);
-            out.flush();
-            return bos.toByteArray();
-        } catch(IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        } finally {
-            try {
-                bos.close();
-            } catch (IOException ex) {
-                // ignore close exception
-            }
-        }
-        return new byte[0]; /* Should not run */
-    }
-
-    /**
-     * TODO MOVE TO ABSTRACT CLASS THAT RETURNS JUST AN OBJECT
-     * Converts DataPacket class to bytes
-     */
-    public DataPacket bytesToDataPacket(byte[] data_packet) throws IOException {
-        ByteArrayInputStream bis = new ByteArrayInputStream(data_packet);
-        ObjectInput in = null;
-        try {
-            in = new ObjectInputStream(bis);
-            return (DataPacket) in.readObject();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException ex) {
-                // ignore close exception
-            }
-        }
-    }
-
-    /**
      * Outputs sendPacket to the console
      */
     private void printSendingInfo(String dataPacket){
@@ -109,7 +61,7 @@ public class FloorSocket extends Thread
         // serialize data into byte array
         byte[] sendData = new byte[0];
         try{
-            sendData = dataPacketToBytes(objToSend);
+            sendData = objToSend.dataPacketToBytes();
         } catch(IOException e){
             e.printStackTrace();
             System.exit(1);
@@ -142,7 +94,7 @@ public class FloorSocket extends Thread
     private void receive() {
         // Construct a DatagramPacket for receiving packets up 
         // to 100 bytes long (the length of the byte array).
-        DataPacket receiveData;
+        DataPacket receiveData = new DataPacket();
         byte receiveDataBytes[] = new byte[100];
         receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
 
@@ -156,7 +108,7 @@ public class FloorSocket extends Thread
 
         // convert received data and have floor subsystem process it 
         try {
-            receiveData = bytesToDataPacket(receiveDataBytes);
+            receiveData.bytesToDataPacket(receiveDataBytes);
             // log the received datagram.
             printReceivingInfo(receiveData.toString());
             floorSubsystem.processData(receiveData);

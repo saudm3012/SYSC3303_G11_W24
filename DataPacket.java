@@ -92,7 +92,7 @@ public class DataPacket implements Serializable {
                 "\t carButton: " + this.car + "\n" +
                 "}\n";
     }
-    public byte[] elevatordata_to_bytes() throws IOException {
+    public byte[] dataPacketToBytes() throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream out = null;
         try {
@@ -113,8 +113,8 @@ public class DataPacket implements Serializable {
         return new byte[0]; /* Should not run */
     }
 
-    public void bytes_to_elevatordata(byte[] data_packet) throws IOException {
-        ByteArrayInputStream bis = new ByteArrayInputStream(data_packet);
+    public void bytesToDataPacket(byte[] dataPacket) throws IOException {
+        ByteArrayInputStream bis = new ByteArrayInputStream(dataPacket);
         ObjectInput in = null;
         try {
             in = new ObjectInputStream(bis);

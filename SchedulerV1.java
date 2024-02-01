@@ -5,7 +5,7 @@ import java.net.SocketException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-//Socket version
+// Socket version
 // Riya Arora 101190033
 public class SchedulerV1 implements Runnable{
     private BlockingQueue<String> floorRequestsQueue;  // Queue for receiving floor requests from the Floor subsystem
@@ -50,7 +50,7 @@ public class SchedulerV1 implements Runnable{
         // Deserialize the received data into ElevatorData
         DataPacket receivedData = new DataPacket();
         try {
-            receivedData.bytes_to_elevatordata(receivePacket.getData());
+            receivedData.bytesToDataPacket(receivePacket.getData());
         } catch (IOException e) {
             e.printStackTrace();
         }
