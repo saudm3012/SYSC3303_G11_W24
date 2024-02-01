@@ -2,27 +2,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
-// Socket version
-// Riya Arora 101190033
-public class SchedulerV1 implements Runnable{
-    private BlockingQueue<String> floorRequestsQueue;  // Queue for receiving floor requests from the Floor subsystem
-
-    public SchedulerV1() {
-        this.floorRequestsQueue = new LinkedBlockingQueue<>();
-    }
-
-    // Method to receive floor requests from the Floor subsystem
-    public void receiveFloorRequest(String request) {
-        try {
-            floorRequestsQueue.put(request);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
+/**
+ * The Scheduler class that sends and receives packets from the FloorSocket to the ElevatorSocket
+ * @Author Mohammad Saud
+ */
+public class Scheduler implements Runnable{
     // Method to receive packet from floor subsystem
     public void getPacketFromFloor() throws InterruptedException {
         DatagramSocket receiveSocket = null;
@@ -55,7 +40,7 @@ public class SchedulerV1 implements Runnable{
             e.printStackTrace();
         }
         // Process the received request (add your logic here)
-        System.out.println("Received Floor Request: " + receivedData);
+        System.out.println("Scheduler Received Floor Request: " + receivedData);
     }
     //Method send packet to elevator
     public void sendPacketToElevator(){
@@ -71,13 +56,13 @@ public class SchedulerV1 implements Runnable{
     }
     public void run() {
         // Start processing requests
-        System.out.println("ENTER");
+        System.out.println("SCHEDULER STARTS");
         try {
             this.getPacketFromFloor();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Done");
+        System.out.println("SCHEDULER ENDS");
         return;
     }
 }
