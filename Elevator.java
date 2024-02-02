@@ -1,6 +1,6 @@
 /**
- * TODO add class description
- * @author  Zakariya Khan 101186641
+ * The Elevator class that sends/receives packets to/from Scheduler
+ * @author Zakariya Khan 101186641
  * @author Jatin Jain 101184197
  */
  

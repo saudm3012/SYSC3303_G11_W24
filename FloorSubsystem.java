@@ -73,7 +73,6 @@ public class FloorSubsystem implements Runnable
             e.printStackTrace();
         }
 
-
         for (int cursor = 1; cursor < inputData.size(); cursor++) {
             // Create the next packet and update the row cursor.
             DataPacket p = this.createPacketFromRow(cursor);

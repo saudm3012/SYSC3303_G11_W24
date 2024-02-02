@@ -34,7 +34,6 @@ public class DataPacket implements Serializable {
     public DataPacket(String time, String floor, String direction, String car){
         this.time = LocalTime.parse(time);
         this.floor = Integer.parseInt(floor);
-        System.out.println(direction);
         if(direction.equals("Up")){this.up_direction = true;}
         else if (direction.equals("Down")) {this.up_direction = false;}
         this.car = Integer.parseInt(car);
