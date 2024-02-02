@@ -6,6 +6,7 @@ import java.net.*;
 /**
  * The Scheduler class that sends and receives packets from the FloorSocket to the ElevatorSocket
  * @Author Mohammad Saud
+ * @Author Zakariya Khan
  */
 public class Scheduler implements Runnable{
     // Sockets
@@ -51,6 +52,20 @@ public class Scheduler implements Runnable{
         }
         elevatorPort = 5001;
         receiveQueue = new LinkedList<>();
+    }
+
+    /**
+     * Issue a sleep
+     * @param ms time in milliseconds
+     */
+    public void sleep(int ms) {
+        // Slow things down (wait 5 seconds)
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     /**
@@ -113,6 +128,7 @@ public class Scheduler implements Runnable{
             }
 
             System.out.println("Scheduler: Packet sent.\n");
+            sleep(100);
         }
     }
    
