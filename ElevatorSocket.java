@@ -13,10 +13,10 @@ public class ElevatorSocket extends Thread
      */
     public ElevatorSocket (Elevator elevator) {
         try {
-            // Construct a datagram socket and bind it to any available 
+            // Construct a datagram socket and bind it to 5001
             // port on the local host machine. This socket will be used to
             // send UDP Datagram packets.
-            sendReceiveSocket = new DatagramSocket();
+            sendReceiveSocket = new DatagramSocket(5001);
             
             //receiveSocket.setSoTimeout(2000);
          } catch (SocketException se) {
@@ -59,18 +59,19 @@ public class ElevatorSocket extends Thread
      */
     public void send(DataPacket objToSend) {
         // serialize data into byte array
-        byte[] sendData = new byte[0];
+        byte[] sendDataBytes = new byte[0];
+        objToSend.setFromElevator();
         try{
-            sendData = objToSend.dataPacketToBytes();
+            sendDataBytes = objToSend.dataPacketToBytes();
         } catch(IOException e){
             e.printStackTrace();
             System.exit(1);
         } 
 
-        // Construct a datagram packet that is to be sent to a specified port 
+        // Construct a datagram packet that is to be sent to port 5000 (scheduler)
         // on a specified host.
         try {
-            sendPacket = new DatagramPacket(sendData, sendData.length,
+            sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length,
                                             InetAddress.getLocalHost(), 5000);
         } catch (UnknownHostException e) {
             e.printStackTrace();

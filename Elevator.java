@@ -16,14 +16,14 @@
      }
  
      public void processData(DataPacket receivedData) {
-         // print data
+         // send data back to scheduler
          socket.send(receivedData);
      }
   
      public void run() {
          socket.start();
          while (true){
-            // do nothing but listen for packets
+            // do nothing but listen for packets using socket thread
          }
      }
  }

@@ -1,6 +1,5 @@
 import java.io.*;
 import java.time.LocalTime;
-import java.util.ArrayList;
 
 /**
  * DataPacket that holds info from input file
@@ -13,13 +12,14 @@ public class DataPacket implements Serializable {
     private boolean up_direction;
     private int car;
     private boolean isEmpty;
-
+    private boolean isFromFloor;
 
     /**
      * Creates a new empty Data packet.
      */
     public DataPacket() {
         this.isEmpty = true;
+        this.isFromFloor = false;
     }
 
     /**
@@ -82,6 +82,28 @@ public class DataPacket implements Serializable {
     }
 
     /**
+     *
+     * @return boolean, true if was sent by floor subsystem, false otherwise.
+     */
+    public boolean isFromFloor() {
+        return this.isFromFloor;
+    }
+
+    /**
+     * set isFromFloor to true
+     */
+    public void setFromFloor() {
+        this.isFromFloor = true;
+    }
+    
+    /**
+     * set isFromFloor to false
+     */
+    public void setFromElevator() {
+        this.isFromFloor = false;
+    }
+
+    /**
      * @return String, all fields of Dataacket in String representation
      */
     public String toString() {
@@ -123,6 +145,7 @@ public class DataPacket implements Serializable {
             this.floor = temp.floor;
             this.up_direction = temp.up_direction;
             this.car = temp.car;
+            this.isFromFloor = temp.isFromFloor;
             in.close();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
