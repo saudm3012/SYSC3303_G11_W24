@@ -64,8 +64,6 @@ public class InputReader {
             String floor = rowData.get(1);
             String floorButton = rowData.get(2);
             String carButton = rowData.get(3);
-            System.out.println("LINE " + cursor);
-            System.out.println("SIZE " + fileData.size());
             cursor++;
             return new DataPacket(time, floor, floorButton, carButton);
         }
