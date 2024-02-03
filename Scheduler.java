@@ -14,8 +14,8 @@ public class Scheduler implements Runnable{
     private DatagramSocket sendSocket, receiveSocket; // socket at which data is sent, received
    
     //IP Addresses
-    InetAddress floorAddress;
-	InetAddress elevatorAddress;
+    private InetAddress floorAddress;
+	private InetAddress elevatorAddress;
 
     // Ports
     private int floorPort;
@@ -58,7 +58,7 @@ public class Scheduler implements Runnable{
      * Issue a sleep
      * @param ms time in milliseconds
      */
-    public void sleep(int ms) {
+    private void sleep(int ms) {
         // Slow things down (wait 5 seconds)
         try {
             Thread.sleep(ms);
@@ -98,7 +98,7 @@ public class Scheduler implements Runnable{
      *  Sends packets from the receive queue to either elevator or floor class.
      *  packets sent are logged to the console.
      */
-    public void send() {
+    private void send() {
         while (!receiveQueue.isEmpty()) {
             DataPacket packet = receiveQueue.remove();
             // serialize data into byte array
