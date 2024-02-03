@@ -118,9 +118,8 @@ public class DataPacket implements Serializable {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
         final DataPacket that = (DataPacket) o;
-        return (this.time == that.time) &&
+        return (this.time.equals(that.time)) &&
                 (this.floor == that.floor) && (this.up_direction == that.up_direction) && (this.car == that.car);
     }
 

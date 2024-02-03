@@ -1,5 +1,6 @@
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.util.ElementFilter;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.time.LocalTime;
 
@@ -17,7 +18,11 @@ public class TestElevatorDataByte {
         System.out.println(data);
         System.out.println(data_2);
         */
-        LocalTime t = LocalTime.parse("14:05:15.0");
-        System.out.println(t);
+        DataPacket data = new DataPacket("14:05:15.0","2" , "Up", "4");
+        InputReader datafile = new InputReader("data.txt");
+        DataPacket data2 = datafile.getNextPacket();
+        System.out.println(data);
+        System.out.println(data2);
+        System.out.println(data.equals(data2));
     }
 }
