@@ -25,13 +25,13 @@ public class FloorSubsystem implements Runnable
     }
 
     /**
-     * Loads data from the input file.
+     * Loads data from the input file using InputReader class
      *
      * @throws IOException Exception, filereader IO exception.
      */
     private void loadData() throws IOException {
         InputReader r = new InputReader();
-        r.loadData(this.inputFilename);                 // Open the specified input file.
+        r.loadData(this.inputFilename);
         this.inputData = r.getFileData();
     }
 
@@ -67,12 +67,14 @@ public class FloorSubsystem implements Runnable
     }
 
     public void run() {
-        try {                       // Load input requests
+        // Load input from .txt file
+        try {
             this.loadData();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        //skip first row for headers
         for (int cursor = 1; cursor < inputData.size(); cursor++) {
             // Create the next packet and update the row cursor.
             DataPacket p = this.createPacketFromRow(cursor);
