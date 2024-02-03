@@ -14,6 +14,7 @@ public class FloorSubsystem implements Runnable
     private Queue<DataPacket> inputQueue; // data to send from input file
     private FloorSocket socket; // communicator helper thread to send and receive data
     private ArrayList<ArrayList<String>> inputData;
+
     /**
      * The constructor for this class.
      */
@@ -23,6 +24,11 @@ public class FloorSubsystem implements Runnable
         inputData = new ArrayList<>();
     }
 
+    /**
+     *
+     * @param p DataPacket to be added to input queue
+     * @return
+     */
     public boolean addPacketToQueue(DataPacket p){
         if(p == null) {
             return false;
@@ -31,6 +37,10 @@ public class FloorSubsystem implements Runnable
         return true;
     }
 
+    /**
+     * placeholder for future
+     * @param receivedData
+     */
     public void processData(DataPacket receivedData) {
         // do nothing for now
     }

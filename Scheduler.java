@@ -131,7 +131,10 @@ public class Scheduler implements Runnable{
             sleep(100);
         }
     }
-   
+
+    /**
+     * Receive on receiveSocket
+     */
     private void receive() {
        // Construct a DatagramPacket for receiving packets up 
         // to 1024 bytes long (the length of the byte array).

@@ -22,6 +22,10 @@ public class InputReader {
     private static int cursor = 1;
     private final String fileName;
 
+    /**
+     *
+     * @param fileReadName File InputReader object will be binded to add read from
+     */
     public InputReader(String fileReadName){
         this.fileName = fileReadName;
     }
@@ -45,7 +49,7 @@ public class InputReader {
 
     /**
      *
-     * @return Returns next data pakcet from file we are reading from
+     * @return DataPacket, returns next data pakcet parsed from file we are reading from
      * @throws IOException
      */
     public DataPacket getNextPacket() throws IOException {
@@ -65,6 +69,7 @@ public class InputReader {
             cursor++;
             return new DataPacket(time, floor, floorButton, carButton);
         }
+        //If we are at the end of the file return null
         return null;
     }
 }

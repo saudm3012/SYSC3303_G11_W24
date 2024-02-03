@@ -92,6 +92,9 @@ public class FloorSocket extends Thread
         System.out.println("FloorSubsystem: Packet sent.\n");
     }
 
+    /**
+     * Wait until a packet is received on socket
+     */
     private void receive() {
         // Construct a DatagramPacket for receiving packets up 
         // to 1024 bytes long (the length of the byte array).

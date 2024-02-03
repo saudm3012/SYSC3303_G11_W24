@@ -42,7 +42,7 @@ public class DataPacket implements Serializable {
 
     /**
      *
-     * @return String, time of request
+     * @return LocalTime, time of request
      */
     public LocalTime getTime() {
         return this.time;
@@ -50,7 +50,7 @@ public class DataPacket implements Serializable {
 
     /**
      * *
-     * @return String, floor where request was made
+     * @return int, floor where request was made
      */
     public int getFloor() {
         return this.floor;
@@ -58,7 +58,7 @@ public class DataPacket implements Serializable {
 
     /**
      *
-     * @return String, car direction
+     * @return boolean, car direction
      */
     public boolean getDirection() {
         return this.up_direction;
@@ -66,7 +66,7 @@ public class DataPacket implements Serializable {
 
     /**
      *
-     * @return String, requested car number
+     * @return int, requested car number
      */
     public int getCarButton() {
         return this.car;
@@ -113,6 +113,12 @@ public class DataPacket implements Serializable {
                 "\t carButton: " + this.car + "\n" +
                 "}\n";
     }
+
+    /**
+     *
+     * @return byte[], returns this DataPacket object converted to bytes
+     * @throws IOException
+     */
     public byte[] dataPacketToBytes() throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream out = null;
@@ -134,6 +140,11 @@ public class DataPacket implements Serializable {
         return new byte[0]; /* Should not run */
     }
 
+    /**
+     * Set this DataPacket object from byte array input
+     * @param dataPacket byte array to be converted
+     * @throws IOException
+     */
     public void bytesToDataPacket(byte[] dataPacket) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(dataPacket);
         ObjectInput in = null;
