@@ -29,7 +29,7 @@ public class FloorSubsystem implements Runnable
      *
      * @throws IOException Exception, filereader IO exception.
      */
-    public void loadData() throws IOException {
+    private void loadData() throws IOException {
         InputReader r = new InputReader();
         r.loadData(this.inputFilename);                 // Open the specified input file.
         this.inputData = r.getFileData();
