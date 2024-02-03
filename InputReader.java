@@ -1,3 +1,4 @@
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -18,12 +19,17 @@ public class InputReader {
     private static final String ABSOLUTE_PATH = new File("").getAbsolutePath();
     private ArrayList<ArrayList<String>> fileData = new ArrayList<>();
 
+    private static int cursor = 1;
+    private final String fileName;
+
+    public InputReader(String fileReadName){
+        this.fileName = fileReadName;
+    }
+
     /**
      * Load data from text file.
-     *
-     * @param fileName String, the name of the file.
      */
-    public void loadData(String fileName) throws IOException {
+    public void loadData() throws IOException {
         //Keep data file in src dir
         File file = new File(ABSOLUTE_PATH + "\\" + fileName);
 
@@ -44,5 +50,22 @@ public class InputReader {
      */
     public ArrayList<ArrayList<String>> getFileData() {
         return fileData;
+    }
+
+    public DataPacket getNextPacket() throws IOException {
+        this.loadData();
+
+        if(cursor < fileData.size()){
+            ArrayList<String> rowData = fileData.get(cursor);
+
+            /* TODO use an enum instead of special numbers */
+            String time = rowData.get(0);
+            String floor = rowData.get(1);
+            String floorButton = rowData.get(2);
+            String carButton = rowData.get(3);
+            cursor++;
+            return new DataPacket(time, floor, floorButton, carButton);
+        }
+        return null;
     }
 }
