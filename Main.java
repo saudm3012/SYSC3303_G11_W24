@@ -1,3 +1,4 @@
+import javax.xml.crypto.Data;
 import java.io.IOException;
 
 public class Main {
@@ -5,6 +6,7 @@ public class Main {
         //Thread floorSubsystem = new Thread(new FloorSubsystem("data.txt"));
         InputReader datafile = new InputReader("data.txt");
         FloorSubsystem floor_sys = new FloorSubsystem();
+        while(floor_sys.addPacketToQueue(datafile.getNextPacket())){};
         floor_sys.addPacketToQueue(datafile.getNextPacket());
         Thread floorSubsystem = new Thread(floor_sys);
         Thread scheduler =  new Thread(new Scheduler());

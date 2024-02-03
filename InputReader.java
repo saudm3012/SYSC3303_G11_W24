@@ -11,6 +11,7 @@ import java.util.Arrays;
  * Time, Floor, Floor Button, Car Button
  * 14:05:15.0, 2, Up, 4
  * @Author Jatin Jain
+ * @Author Mohammad Saud 101195172
  */
 public class InputReader {
     /* Text file is stored in program absolute path
@@ -18,7 +19,6 @@ public class InputReader {
      */
     private static final String ABSOLUTE_PATH = new File("").getAbsolutePath();
     private ArrayList<ArrayList<String>> fileData = new ArrayList<>();
-
     private static int cursor = 1;
     private final String fileName;
 
@@ -44,16 +44,13 @@ public class InputReader {
     }
 
     /**
-     * Gets file data.
      *
-     * @return ArrayList<ArrayList<String>>, the parsed data.
+     * @return Returns next data pakcet from file we are reading from
+     * @throws IOException
      */
-    public ArrayList<ArrayList<String>> getFileData() {
-        return fileData;
-    }
-
     public DataPacket getNextPacket() throws IOException {
-        this.loadData();
+
+        if(cursor == 1){this.loadData();}
 
         if(cursor < fileData.size()){
             ArrayList<String> rowData = fileData.get(cursor);
@@ -63,6 +60,8 @@ public class InputReader {
             String floor = rowData.get(1);
             String floorButton = rowData.get(2);
             String carButton = rowData.get(3);
+            System.out.println("LINE " + cursor);
+            System.out.println("SIZE " + fileData.size());
             cursor++;
             return new DataPacket(time, floor, floorButton, carButton);
         }

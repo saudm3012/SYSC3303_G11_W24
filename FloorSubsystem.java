@@ -3,6 +3,7 @@
  * presses and lamps at the floor.
  *
  * @author  Zakariya Khan 101186641
+ * @author Mohammad Saud 101195172
  */
 
 import java.util.*;
@@ -22,8 +23,12 @@ public class FloorSubsystem implements Runnable
         inputData = new ArrayList<>();
     }
 
-    public void addPacketToQueue(DataPacket p){
+    public boolean addPacketToQueue(DataPacket p){
+        if(p == null) {
+            return false;
+        }
         inputQueue.add(p);
+        return true;
     }
 
     public void processData(DataPacket receivedData) {
