@@ -7,12 +7,11 @@
  */
 
 import java.util.*;
-import java.io.IOException;
 
 public class FloorSubsystem implements Runnable
 {
     private Queue<DataPacket> inputQueue; // data to send from input file
-    FloorSocket socket; // communicator helper thread to send and receive data
+    public FloorSocket socket; // communicator helper thread to send and receive data
     private ArrayList<ArrayList<String>> inputData;
 
     /**
