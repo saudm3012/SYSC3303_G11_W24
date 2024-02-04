@@ -10,6 +10,13 @@ import java.net.SocketException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Scheduler test
+ * Overall, this test class aims to check the basic functionalities and behavior of the Scheduler class, including socket
+ * initialization, sleeping, closing sockets, and running in a separate thread.
+ * @Author Riya Arora
+ */
+
 class SchedulerTest {
 
     private Scheduler scheduler;
@@ -93,5 +100,13 @@ class SchedulerTest {
         assertTrue(scheduler.receiveSocket.isClosed());
     }
 
-    // Add more tests for other methods as needed
+    @Test
+    void testRunInSeparateThread() {
+        // Test running the scheduler in a separate thread
+        Thread schedulerThread = new Thread(scheduler);
+        schedulerThread.start();
+        schedulerThread.interrupt();
+        assertDoesNotThrow(() -> schedulerThread.join(2000));
+    }
+
 }

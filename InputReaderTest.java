@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * will create new packet with same values as first entry in provided data.txt and check if it is the same as
  *  * when getNextPacket() function is initialised
  * @Author Ali Nadim
+ * @Author Riya Arora 101190033
  */
 
 class InputReaderTest {

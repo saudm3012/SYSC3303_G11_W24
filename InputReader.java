@@ -1,8 +1,8 @@
 import javax.xml.crypto.Data;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -14,19 +14,15 @@ import java.util.Arrays;
  * @Author Mohammad Saud 101195172
  */
 public class InputReader {
-    /* Text file is stored in program absolute path
-     * Each entry is retrieved as strings from input reader
-     */
-    private static final String ABSOLUTE_PATH = new File("").getAbsolutePath();
     private ArrayList<ArrayList<String>> fileData = new ArrayList<>();
     private static int cursor = 1;
     private final String fileName;
 
     /**
      *
-     * @param fileReadName File InputReader object will be binded to add read from
+     * @param fileReadName File InputReader object will be bound to read from
      */
-    public InputReader(String fileReadName){
+    public InputReader(String fileReadName) {
         this.fileName = fileReadName;
     }
 
@@ -34,29 +30,34 @@ public class InputReader {
      * Load data from text file.
      */
     public void loadData() throws IOException {
-        //Keep data file in src dir
-        File file = new File(ABSOLUTE_PATH + "\\" + fileName);
+        // Use class loader to load the file
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
+
+        if (inputStream == null) {
+            throw new IOException("File not found: " + fileName);
+        }
 
         // Open file under buffered reader
-        BufferedReader br = new BufferedReader(new FileReader(file));
-
-        String st;
-        // Read all lines until end and store into array list
-        while ((st = br.readLine()) != null) {
-            fileData.add(new ArrayList(Arrays.asList(st.split(" "))));
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            String st;
+            // Read all lines until end and store into array list
+            while ((st = br.readLine()) != null) {
+                fileData.add(new ArrayList<>(Arrays.asList(st.split(" "))));
+            }
         }
     }
 
     /**
      *
-     * @return DataPacket, returns next data pakcet parsed from file we are reading from
+     * @return DataPacket, returns next data packet parsed from the file we are reading from
      * @throws IOException
      */
     public DataPacket getNextPacket() throws IOException {
+        if (cursor == 1) {
+            this.loadData();
+        }
 
-        if(cursor == 1){this.loadData();}
-
-        if(cursor < fileData.size()){
+        if (cursor < fileData.size()) {
             ArrayList<String> rowData = fileData.get(cursor);
 
             /* TODO use an enum instead of special numbers */
@@ -67,7 +68,7 @@ public class InputReader {
             cursor++;
             return new DataPacket(time, floor, floorButton, carButton);
         }
-        //If we are at the end of the file return null
+        // If we are at the end of the file, return null
         return null;
     }
 }
