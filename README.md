@@ -26,7 +26,11 @@ SYSC 3303 G11 W24 - Elvator System Project - Iteration 1
 * Scheduler - The scheduler communicated event data by transferring DataPackets between FloorSubsystem and Elevator
 
 Test files
-* TestElevatorDataByte
+* InputReaderTest - Tests if input reader receives data packet info correctly from data.txt file
+* FloorSocketTest - Tests FloorSubsystem send() functionality and make sure info send is correct
+* ElevatorSocketTest - Tests Elevators ProcessData() functionality and make sure info send is correct
+* DataPacketTest - Tests conversion between bytes and DataPacket type
+* 
 
 ### Set-up Instructions
 Project has been developed and tested using IntelliJ

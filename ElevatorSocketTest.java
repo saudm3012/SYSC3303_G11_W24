@@ -9,16 +9,16 @@ import java.net.DatagramSocket;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Floor Socket test
- * Will open a socket and send data through it using floorSubsystem Send() method
+ * Elevator Socket test
+ * Will open a socket and send data through it using Elevator ProcessData() method
  * Then will receive the packet and make sure the values are equal
  * @Author Ali Nadim
  */
 
-class FloorSocketTest {
+class ElevatorSocketTest {
     private DatagramPacket receivePacket;
     private DatagramSocket sendReceiveSocket,receiveSocket;
-    private FloorSubsystem sub;
+    private Elevator sub;
 
     private DataPacket data;
 
@@ -33,20 +33,20 @@ class FloorSocketTest {
         receiveSocket = new DatagramSocket(5000);
         sendReceiveSocket = new DatagramSocket();
 
-        sub = new FloorSubsystem();
+        sub = new Elevator();
         data = new DataPacket("14:05:15.0","2" , "Up", "4"); //makes new packet with values
 
     }
+
     /**
-     * Test function method
-     * open a socket and send data through it using floorSubsystem Send() method
-     * Then will receive the packet and make sure the values are equal
+     * Test method
+     * open a socket and send data through it using Elevator ProcessData() method
+     *  * Then will receive the packet and make sure the values are equal
      * @throws IOException
      */
     @Test
     void testSend() throws IOException {
-        sub.socket.start();
-        sub.socket.send(data);
+        sub.processData(data);
         //receiving data
         DataPacket receiveData = new DataPacket();
         byte receiveDataBytes[] = new byte[1024];
