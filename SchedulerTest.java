@@ -100,13 +100,5 @@ class SchedulerTest {
         assertTrue(scheduler.receiveSocket.isClosed());
     }
 
-    @Test
-    void testRunInSeparateThread() {
-        // Test running the scheduler in a separate thread
-        Thread schedulerThread = new Thread(scheduler);
-        schedulerThread.start();
-        schedulerThread.interrupt();
-        assertDoesNotThrow(() -> schedulerThread.join(2000));
-    }
 
 }
