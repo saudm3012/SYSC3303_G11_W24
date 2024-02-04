@@ -37,7 +37,7 @@ public class Scheduler implements Runnable, AutoCloseable {
             // Construct a datagram socket and bind it to port 5000
             // on the local host machine. This socket will be used to
             // receive UDP Datagram packets from floor subsystem and elevators.
-            receiveSocket = new DatagramSocket(0);
+            receiveSocket = new DatagramSocket(5000);
 
         } catch (SocketException se) {
             se.printStackTrace();
@@ -137,14 +137,14 @@ public class Scheduler implements Runnable, AutoCloseable {
      * Receive on receiveSocket
      */
     void receive() {
-        System.out.println("Inside receive method");
+        //System.out.println("Inside receive method");
 
         // Construct a DatagramPacket for receiving packets up to 1024 bytes long (the length of the byte array).
         DataPacket receiveData = new DataPacket();
         byte receiveDataBytes[] = new byte[1024];
         receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
 
-        System.out.println("Before receiving packet");
+        //System.out.println("Before receiving packet");
 
         try {
             // Block until a datagram is received via sendReceiveSocket.
