@@ -16,6 +16,7 @@ class InputReaderTest {
     DataPacket data;
 
     /**
+     * Setup method
      * Creates new data with same value as first entry in provided data.txt file
      */
     @BeforeEach
@@ -24,7 +25,9 @@ class InputReaderTest {
 
     }
     /**
+     * Test function method
      * check if it is the same as when getNextPacket() function is initialised
+     * @throws IOException
      */
     @Test
     void testloadData() throws IOException {
