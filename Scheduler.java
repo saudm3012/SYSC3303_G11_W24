@@ -22,6 +22,7 @@ public class Scheduler implements Runnable, AutoCloseable {
     private int floorPort;
     private int elevatorPort;
 
+    private SchedulerState state = SchedulerState.IDLE;
     Queue<DataPacket> receiveQueue;
 
     /**
