@@ -57,6 +57,12 @@ public class FloorSubsystem implements Runnable
         socket.start();
         while(!inputQueue.isEmpty()) {
             socket.send(inputQueue.remove());
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
         }
 
     }
