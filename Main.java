@@ -10,10 +10,7 @@ public class Main {
         floor_sys.addPacketToQueue(datafile.getNextPacket());
         Thread floorSubsystem = new Thread(floor_sys);
         Thread scheduler =  new Thread(new Scheduler());
-        Thread elevator =  new Thread(new Elevator());
         floorSubsystem.start();
         scheduler.start();
-        elevator.start();
-
     }
 }

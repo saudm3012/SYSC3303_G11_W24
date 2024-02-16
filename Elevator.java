@@ -1,26 +1,44 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * The Elevator class that sends/receives packets to/from Scheduler
  * @author Zakariya Khan 101186641
  * @author Jatin Jain 101184197
  */
  
- public class Elevator implements Runnable
+ public class Elevator extends Thread
  {
      private ElevatorSocket socket; // communicator helper thread to send and receive data
      private ElevatorStates state;
+     private Queue<DataPacket> receiveQueue;
+     private int elevatorNum;
+     private int numFloors;
      /**
       * The constructor for this class.
       */
-     public Elevator () {
-        socket = new ElevatorSocket(this);
+     public Elevator (int elevatorNum, int numFloors) {
+        this.socket = new ElevatorSocket(2000+elevatorNum,this);
+        this.receiveQueue = new LinkedList<>();
         this.state = ElevatorStates.IDLE;
-     }
- 
-     public void processData(DataPacket receivedData) {
-         // send data back to scheduler
-         socket.send(receivedData);
+        this.elevatorNum = elevatorNum;
+        this.numFloors = numFloors;
      }
      
+     public void processData(DataPacket receivedData) {
+        receiveQueue.add(receivedData);
+        // send data back to scheduler
+         //socket.send(receivedData);
+     }
+     
+     /**
+      * Close the socket of elevators
+      */
+      public void closeSockets() {
+        // We're finished, so close the sockets.
+        this.socket.closeSockets();
+    }
+
      private void idle(){
         // read and parse the next instruction from scheduler in the receive queue
         // if theres no instruction stay idle 
@@ -36,7 +54,7 @@
         // if we reach a DESTINATION floor change the state to load/unload
         state = ElevatorStates.LOADING_UNLOADING;
         // otherwise we reached a floor between our destination and need to ask scheduler if we should stop or continue moving
-        state = ElevatorStates.MOVING;
+        state = ElevatorStates.IDLE;
      }
      
      private void loadAndUnload(){

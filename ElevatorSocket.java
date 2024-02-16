@@ -11,12 +11,12 @@ public class ElevatorSocket extends Thread
     /**
      * The constructor for this class.
      */
-    public ElevatorSocket (Elevator elevator) {
+    public ElevatorSocket (int port, Elevator elevator) {
         try {
             // Construct a datagram socket and bind it to 5001
             // port on the local host machine. This socket will be used to
             // send UDP Datagram packets.
-            sendReceiveSocket = new DatagramSocket(5001);
+            sendReceiveSocket = new DatagramSocket(port);
             
             //receiveSocket.setSoTimeout(2000);
          } catch (SocketException se) {
@@ -119,6 +119,14 @@ public class ElevatorSocket extends Thread
         } 
     }
     
+     /**
+      * Close the socket of elevators
+      */
+      public void closeSockets() {
+        // We're finished, so close the sockets.
+        this.sendReceiveSocket.close();
+    }
+
     public void run() {
         while(true) {
             receive();
