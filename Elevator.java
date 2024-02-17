@@ -13,9 +13,9 @@ import javax.xml.crypto.Data;
  {
      private ElevatorSocket socket; // communicator helper thread to send and receive data
      public ElevatorStates state;
-     private Queue<DataPacket> receiveQueue;
+     public Queue<DataPacket> receiveQueue;
      private boolean ascending;
-     private int currFloor;
+     public int currFloor;
      private DataPacket floorRequest;
      private Queue<Integer> nextFloorQueue;
      /**
@@ -61,9 +61,8 @@ import javax.xml.crypto.Data;
         System.out.println(" Direction: "+ (ascending ? "UP" : "DOWN"));
     }
      private void idle(){
-        //DataPacket floorRequest;
         // read and parse the next instruction from scheduler in the receive queue
-        sleep(100);
+        sleep(10);
         if (!receiveQueue.isEmpty()){
             System.out.println("[ELEVATOR]: IDLE");
             floorRequest = receiveQueue.remove();

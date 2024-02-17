@@ -54,5 +54,8 @@ class ElevatorSocketTest {
         receiveSocket.receive(receivePacket);
         receiveData.bytesToDataPacket(receiveDataBytes);
         assertTrue(data.equals(receiveData));
+        receiveSocket.close();
+        sendReceiveSocket.close();
+        sub.closeSockets();
     }
 }

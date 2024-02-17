@@ -57,8 +57,8 @@ public class Scheduler implements Runnable {
             //Wait for the receive queue to fill up
             //System.out.println("Wait for fill up");
             sleep(1000);
-
         }
+
         //System.out.println("Filled up");
         sleep(100);
         socket.sendToElevator(receiveQueue.remove());
