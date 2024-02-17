@@ -1,6 +1,8 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
+import javax.xml.crypto.Data;
+
 /**
  * The Elevator class that sends/receives packets to/from Scheduler
  * @author Zakariya Khan 101186641
@@ -12,8 +14,9 @@ import java.util.Queue;
      private ElevatorSocket socket; // communicator helper thread to send and receive data
      private ElevatorStates state;
      private Queue<DataPacket> receiveQueue;
-     //private boolean ascending;
+     private boolean ascending;
      private int currFloor;
+     private DataPacket floorRequest;
      private Queue<Integer> nextFloorQueue;
      /**
       * The constructor for this class.
@@ -23,10 +26,11 @@ import java.util.Queue;
         this.receiveQueue = new LinkedList<>();
         this.nextFloorQueue = new LinkedList<>();
         this.state = ElevatorStates.IDLE;
+        this.currFloor = 1;
      }
      
      public void processData(DataPacket receivedData) {
-        receiveQueue.add(receivedData);
+        this.receiveQueue.add(receivedData);
         // send data back to scheduler
          //socket.send(receivedData);
      }
@@ -51,11 +55,17 @@ import java.util.Queue;
 			System.exit(1);
 		}
 	}
-
+    private void printCurrentFloor(){
+        System.out.print("[ELEVATOR]: MOVING Reached Floor: ");
+        System.out.print(currFloor);
+        System.out.println(" Direction: "+ (ascending ? "UP" : "DOWN"));
+    }
      private void idle(){
-        DataPacket floorRequest;
+        //DataPacket floorRequest;
         // read and parse the next instruction from scheduler in the receive queue
+        sleep(100);
         if (!receiveQueue.isEmpty()){
+            System.out.println("[ELEVATOR]: IDLE");
             floorRequest = receiveQueue.remove();
             // Add the passangers floor to the destination queue
             nextFloorQueue.add((Integer)floorRequest.getFloor());
@@ -75,18 +85,16 @@ import java.util.Queue;
         // move to next floor 
         sleep(1000); // TODO Traveling between floors should be 2 seconds
         if (currFloor<nextFloorQueue.peek()){
-            //ascending = true;
+            ascending = true;
             currFloor++;
+            printCurrentFloor();
         } else if (currFloor>nextFloorQueue.peek()){
-            //ascending = false;
+            ascending = false;
             currFloor--;
+            printCurrentFloor();
         } else{
             // we have reached the destination
             nextFloorQueue.remove();
-            if (nextFloorQueue.isEmpty()){
-                // let scheduler know we have fulfilled a floor request
-                socket.send(new DataPacket());
-            }
             // change the state to load/unload
             state = ElevatorStates.LOADING_UNLOADING;
         }
@@ -94,7 +102,14 @@ import java.util.Queue;
      
      private void loadAndUnload(){
         // opening and closing door
-        sleep(2000); // TODO should be 11 seconds
+        System.out.println("[ELEVATOR]: Door Opening");
+        sleep(1000); // TODO should be 6 seconds
+        System.out.println("[ELEVATOR]: Door Closing");
+        sleep(1000); // TODO should be 6 seconds
+        if (nextFloorQueue.isEmpty()){
+            // let scheduler know we have fulfilled a floor request
+            socket.send(floorRequest);
+        }
         state = ElevatorStates.IDLE;
      }
 

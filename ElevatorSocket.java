@@ -13,7 +13,7 @@ public class ElevatorSocket extends Thread
      */
     public ElevatorSocket (int port, Elevator elevator) {
         try {
-            // Construct a datagram socket and bind it to 5001
+            // Construct a datagram socket and bind it to 2000 + elevator num
             // port on the local host machine. This socket will be used to
             // send UDP Datagram packets.
             sendReceiveSocket = new DatagramSocket(port);
@@ -30,7 +30,7 @@ public class ElevatorSocket extends Thread
      * Outputs sendPacket to the console
      */
     private void printSendingInfo(String dataPacket){
-       System.out.println("Elevator: Sending packet:");
+       System.out.println("\nElevator: Sending packet:");
        System.out.println("To host: " + sendPacket.getAddress());
        System.out.println("Destination host port: " + sendPacket.getPort());
        int len = sendPacket.getLength();
@@ -43,7 +43,7 @@ public class ElevatorSocket extends Thread
      * Outputs receivePacket to the console
      */
     private void printReceivingInfo(String dataPacket){
-       System.out.println("Elevator: Packet received:");
+       System.out.println("\nElevator: Packet received:");
        System.out.println("From host: " + receivePacket.getAddress());
        System.out.println("Host port: " + receivePacket.getPort());
        int len = receivePacket.getLength();

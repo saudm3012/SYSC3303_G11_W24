@@ -39,7 +39,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             e.printStackTrace();
             System.exit(1);
         }
-        elevatorPort = 5001;
+        elevatorPort = 2000;
         this.scheduler = scheduler;
     }
 
@@ -148,7 +148,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
      * Outputs sendPacket to the console
      */
     void printSendingInfo(String dataPacket, boolean isToFloor) {
-        System.out.println("Scheduler: Sending packet to: " + (isToFloor ? "Elevator" : "Floor Subsystem"));
+        System.out.println("\nScheduler: Sending packet to: " + (isToFloor ? "Elevator" : "Floor Subsystem"));
         System.out.println("To host: " + sendPacket.getAddress());
         System.out.println("Destination host port: " + sendPacket.getPort());
         int len = sendPacket.getLength();
@@ -161,7 +161,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
      * Outputs receivePacket to the console
      */
     void printReceivingInfo(String dataPacket, boolean isFromFloor) {
-        System.out.println("Scheduler: Packet received from: " + (isFromFloor ? "Floor Subsystem" : "Elevator"));
+        System.out.println("\nScheduler: Packet received from: " + (isFromFloor ? "Floor Subsystem" : "Elevator"));
         System.out.println("From host: " + receivePacket.getAddress());
         System.out.println("Host port: " + receivePacket.getPort());
         int len = receivePacket.getLength();

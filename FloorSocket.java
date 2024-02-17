@@ -30,7 +30,7 @@ public class FloorSocket extends Thread
      * Outputs sendPacket to the console
      */
     private void printSendingInfo(String dataPacket){
-       System.out.println("FloorSubsystem: Sending packet:");
+       System.out.println("\nFloorSubsystem: Sending packet:");
        System.out.println("To host: " + sendPacket.getAddress());
        System.out.println("Destination host port: " + sendPacket.getPort());
        int len = sendPacket.getLength();
@@ -43,7 +43,7 @@ public class FloorSocket extends Thread
      * Outputs receivePacket to the console
      */
     private void printReceivingInfo(String dataPacket){
-       System.out.println("FloorSubsystem: Packet received:");
+       System.out.println("\nFloorSubsystem: Packet received:");
        System.out.println("From host: " + receivePacket.getAddress());
        System.out.println("Host port: " + receivePacket.getPort());
        int len = receivePacket.getLength();

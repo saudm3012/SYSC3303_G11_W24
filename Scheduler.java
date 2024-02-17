@@ -55,11 +55,11 @@ public class Scheduler implements Runnable {
         // How we actually want to do it with a separate Scheduler socket class, for now just wait here
         while(receiveQueue.isEmpty()){
             //Wait for the receive queue to fill up
-            System.out.println("Wait for fill up");
+            //System.out.println("Wait for fill up");
             sleep(1000);
 
         }
-        System.out.println("Filled up");
+        //System.out.println("Filled up");
         sleep(100);
         socket.sendToElevator(receiveQueue.remove());
         this.state = SchedulerState.WAIT_ACK;
@@ -67,7 +67,7 @@ public class Scheduler implements Runnable {
 
     private void wait_ack(){
         socket.receiveFromElevator();
-        System.out.println("RECEIVED FROM ELEVATOR");
+        //System.out.println("RECEIVED FROM ELEVATOR");
         sleep(100);
         this.state = SchedulerState.IDLE;
     }
@@ -75,12 +75,12 @@ public class Scheduler implements Runnable {
     public void execute(){
         switch (this.state){
             case IDLE:{
-                System.out.println("[SCHEDULER] IDLE");
+                System.out.println("[SCHEDULER]:IDLE");
                 this.idle();
             }
 
             case WAIT_ACK:{
-                System.out.println("[SCHEDULER] WAIT_ACK");
+                System.out.println("[SCHEDULER]:WAIT_ACK");
                 this.wait_ack();
             }
         }
