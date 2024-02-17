@@ -8,9 +8,11 @@ public class Main {
         FloorSubsystem floor_sys = new FloorSubsystem();
         while(floor_sys.addPacketToQueue(datafile.getNextPacket())){};
         floor_sys.addPacketToQueue(datafile.getNextPacket());
+        Thread elevator = new ElevatorSubsystem(5,2);
         Thread floorSubsystem = new Thread(floor_sys);
         Thread scheduler =  new Thread(new Scheduler());
         floorSubsystem.start();
         scheduler.start();
+        elevator.start();
     }
 }

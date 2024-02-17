@@ -35,7 +35,7 @@
      public void print(String message) {
          System.out.println("ELEVATOR SUBSYSTEM: " + message);
      }
-     public void runElevators() {
+     public void run() {
         for (Elevator e: elevatorList) {
 			e.start();
 		}

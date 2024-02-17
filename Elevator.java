@@ -113,7 +113,6 @@ import java.util.Queue;
                     break;
                 default:
                     idle();
-                    break;
             }
          }
      }
