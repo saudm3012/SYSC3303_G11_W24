@@ -13,7 +13,7 @@
          
          //Initialize the elevators
          for (int i = 0; i < numElevators; i ++) {
-             elevatorList[i] = ((new Elevator(i, numFloors)));
+             elevatorList[i] = ((new Elevator(i)));
          }
 
      }
