@@ -33,7 +33,7 @@ class ElevatorSocketTest {
         receiveSocket = new DatagramSocket(5000);
         sendReceiveSocket = new DatagramSocket();
 
-        sub = new Elevator();
+        sub = new Elevator(1);
         data = new DataPacket("14:05:15.0","2" , "Up", "4"); //makes new packet with values
 
     }
