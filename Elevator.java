@@ -12,7 +12,7 @@ import javax.xml.crypto.Data;
  public class Elevator extends Thread
  {
      private ElevatorSocket socket; // communicator helper thread to send and receive data
-     private ElevatorStates state;
+     public ElevatorStates state;
      private Queue<DataPacket> receiveQueue;
      private boolean ascending;
      private int currFloor;
