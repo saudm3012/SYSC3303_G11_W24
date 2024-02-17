@@ -98,7 +98,7 @@ public class ElevatorStateTest {
         }
 
         //Reaches floor to load passenger
-        assertTrue(elevator.state == ElevatorStates.LOADING_UNLOADING);
+        assertTrue(elevator.state == ElevatorStates.LOADING);
 
         try {
             Thread.sleep(2000);
@@ -118,7 +118,7 @@ public class ElevatorStateTest {
         }
 
         // reaches destination floor then unloads
-        assertTrue(elevator.state == ElevatorStates.LOADING_UNLOADING);
+        assertTrue(elevator.state == ElevatorStates.UNLOADING);
 
         try {
             Thread.sleep(2000);

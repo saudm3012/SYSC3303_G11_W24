@@ -1,18 +1,32 @@
-import java.io.IOException;
-import java.net.*;
+
+/**
+ * The Scheduler class that manages communication between FloorSocket and ElevatorSocket.
+ *
+ * This class acts as the central controller, receiving data packets from FloorSocket,
+ * and forwarding them to ElevatorSocket. It transitions between the IDLE and WAIT_ACK states.
+ *
+ * @author Mohammad Saud
+ * @author Riya Arora (101190033)
+ */
+
 import java.util.LinkedList;
 import java.util.Queue;
 
-/**
- * The Scheduler class that sends and receives packets from the FloorSocket to the ElevatorSocket
- * @Author Mohammad Saud
- * @Author Zakariya Khan
- * @Author Riya Arora 101190033
- */
 public class Scheduler implements Runnable {
+
+    /**
+     * The socket responsible for communication with elevators.
+     */
     private SchedulerSocket socket;
-    private int floorPort;
+
+    /**
+     * The current state of the scheduler.
+     */
     private SchedulerState state = SchedulerState.IDLE;
+
+    /**
+     * Queue for storing received data packets.
+     */
     Queue<DataPacket> receiveQueue;
 
     /**
@@ -20,17 +34,16 @@ public class Scheduler implements Runnable {
      */
     public Scheduler() {
         socket = new SchedulerSocket(this);
-
         receiveQueue = new LinkedList<>();
     }
 
     /**
-     * Issue a sleep
+     * Delays the execution of the thread for the specified time.
      *
-     * @param ms time in milliseconds
+     * @param ms Time in milliseconds to sleep.
      */
     void sleep(int ms) {
-        // Slow things down (wait 5 seconds)
+        // Slow things down (wait for the specified time)
         try {
             Thread.sleep(ms);
         } catch (InterruptedException e) {
@@ -39,53 +52,75 @@ public class Scheduler implements Runnable {
         }
     }
 
-    public boolean receiveQueueIsEmpty(){
+    /**
+     * Checks if the receive queue is empty.
+     *
+     * @return true if the receive queue is empty, false otherwise.
+     */
+    public boolean receiveQueueIsEmpty() {
         return receiveQueue.isEmpty();
     }
 
-    public DataPacket receiveQueueRemove(){
+    /**
+     * Removes and returns the next data packet from the receive queue.
+     *
+     * @return The next data packet in the receive queue.
+     */
+    public DataPacket receiveQueueRemove() {
         return receiveQueue.remove();
     }
 
-    public void receiveQueueAdd(DataPacket data){
+    /**
+     * Adds a data packet to the receive queue.
+     *
+     * @param data The data packet to be added.
+     */
+    public void receiveQueueAdd(DataPacket data) {
         receiveQueue.add(data);
     }
 
-    private void idle(){
-        // How we actually want to do it with a separate Scheduler socket class, for now just wait here
-        while(receiveQueue.isEmpty()){
-            //Wait for the receive queue to fill up
-            //System.out.println("Wait for fill up");
+    /**
+     * Handles the IDLE state, waiting for the receive queue to fill up and then
+     * sending data to the elevator.
+     */
+    private void idle() {
+        while (receiveQueue.isEmpty()) {
+            // Wait for the receive queue to fill up
             sleep(1000);
         }
-
-        //System.out.println("Filled up");
         sleep(100);
         socket.sendToElevator(receiveQueue.remove());
         this.state = SchedulerState.WAIT_ACK;
     }
 
-    private void wait_ack(){
+    /**
+     * Handles the WAIT_ACK state, receiving data from the elevator.
+     */
+    private void wait_ack() {
         socket.receiveFromElevator();
-        //System.out.println("RECEIVED FROM ELEVATOR");
         sleep(100);
         this.state = SchedulerState.IDLE;
     }
 
-    public void execute(){
-        switch (this.state){
-            case IDLE:{
-                System.out.println("[SCHEDULER]:IDLE");
+    /**
+     * Executes the current state's logic.
+     */
+    public void execute() {
+        switch (this.state) {
+            case IDLE:
+                System.out.println("[SCHEDULER]: IDLE");
                 this.idle();
-            }
-
-            case WAIT_ACK:{
-                System.out.println("[SCHEDULER]:WAIT_ACK");
+                break;
+            case WAIT_ACK:
+                System.out.println("[SCHEDULER]: WAIT_ACK");
                 this.wait_ack();
-            }
+                break;
         }
     }
 
+    /**
+     * The main run method of the scheduler thread.
+     */
     public void run() {
         socket.start();
         while (true) {
@@ -93,4 +128,3 @@ public class Scheduler implements Runnable {
         }
     }
 }
-

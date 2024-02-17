@@ -1,3 +1,4 @@
+
 /**
  * The Elevator class represents an elevator system that communicates with a Scheduler.
  *
@@ -25,7 +26,7 @@ public class Elevator extends Thread {
     private boolean ascending;
 
     // The current floor of the elevator.
-    private int currFloor;
+    public int currFloor;
 
     // The floor request data packet.
     private DataPacket floorRequest;
@@ -102,6 +103,16 @@ public class Elevator extends Thread {
     }
 
     /**
+     * Prints door opening and closing while mimicing their timings.
+     */
+    private void openCloseDoors() {
+        System.out.println("[ELEVATOR]: Door Opening");
+        sleep(1000); // TODO should be 6 seconds
+        System.out.println("[ELEVATOR]: Door Closing");
+        sleep(1000); // TODO should be 6 seconds
+    }
+
+    /**
      * Handles the idle state of the elevator.
      */
     private void idle() {
@@ -148,20 +159,23 @@ public class Elevator extends Thread {
     }
 
     /**
-     * Handles the load and unload state of the elevator.
-     *
-     * @param unload Flag indicating whether unloading is to be performed.
+     * Handles the load state of the elevator.
      */
-    private void loadAndUnload(boolean unload) {
+    private void load() {
         // opening and closing door
-        System.out.println("[ELEVATOR]: Door Opening");
-        sleep(1000); // TODO should be 6 seconds
-        System.out.println("[ELEVATOR]: Door Closing");
-        sleep(1000); // TODO should be 6 seconds
-        if (nextFloorQueue.isEmpty()) {
-            // let scheduler know we have fulfilled a floor request
-            socket.send(floorRequest);
-        }
+        openCloseDoors();
+        state = ElevatorStates.MOVING;
+        printLatch = true;
+    }
+
+    /**
+     * Handles the unload state of the elevator.
+     */
+    private void unload() {
+        // opening and closing door
+        openCloseDoors();
+        // let scheduler know we have fulfilled a floor request
+        socket.send(floorRequest);
         state = ElevatorStates.IDLE;
         printLatch = true;
     }
@@ -186,12 +200,12 @@ public class Elevator extends Thread {
                 case LOADING:
                     if (printLatch)
                         printState();
-                    loadAndUnload(false);
+                    load();
                     break;
                 case UNLOADING:
                     if (printLatch)
                         printState();
-                    loadAndUnload(true);
+                    unload();
                     break;
                 default:
                     if (printLatch)
