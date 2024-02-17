@@ -72,7 +72,7 @@ public class ElevatorSocket extends Thread
         // on a specified host.
         try {
             sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length,
-                                            InetAddress.getLocalHost(), 5000);
+                                            InetAddress.getLocalHost(), 4999);
         } catch (UnknownHostException e) {
             e.printStackTrace();
             System.exit(1);
