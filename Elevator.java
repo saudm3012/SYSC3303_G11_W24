@@ -198,13 +198,11 @@ public class Elevator extends Thread {
                     move();
                     break;
                 case LOADING:
-                    if (printLatch)
-                        printState();
+                    printState();
                     load();
                     break;
                 case UNLOADING:
-                    if (printLatch)
-                        printState();
+                    printState();
                     unload();
                     break;
                 default:
