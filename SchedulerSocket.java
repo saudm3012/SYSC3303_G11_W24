@@ -1,4 +1,3 @@
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.*;
 
@@ -59,7 +58,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
     }
 
 
-    void sendToElevator(DataPacket packet) {
+    void sendToElevator(FloorRequest packet) {
         // serialize data into byte array
         byte[] sendDataBytes = new byte[0];
         try {
@@ -96,7 +95,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
         //System.out.println("Inside receive method");
 
         // Construct a DatagramPacket for receiving packets up to 1024 bytes long (the length of the byte array).
-        DataPacket receiveData = new DataPacket();
+        FloorRequest receiveData = new FloorRequest();
         byte receiveDataBytes[] = new byte[1024];
         receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
 
@@ -132,7 +131,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
 
     void receiveFromElevator(){
         // Construct a DatagramPacket for receiving packets up to 1024 bytes long (the length of the byte array).
-        DataPacket receiveData = new DataPacket();
+        FloorRequest receiveData = new FloorRequest();
         byte receiveDataBytes[] = new byte[0];
         receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
 

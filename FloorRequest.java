@@ -1,4 +1,3 @@
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.time.LocalTime;
 
@@ -7,7 +6,7 @@ import java.time.LocalTime;
  * Object to be sent from floor to scheduler to elevator
  * @Author Jatin Jain
  */
-public class DataPacket implements Serializable {
+public class FloorRequest implements Serializable {
     private LocalTime time;
     private int floor;
     private boolean goingUp;
@@ -18,7 +17,7 @@ public class DataPacket implements Serializable {
     /**
      * Creates a new empty Data packet.
      */
-    public DataPacket() {
+    public FloorRequest() {
         this.isEmpty = true;
         this.isFromFloor = false;
     }
@@ -32,7 +31,7 @@ public class DataPacket implements Serializable {
      * @param direction String, car direction
      * @param car       String, requested car number
      */
-    public DataPacket(String time, String floor, String direction, String car){
+    public FloorRequest(String time, String floor, String direction, String car){
         this.time = LocalTime.parse(time);
         this.floor = Integer.parseInt(floor);
         if(direction.equals("Up")){this.goingUp = true;}
@@ -118,7 +117,7 @@ public class DataPacket implements Serializable {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        final DataPacket that = (DataPacket) o;
+        final FloorRequest that = (FloorRequest) o;
         return (this.time.equals(that.time)) &&
                 (this.floor == that.floor) && (this.goingUp == that.goingUp) && (this.car == that.car);
     }
@@ -159,7 +158,7 @@ public class DataPacket implements Serializable {
         ObjectInput in = null;
         try {
             in = new ObjectInputStream(bis);
-            DataPacket temp = (DataPacket) in.readObject();
+            FloorRequest temp = (FloorRequest) in.readObject();
             this.time = temp.time;
             this.floor = temp.floor;
             this.goingUp = temp.goingUp;

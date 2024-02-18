@@ -5,10 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.net.*;
 
+/**
+ * Tests scheduler state machine through all states.
+ **/
 public class SchedulerTest {
     public static Scheduler schedulerObj;
     DatagramSocket sendSocket;
-    private DataPacket data;
+    private FloorRequest data;
     private DatagramPacket sendFloorPacket;
     private DatagramPacket sendElevatorPacket;
 
@@ -25,7 +28,7 @@ public class SchedulerTest {
         sendSocket = new DatagramSocket();
         schedulerObj = new Scheduler();
         //data to send as a DataPacket
-        data = new DataPacket("14:05:15.0", "2", "Up", "4");
+        data = new FloorRequest("14:05:15.0", "2", "Up", "4");
 
         byte[] sendDataBytes = new byte[0];
 

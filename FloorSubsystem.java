@@ -10,7 +10,7 @@ import java.util.*;
 
 public class FloorSubsystem implements Runnable
 {
-    private Queue<DataPacket> inputQueue; // data to send from input file
+    private Queue<FloorRequest> inputQueue; // data to send from input file
     public FloorSocket socket; // communicator helper thread to send and receive data
     private ArrayList<ArrayList<String>> inputData;
 
@@ -28,7 +28,7 @@ public class FloorSubsystem implements Runnable
      * @param p DataPacket to be added to input queue
      * @return
      */
-    public boolean addPacketToQueue(DataPacket p){
+    public boolean addPacketToQueue(FloorRequest p){
         if(p == null) {
             return false;
         }
@@ -40,7 +40,7 @@ public class FloorSubsystem implements Runnable
      * placeholder for future
      * @param receivedData
      */
-    public void processData(DataPacket receivedData) {
+    public void processData(FloorRequest receivedData) {
         // do nothing for now
     }
 

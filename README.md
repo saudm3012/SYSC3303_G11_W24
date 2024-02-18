@@ -18,7 +18,7 @@ The goal of this iteration is to add the state machines for the scheduler and el
 ### Included directories/files
 * SYSC3303_G11_W24' - IntelliJ project directory
 * data.txt - input file to be read with specified header
-* DataPacket.java - Data that contains info from each row of input (time, floor, direction, car)
+* FloorRequest.java - Data that contains info from each row of input (time, floor, direction, car)
 * Elevator - class represents an elevator in your system that communicates with a Scheduler. It handles the movement, loading, and unloading of the elevator, receiving instructions from the scheduler and interacting with the building's floors.
 * ElevatorSocket - Used by Elevator for communication with Scheduler
 * FloorSocket - Used by FloorSubsystem for communication with Scheduler
@@ -35,7 +35,7 @@ Test files
 * InputReaderTest - Tests if input reader receives data packet info correctly from data.txt file
 * FloorSocketTest - Tests FloorSubsystem send() functionality and make sure info send is correct
 * ElevatorSocketTest - Tests Elevators ProcessData() functionality and make sure info send is correct
-* DataPacketTest - Tests conversion between bytes and DataPacket type
+* FloorRequestTest - Tests conversion between bytes and FloorRequest type
 * SchedulerTest - Tests aims to check the basic functionalities and behavior of the Scheduler class, including socket initialization, sleeping, closing sockets.
 * ElevatorStateTest - JUnit test class designed to test the state transitions of an Elevator object in an elevator system. The test focuses on the elevator state machine, simulating the process of receiving a request, moving to the specified floor, loading/unloading passengers, and returning to an idle state.
 * SchedulerTest - JUnit test case for the Scheduler to test if scheduler transitions from the IDLE state to the WAIT_ACK state correctly when a data packet is added to its receive queue and then the execute method is called
@@ -51,7 +51,7 @@ For testing Junit must be installed
 * FloorSubsystem/FloorSocket - Zakariya
 * Elevator/ElevatorSocket/ElevatorTest - Zakariya/Jatin
 * InputReader - Jatin/Mohammad
-* DataPacket Jatin/Mohammad/Zakariya
+* FloorRequest Jatin/Mohammad/Zakariya
 * Elevator/ElevatorStates/ElevatorStateTest - Zakariya/Jatin/Saud
 * Scheduler/SchedulerSocket/SchedulerState/SchedulerTest/ - Zakariya/Jatin/Saud/Riya
 * Test files - Ali/Mohammad/Jatin/Riya

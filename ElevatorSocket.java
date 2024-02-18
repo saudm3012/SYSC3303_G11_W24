@@ -57,7 +57,7 @@ public class ElevatorSocket extends Thread
      *  Both packet sent and received packet are logged to the console.
      * @param objToSend the data to send to the Scheduler
      */
-    public void send(DataPacket objToSend) {
+    public void send(FloorRequest objToSend) {
         // serialize data into byte array
         byte[] sendDataBytes = new byte[0];
         objToSend.setFromElevator();
@@ -95,7 +95,7 @@ public class ElevatorSocket extends Thread
     private void receive() {
         // Construct a DatagramPacket for receiving packets up 
         // to 1024 bytes long (the length of the byte array).
-        DataPacket receiveData = new DataPacket();
+        FloorRequest receiveData = new FloorRequest();
         byte receiveDataBytes[] = new byte[1024];
         receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
 

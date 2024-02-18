@@ -27,7 +27,7 @@ public class Scheduler implements Runnable {
     /**
      * Queue for storing received data packets.
      */
-    Queue<DataPacket> receiveQueue;
+    Queue<FloorRequest> receiveQueue;
 
     /**
      * The constructor for this class.
@@ -66,7 +66,7 @@ public class Scheduler implements Runnable {
      *
      * @return The next data packet in the receive queue.
      */
-    public DataPacket receiveQueueRemove() {
+    public FloorRequest receiveQueueRemove() {
         return receiveQueue.remove();
     }
 
@@ -75,7 +75,7 @@ public class Scheduler implements Runnable {
      *
      * @param data The data packet to be added.
      */
-    public void receiveQueueAdd(DataPacket data) {
+    public void receiveQueueAdd(FloorRequest data) {
         receiveQueue.add(data);
     }
 

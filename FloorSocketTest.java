@@ -20,7 +20,7 @@ class FloorSocketTest {
     private DatagramSocket sendReceiveSocket,receiveSocket;
     private FloorSubsystem sub;
 
-    private DataPacket data;
+    private FloorRequest data;
 
 
     /**
@@ -34,7 +34,7 @@ class FloorSocketTest {
         sendReceiveSocket = new DatagramSocket();
 
         sub = new FloorSubsystem();
-        data = new DataPacket("14:05:15.0","2" , "Up", "4"); //makes new packet with values
+        data = new FloorRequest("14:05:15.0","2" , "Up", "4"); //makes new packet with values
 
     }
     /**
@@ -48,7 +48,7 @@ class FloorSocketTest {
         sub.socket.start();
         sub.socket.send(data);
         //receiving data
-        DataPacket receiveData = new DataPacket();
+        FloorRequest receiveData = new FloorRequest();
         byte receiveDataBytes[] = new byte[1024];
         receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
         receiveSocket.receive(receivePacket);

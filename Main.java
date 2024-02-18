@@ -3,7 +3,6 @@ import java.io.IOException;
 
 public class Main {
     public static void main (String args[]) throws IOException {
-        //Thread floorSubsystem = new Thread(new FloorSubsystem("data.txt"));
         InputReader datafile = new InputReader("data.txt");
         FloorSubsystem floor_sys = new FloorSubsystem();
         while(floor_sys.addPacketToQueue(datafile.getNextPacket())){};

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InputReaderTest {
     private ArrayList<ArrayList<String>> inputData;
-    DataPacket data;
+    FloorRequest data;
 
     /**
      * Setup method
@@ -22,7 +22,7 @@ class InputReaderTest {
      */
     @BeforeEach
     void setUp() {
-        data = new DataPacket("14:05:15.0","2" , "Up", "4");
+        data = new FloorRequest("14:05:15.0","2" , "Up", "4");
 
     }
     /**
@@ -33,7 +33,7 @@ class InputReaderTest {
     @Test
     void testloadData() throws IOException {
         InputReader datafile = new InputReader("data.txt");
-        DataPacket data2 = datafile.getNextPacket();
+        FloorRequest data2 = datafile.getNextPacket();
         assertTrue(data.equals(data2));
 
     }

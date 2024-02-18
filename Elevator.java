@@ -20,7 +20,7 @@ public class Elevator extends Thread {
     public ElevatorStates state;
 
     // Queue for receiving data packets.
-    private Queue<DataPacket> receiveQueue;
+    private Queue<FloorRequest> receiveQueue;
 
     // Flag indicating whether the elevator is ascending or not.
     private boolean ascending;
@@ -29,7 +29,7 @@ public class Elevator extends Thread {
     public int currFloor;
 
     // The floor request data packet.
-    private DataPacket floorRequest;
+    private FloorRequest floorRequest;
 
     // Queue for storing the next floors to visit
     private Queue<Integer> nextFloorQueue;
@@ -56,7 +56,7 @@ public class Elevator extends Thread {
      *
      * @param receivedData The data packet received.
      */
-    public void processData(DataPacket receivedData) {
+    public void processData(FloorRequest receivedData) {
         this.receiveQueue.add(receivedData);
         // send data back to scheduler
         // socket.send(receivedData);

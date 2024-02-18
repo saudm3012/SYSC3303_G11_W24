@@ -1,15 +1,14 @@
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.*;
+
 public class ElevatorStateTest {
     public static Elevator elevator;
     DatagramSocket sendSocket;
-    private DataPacket data;
+    private FloorRequest data;
     private DatagramPacket sendPacket;
 
     InetAddress elevatorAddress;
@@ -25,7 +24,7 @@ public class ElevatorStateTest {
         sendSocket = new DatagramSocket();
 
         //data to send as a DataPacket
-        data = new DataPacket("14:05:15.0","2" , "Up", "4");
+        data = new FloorRequest("14:05:15.0","2" , "Up", "4");
 
         byte[] sendDataBytes = new byte[0];
 

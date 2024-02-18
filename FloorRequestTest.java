@@ -11,16 +11,16 @@ import static org.junit.jupiter.api.Assertions.*;
  * then tests dataPacketToBytes and bytesToDataPackets simulataneously
  * @Author Ali Nadim
  */
-class DataPacketTest {
+class FloorRequestTest {
 
-    DataPacket data;
+    FloorRequest data;
     /**
      * Setup method
      * Creates new data with same value as first entry in provided data.txt file
      */
     @BeforeEach
     void setUp() {
-        DataPacket data = new DataPacket("14:05:15.0","2" , "Up", "4"); //makes new packet with values
+        FloorRequest data = new FloorRequest("14:05:15.0","2" , "Up", "4"); //makes new packet with values
     }
 
 
@@ -33,10 +33,10 @@ class DataPacketTest {
 
     @Test
     void dataPacketToBytes() throws IOException {
-        DataPacket data = new DataPacket("14:05:15.0","2" , "Up", "4"); //makes new packet with values
+        FloorRequest data = new FloorRequest("14:05:15.0","2" , "Up", "4"); //makes new packet with values
         byte[] packet;
         packet = data.dataPacketToBytes(); //converting data to bytes
-        DataPacket data_2 = new DataPacket();
+        FloorRequest data_2 = new FloorRequest();
         data_2.bytesToDataPacket(packet); // converting back to packet
         assertTrue(data.equals(data_2));
     }

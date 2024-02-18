@@ -1,4 +1,3 @@
-import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +51,7 @@ public class InputReader {
      * @return DataPacket, returns next data packet parsed from the file we are reading from
      * @throws IOException
      */
-    public DataPacket getNextPacket() throws IOException {
+    public FloorRequest getNextPacket() throws IOException {
         if (cursor == 1) {
             this.loadData();
         }
@@ -66,7 +65,7 @@ public class InputReader {
             String floorButton = rowData.get(2);
             String carButton = rowData.get(3);
             cursor++;
-            return new DataPacket(time, floor, floorButton, carButton);
+            return new FloorRequest(time, floor, floorButton, carButton);
         }
         // If we are at the end of the file, return null
         return null;
