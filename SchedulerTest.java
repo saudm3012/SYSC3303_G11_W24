@@ -1,106 +1,44 @@
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.DatagramSocket;
-import java.net.SocketException;
+import java.lang.reflect.Field;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * Scheduler test
- * Overall, this test class aims to check the basic functionalities and behavior of the Scheduler class, including socket
- * initialization, sleeping, closing sockets, and running in a separate thread.
- * @Author Riya Arora
- */
-/**
-class SchedulerTest {
+public class SchedulerTest {
 
-    private Scheduler scheduler;
+    @Test
+    void testSchedulerTransition() {
+        // Create an instance of the Scheduler
+        Scheduler scheduler = new Scheduler();
 
-    // Redirect standard output for console printing
-    private final PrintStream originalOut = System.out;
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        // Use reflection to access the private field 'state' in the Scheduler class
+        try {
+            Field stateField = Scheduler.class.getDeclaredField("state");
+            stateField.setAccessible(true);
 
-    @BeforeEach
-    void setUp() throws SocketException {
-        // Redirect standard output for console printing to capture print statements
-        System.setOut(new PrintStream(outContent));
+            // Verify that the initial state is IDLE
+            SchedulerState initialState = (SchedulerState) stateField.get(scheduler);
+            System.out.println("[TEST]: Initial State: " + initialState);
+            assertEquals(SchedulerState.IDLE, initialState);
 
-        // Create a Scheduler instance for testing
-        scheduler = new Scheduler();
-    }
+            // Add a data packet to the receive queue
+            DataPacket dataPacket = new DataPacket("14:05:15.0", "2", "Up", "4");
+            scheduler.receiveQueueAdd(dataPacket);
+            System.out.println("[TEST]: Data Packet added to receive queue: " + dataPacket);
 
-    @AfterEach
-    void tearDown() {
-        // Reset standard output
-        System.setOut(originalOut);
+            // Execute scheduler and verify that the state transitions to WAIT_ACK
+            scheduler.execute();
+            SchedulerState waitAckState = (SchedulerState) stateField.get(scheduler);
+            System.out.println("[TEST]: State after execute: " + waitAckState);
 
-        // Close sockets
-        if (scheduler.sendSocket != null && !scheduler.sendSocket.isClosed()) {
-            scheduler.sendSocket.close();
-        }
+            // Assert that the state transitions to WAIT_ACK
+            assertEquals(SchedulerState.WAIT_ACK, waitAckState);
 
-        if (scheduler.receiveSocket != null && !scheduler.receiveSocket.isClosed()) {
-            scheduler.receiveSocket.close();
+            // Add additional assertions or print statements to check if the packet is sent
+            System.out.println("[TEST]: Packet sent to elevator");
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
-
-    @Test
-    void testConstructor() {
-        assertNotNull(scheduler.sendSocket);
-        assertNotNull(scheduler.receiveSocket);
-        assertNotNull(scheduler.floorAddress);
-        assertNotNull(scheduler.elevatorAddress);
-        assertTrue(scheduler.receiveQueue.isEmpty());
-    }
-
-    @Test
-    void testSleep() {
-        assertDoesNotThrow(() -> scheduler.sleep(100));
-    }
-
-    /*
-    @Test
-    void testPrintSendingInfo() {
-        scheduler.printSendingInfo("Test DataPacket", true);
-
-        // Check if the correct information is printed to the console
-        String expectedOutput = "Scheduler: Sending packet to: Elevator\n" +
-                "To host: " + scheduler.sendPacket.getAddress() + "\n" +
-                "Destination host port: " + scheduler.sendPacket.getPort() + "\n" +
-                "Length: " + scheduler.sendPacket.getLength() + "\n" +
-                "Containing: Test DataPacket\n";
-        assertEquals(expectedOutput, outContent.toString());
-    }
-    */
-
-    /*
-    @Test
-    void testPrintReceivingInfo() {
-        scheduler.printReceivingInfo("Test DataPacket", true);
-
-        // Check if the correct information is printed to the console
-        String expectedOutput = "Scheduler: Packet received from: Floor Subsystem\n" +
-                "From host: " + scheduler.receivePacket.getAddress() + "\n" +
-                "Host port: " + scheduler.receivePacket.getPort() + "\n" +
-                "Length: " + scheduler.receivePacket.getLength() + "\n" +
-                "Containing: Test DataPacket\n";
-        assertEquals(expectedOutput, outContent.toString());
-    }
-    */
-    /**
-    @Test
-    void testClose() {
-        assertDoesNotThrow(() -> scheduler.close());
-        assertTrue(scheduler.sendSocket.isClosed());
-        assertTrue(scheduler.receiveSocket.isClosed());
-    }
-
-
 }
-*/

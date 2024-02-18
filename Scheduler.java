@@ -83,6 +83,7 @@ public class Scheduler implements Runnable {
      * Handles the IDLE state, waiting for the receive queue to fill up and then
      * sending data to the elevator.
      */
+
     private void idle() {
         while (receiveQueue.isEmpty()) {
             // Wait for the receive queue to fill up
@@ -118,6 +119,8 @@ public class Scheduler implements Runnable {
         }
     }
 
+
+
     /**
      * The main run method of the scheduler thread.
      */
@@ -127,4 +130,7 @@ public class Scheduler implements Runnable {
             execute();
         }
     }
+
+
+
 }
