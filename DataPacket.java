@@ -10,7 +10,7 @@ import java.time.LocalTime;
 public class DataPacket implements Serializable {
     private LocalTime time;
     private int floor;
-    private boolean up_direction;
+    private boolean goingUp;
     private int car;
     private boolean isEmpty;
     private boolean isFromFloor;
@@ -35,8 +35,8 @@ public class DataPacket implements Serializable {
     public DataPacket(String time, String floor, String direction, String car){
         this.time = LocalTime.parse(time);
         this.floor = Integer.parseInt(floor);
-        if(direction.equals("Up")){this.up_direction = true;}
-        else if (direction.equals("Down")) {this.up_direction = false;}
+        if(direction.equals("Up")){this.goingUp = true;}
+        else if (direction.equals("Down")) {this.goingUp = false;}
         this.car = Integer.parseInt(car);
         this.isEmpty = false;
     }
@@ -62,7 +62,7 @@ public class DataPacket implements Serializable {
      * @return boolean, car direction
      */
     public boolean getDirection() {
-        return this.up_direction;
+        return this.goingUp;
     }
 
     /**
@@ -110,7 +110,7 @@ public class DataPacket implements Serializable {
         return "DataPacket { \n" +
                 "\t time: " + this.time + "\n" +
                 "\t floor: " + this.floor + "\n" +
-                "\t directionIsUp: " + this.up_direction + "\n" +
+                "\t directionIsUp: " + this.goingUp + "\n" +
                 "\t carButton: " + this.car + "\n" +
                 "}\n";
     }
@@ -120,7 +120,7 @@ public class DataPacket implements Serializable {
         if (this == o) return true;
         final DataPacket that = (DataPacket) o;
         return (this.time.equals(that.time)) &&
-                (this.floor == that.floor) && (this.up_direction == that.up_direction) && (this.car == that.car);
+                (this.floor == that.floor) && (this.goingUp == that.goingUp) && (this.car == that.car);
     }
 
     /**
@@ -162,7 +162,7 @@ public class DataPacket implements Serializable {
             DataPacket temp = (DataPacket) in.readObject();
             this.time = temp.time;
             this.floor = temp.floor;
-            this.up_direction = temp.up_direction;
+            this.goingUp = temp.goingUp;
             this.car = temp.car;
             this.isFromFloor = temp.isFromFloor;
             in.close();
