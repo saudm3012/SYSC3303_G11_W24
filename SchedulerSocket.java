@@ -129,6 +129,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
         }
     }
 
+
     void receiveFromElevator(){
         // Construct a DatagramPacket for receiving packets up to 1024 bytes long (the length of the byte array).
         DataPacket receiveData = new DataPacket();
@@ -143,6 +144,9 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             System.exit(1);
         }
     }
+
+
+
 
     /**
      * Outputs sendPacket to the console
