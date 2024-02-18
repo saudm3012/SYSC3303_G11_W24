@@ -57,81 +57,51 @@ public class ElevatorStateTest {
      * @author Jatin Jain
      */
     @Test
-    public void testElevatorStateMachine(){
+    public void testElevatorStateMachine() {
 
         //Start at IDLE state
         assertTrue(elevator.state == ElevatorStates.IDLE);
 
         try {
             sendSocket.send(sendPacket);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
 
-        try {
             Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
 
-        //Wait for elevator to move to floor 1
-        assertTrue(elevator.state == ElevatorStates.MOVING);
-        assertTrue(elevator.currFloor == 1);
+            //Wait for elevator to move to floor 1
+            assertTrue(elevator.state == ElevatorStates.MOVING);
+            assertTrue(elevator.currFloor == 1);
 
-        try {
             Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
 
-        //Elevator moves 1 floor every 1 second
-        assertTrue(elevator.currFloor == 2);
+            //Elevator moves 1 floor every 1 second
+            assertTrue(elevator.currFloor == 2);
 
-        try {
             Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
 
-        //Reaches floor to load passenger
-        assertTrue(elevator.state == ElevatorStates.LOADING);
+            //Reaches floor to load passenger
+            assertTrue(elevator.state == ElevatorStates.LOADING);
 
-        try {
             Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
 
-        //moving towards destination floor
-        assertTrue(elevator.state == ElevatorStates.MOVING);
+            //moving towards destination floor
+            assertTrue(elevator.state == ElevatorStates.MOVING);
 
-        try {
             Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
 
-        // reaches destination floor then unloads
-        assertTrue(elevator.state == ElevatorStates.UNLOADING);
 
-        try {
+            // reaches destination floor then unloads
+            assertTrue(elevator.state == ElevatorStates.UNLOADING);
             Thread.sleep(2000);
+
+
+            //back to idle after opening/closing doors for 2 seconds
+            assertTrue(elevator.state == ElevatorStates.IDLE);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException(e);
         }
-
-        //back to idle after opening/closing doors for 2 seconds
-        assertTrue(elevator.state == ElevatorStates.IDLE);
-
+        }
     }
-
-}
 
 

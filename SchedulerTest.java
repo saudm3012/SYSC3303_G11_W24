@@ -1,60 +1,90 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.lang.reflect.Field;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-/**
- * @Author Riya Arora
- */
+import java.io.IOException;
+import java.net.*;
 
 public class SchedulerTest {
+    public static Scheduler schedulerObj;
+    DatagramSocket sendSocket;
+    private DataPacket data;
+    private DatagramPacket sendFloorPacket;
+    private DatagramPacket sendElevatorPacket;
 
-    @Test
-    void testSchedulerTransition() {
-        // Create an instance of the Scheduler
-        Scheduler scheduler = new Scheduler();
+    InetAddress localAddress;
 
-        // Use reflection to access the private field 'state' in the Scheduler class
+    /**
+     * Initialize the test harness.
+     * Creates a scheduler and DataPacket to send acting as the floor request and elevator reply
+     *
+     * @throws SocketException
+     */
+    @BeforeEach
+    public void setup() throws SocketException {
+        sendSocket = new DatagramSocket();
+        schedulerObj = new Scheduler();
+        //data to send as a DataPacket
+        data = new DataPacket("14:05:15.0", "2", "Up", "4");
+
+        byte[] sendDataBytes = new byte[0];
+
         try {
-            Field stateField = Scheduler.class.getDeclaredField("state");
-            stateField.setAccessible(true);
-
-            // Verify that the initial state is IDLE
-            SchedulerState initialState = (SchedulerState) stateField.get(scheduler);
-            System.out.println("[TEST]: Initial State: " + initialState);
-            assertEquals(SchedulerState.IDLE, initialState);
-
-            // Add a data packet to the receive queue
-            DataPacket dataPacket = new DataPacket("14:05:15.0", "2", "Up", "4");
-            scheduler.receiveQueueAdd(dataPacket);
-            System.out.println("[TEST]: Data Packet added to receive queue: " + dataPacket);
-
-            // Execute scheduler and verify that the state transitions to WAIT_ACK
-            scheduler.execute();
-            SchedulerState waitAckState = (SchedulerState) stateField.get(scheduler);
-            System.out.println("[TEST]: State after execute: " + waitAckState);
-
-            // Assert that the state transitions to WAIT_ACK
-            assertEquals(SchedulerState.WAIT_ACK, waitAckState);
-
-            // Add a delay to allow time for the system to progress
-            Thread.sleep(2000);  // Adjust the sleep duration as needed
-
-            // Add additional assertions or print statements to check if the packet is sent
-            System.out.println("[TEST]: Packet sent to elevator");
-
-            // Simulate the transition from WAIT_ACK to IDLE
-            scheduler.execute();
-            SchedulerState idleState = (SchedulerState) stateField.get(scheduler);
-            System.out.println("[TEST]: State after execute: " + idleState);
-
-            // Assert that the state transitions back to IDLE
-            assertEquals(SchedulerState.IDLE, idleState);
-
-        } catch (NoSuchFieldException | IllegalAccessException | InterruptedException e) {
+            sendDataBytes = data.dataPacketToBytes();
+        } catch (IOException e) {
             e.printStackTrace();
+            System.exit(1);
         }
+
+        try {
+            localAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        //DatagramPacket to send to elevator
+        sendFloorPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, localAddress, 5000);
+        sendElevatorPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, localAddress, 4999);
+
+        Thread scheduler =  new Thread(schedulerObj);
+        scheduler.start();
+    }
+
+    /**
+     * Tests scheduler state machine through all states.
+     * Sequence: Sends a packet to port 5000 acting as a request from floor
+     * Check for transition from idle to wait
+     * Sends a packet to port 4999 acting as a reply back from elevator
+     * Check for transition from wait to idle
+     *
+     * @author Jatin Jain
+     */
+    @Test
+    public void testElevatorStateMachine(){
+        try {
+            // Check if scheduler is in idle
+            assertTrue(schedulerObj.state == SchedulerState.IDLE);
+
+            //Send a packet to port 5000 to act like it comes from floor
+            sendSocket.send(sendFloorPacket);
+            Thread.sleep(1500);
+            assertTrue(schedulerObj.state == SchedulerState.WAIT_ACK);
+
+            //Send a packet to port 4999 to act like it comes from elevator
+            sendSocket.send(sendElevatorPacket);
+            Thread.sleep(1500);
+            assertTrue(schedulerObj.state == SchedulerState.IDLE);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
+
+
 

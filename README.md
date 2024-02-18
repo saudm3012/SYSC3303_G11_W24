@@ -45,6 +45,7 @@ Project has been developed and tested using IntelliJ
 - Download project and run the Main() class, actions that take place to show data transfer are displayed on console
 
 For testing Junit must be installed
+- To run tests run test files above
 
 ### Breakdown of Responsibilities
 * FloorSubsystem/FloorSocket - Zakariya

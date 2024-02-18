@@ -22,7 +22,7 @@ public class Scheduler implements Runnable {
     /**
      * The current state of the scheduler.
      */
-    private SchedulerState state = SchedulerState.IDLE;
+    public SchedulerState state = SchedulerState.IDLE;
 
     /**
      * Queue for storing received data packets.
