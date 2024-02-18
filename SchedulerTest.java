@@ -34,11 +34,23 @@ public class SchedulerTest {
             // Assert that the state transitions to WAIT_ACK
             assertEquals(SchedulerState.WAIT_ACK, waitAckState);
 
+            // Add a delay to allow time for the system to progress
+            Thread.sleep(2000);  // Adjust the sleep duration as needed
+
             // Add additional assertions or print statements to check if the packet is sent
             System.out.println("[TEST]: Packet sent to elevator");
 
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // Simulate the transition from WAIT_ACK to IDLE
+            scheduler.execute();
+            SchedulerState idleState = (SchedulerState) stateField.get(scheduler);
+            System.out.println("[TEST]: State after execute: " + idleState);
+
+            // Assert that the state transitions back to IDLE
+            assertEquals(SchedulerState.IDLE, idleState);
+
+        } catch (NoSuchFieldException | IllegalAccessException | InterruptedException e) {
             e.printStackTrace();
         }
     }
 }
+
