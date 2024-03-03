@@ -40,7 +40,7 @@ Test files
 * ElevatorStateTest - JUnit test class designed to test the state transitions of an Elevator object in an elevator system. The test focuses on the elevator state machine, simulating the process of receiving a request, moving to the specified floor, loading/unloading passengers, and returning to an idle state.
 * SchedulerTest - JUnit test case for the Scheduler to test if scheduler transitions from the IDLE state to the WAIT_ACK state correctly when a data packet is added to its receive queue and then the execute method is called
 
-### Set-up Instructions
+### Set-up Instructions (For Iteration 1)
 
 Instructions below for macOS Users (assuming no pre-installations have been done):
 
