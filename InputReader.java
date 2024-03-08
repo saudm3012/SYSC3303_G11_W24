@@ -65,7 +65,7 @@ public class InputReader {
             String floorButton = rowData.get(2);
             String carButton = rowData.get(3);
             cursor++;
-            return new FloorRequest(time, floor, floorButton, carButton);
+            return new FloorRequest(time, floor, floorButton, carButton, false);
         }
         // If we are at the end of the file, return null
         return null;
