@@ -89,12 +89,6 @@ public class Scheduler implements Runnable {
      */
 
     private void idle() {
-        /**
-        while (receiveQueue.isEmpty()) {
-            // Wait for the receive queue to fill up
-            sleep(1000);
-        }
-        */
         while(true) {
             if (socket.receiveFromElevator() == 1) {
                 this.state = SchedulerState.SELECT_REQ;
@@ -120,16 +114,8 @@ public class Scheduler implements Runnable {
     }
 
     private void select_request() {
-
-    }
-
-    /**
-     * Handles the WAIT_ACK state, receiving data from the elevator.
-     */
-    private void wait_ack() {
-        socket.receiveFromElevator();
-        sleep(100);
-        this.state = SchedulerState.IDLE;
+        // Give the current elevator a req/ multiple request or nothing.
+        //socket.sendToElevator(); whatever requests we want to give it
     }
 
     /**
@@ -140,10 +126,6 @@ public class Scheduler implements Runnable {
             case IDLE:
                 System.out.println("[SCHEDULER]: IDLE");
                 this.idle();
-                break;
-            case WAIT_ACK:
-                System.out.println("[SCHEDULER]: WAIT_ACK");
-                this.wait_ack();
                 break;
             case PROCESS_REQ:
                 System.out.println("[SCHEDULER]: PROCESS_REQ");
