@@ -34,7 +34,7 @@ class FloorSocketTest {
         sendReceiveSocket = new DatagramSocket();
 
         sub = new FloorSubsystem();
-        data = new FloorRequest("14:05:15.0","2" , "Up", "4"); //makes new packet with values
+        data = new FloorRequest("14:05:15.0","2" , "Up", "4", false); //makes new packet with values
 
     }
     /**

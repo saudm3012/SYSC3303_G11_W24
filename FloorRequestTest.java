@@ -20,7 +20,7 @@ class FloorRequestTest {
      */
     @BeforeEach
     void setUp() {
-        FloorRequest data = new FloorRequest("14:05:15.0","2" , "Up", "4"); //makes new packet with values
+        FloorRequest data = new FloorRequest("14:05:15.0","2" , "Up", "4", false); //makes new packet with values
     }
 
 
@@ -33,7 +33,7 @@ class FloorRequestTest {
 
     @Test
     void dataPacketToBytes() throws IOException {
-        FloorRequest data = new FloorRequest("14:05:15.0","2" , "Up", "4"); //makes new packet with values
+        FloorRequest data = new FloorRequest("14:05:15.0","2" , "Up", "4", false); //makes new packet with values
         byte[] packet;
         packet = data.dataPacketToBytes(); //converting data to bytes
         FloorRequest data_2 = new FloorRequest();

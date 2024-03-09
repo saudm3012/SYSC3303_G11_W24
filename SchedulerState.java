@@ -1,3 +1,3 @@
 public enum SchedulerState {
-    IDLE, WAIT_ACK
+    IDLE, PROCESS_REQ, SELECT_REQ
 }

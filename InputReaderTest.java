@@ -22,7 +22,7 @@ class InputReaderTest {
      */
     @BeforeEach
     void setUp() {
-        data = new FloorRequest("14:05:15.0","2" , "Up", "4");
+        data = new FloorRequest("14:05:15.0","2" , "Up", "4", false);
 
     }
     /**

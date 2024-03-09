@@ -28,6 +28,9 @@ public class Scheduler implements Runnable {
      * Queue for storing received data packets.
      */
     Queue<FloorRequest> receiveQueue;
+    Queue<FloorRequest> upQueue;
+    Queue<FloorRequest> downQueue;
+    FloorRequest endPacket;
 
     /**
      * The constructor for this class.
@@ -35,6 +38,7 @@ public class Scheduler implements Runnable {
     public Scheduler() {
         socket = new SchedulerSocket(this);
         receiveQueue = new LinkedList<>();
+        endPacket = new FloorRequest("","","","",true);
     }
 
     /**
@@ -85,22 +89,33 @@ public class Scheduler implements Runnable {
      */
 
     private void idle() {
-        while (receiveQueue.isEmpty()) {
-            // Wait for the receive queue to fill up
-            sleep(1000);
+        while(true) {
+            if (socket.receiveFromElevator() == 1) {
+                this.state = SchedulerState.SELECT_REQ;
+                break;
+            } else {
+                if (!receiveQueue.isEmpty()) {
+                    sleep(100);
+                    this.state = SchedulerState.PROCESS_REQ;
+                    break;
+                }
+            }
         }
-        sleep(100);
-        socket.sendToElevator(receiveQueue.remove());
-        this.state = SchedulerState.WAIT_ACK;
     }
 
-    /**
-     * Handles the WAIT_ACK state, receiving data from the elevator.
-     */
-    private void wait_ack() {
-        socket.receiveFromElevator();
-        sleep(100);
+    private void process_request() {
+        FloorRequest currentReq = receiveQueue.remove();
+        if(currentReq.isUp()){
+            upQueue.add(currentReq);
+        } else {
+            downQueue.add(currentReq);
+        }
         this.state = SchedulerState.IDLE;
+    }
+
+    private void select_request() {
+        // Give the current elevator a req/ multiple request or nothing.
+        //socket.sendToElevator(); whatever requests we want to give it
     }
 
     /**
@@ -112,9 +127,13 @@ public class Scheduler implements Runnable {
                 System.out.println("[SCHEDULER]: IDLE");
                 this.idle();
                 break;
-            case WAIT_ACK:
-                System.out.println("[SCHEDULER]: WAIT_ACK");
-                this.wait_ack();
+            case PROCESS_REQ:
+                System.out.println("[SCHEDULER]: PROCESS_REQ");
+                this.process_request();
+                break;
+            case SELECT_REQ:
+                System.out.println("[SCHEDULER] SELECT_REQ");
+                this.select_request();
                 break;
         }
     }

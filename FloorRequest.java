@@ -13,6 +13,7 @@ public class FloorRequest implements Serializable {
     private int car;
     private boolean isEmpty;
     private boolean isFromFloor;
+    private boolean endPacket;
 
     /**
      * Creates a new empty Data packet.
@@ -20,6 +21,7 @@ public class FloorRequest implements Serializable {
     public FloorRequest() {
         this.isEmpty = true;
         this.isFromFloor = false;
+        this.endPacket = false;
     }
 
     /**
@@ -31,13 +33,14 @@ public class FloorRequest implements Serializable {
      * @param direction String, car direction
      * @param car       String, requested car number
      */
-    public FloorRequest(String time, String floor, String direction, String car){
+    public FloorRequest(String time, String floor, String direction, String car, boolean end){
         this.time = LocalTime.parse(time);
         this.floor = Integer.parseInt(floor);
         if(direction.equals("Up")){this.goingUp = true;}
         else if (direction.equals("Down")) {this.goingUp = false;}
         this.car = Integer.parseInt(car);
         this.isEmpty = false;
+        this.endPacket = end;
     }
 
     /**
@@ -55,6 +58,12 @@ public class FloorRequest implements Serializable {
     public int getFloor() {
         return this.floor;
     }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isUp() { return this.goingUp;}
 
     /**
      *

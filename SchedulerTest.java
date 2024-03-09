@@ -28,7 +28,7 @@ public class SchedulerTest {
         sendSocket = new DatagramSocket();
         schedulerObj = new Scheduler();
         //data to send as a DataPacket
-        data = new FloorRequest("14:05:15.0", "2", "Up", "4");
+        data = new FloorRequest("14:05:15.0", "2", "Up", "4", false);
 
         byte[] sendDataBytes = new byte[0];
 

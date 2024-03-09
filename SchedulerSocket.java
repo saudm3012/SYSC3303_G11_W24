@@ -26,6 +26,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             // receive UDP Datagram packets from floor subsystem and elevators.
             floorReceiveSocket = new DatagramSocket(5000);
             elevatorReceiveSocket = new DatagramSocket(4999);
+            elevatorReceiveSocket.setSoTimeout(1000);
 
         } catch (SocketException se) {
             se.printStackTrace();
@@ -129,7 +130,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
     }
 
 
-    void receiveFromElevator(){
+    int receiveFromElevator() {
         // Construct a DatagramPacket for receiving packets up to 1024 bytes long (the length of the byte array).
         FloorRequest receiveData = new FloorRequest();
         byte receiveDataBytes[] = new byte[0];
@@ -139,9 +140,13 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             // Block until a datagram is received via sendReceiveSocket.
             elevatorReceiveSocket.receive(receivePacket);
         } catch (IOException e) {
+            if(e instanceof SocketTimeoutException){
+                return 0;
+            }
             e.printStackTrace();
             System.exit(1);
         }
+        return 1;
     }
 
 
