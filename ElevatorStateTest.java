@@ -70,10 +70,10 @@ import junit.framework.TestCase;
         assertTrue(elevator.getCurrState() == ElevatorStates.NOTIFY);
 
         try {
-            Thread.sleep(10);
+            Thread.sleep(1);
             // Send a floor request
             sendSocket.send(sendPacket);
-            Thread.sleep(10);
+            Thread.sleep(1);
             sendSocket.send(sendEndPacket);
             Thread.sleep(10);
             assertTrue(elevator.getCurrState() == ElevatorStates.MOVING);
@@ -93,7 +93,7 @@ import junit.framework.TestCase;
             // Elevator moves 1 floor towards drop-off
             assertTrue(elevator.getCurrState() == ElevatorStates.MOVING);
             // wait to move floor
-            Thread.sleep(2010);
+            Thread.sleep(2001);
             assertTrue(elevator.currFloor == 3);
             // elevator should notify we reached a new floor
             assertTrue(elevator.getCurrState() == ElevatorStates.NOTIFY);
@@ -101,7 +101,7 @@ import junit.framework.TestCase;
             Thread.sleep(10);
             //Elevator moves 1 floor towards drop-off
             assertTrue(elevator.getCurrState() == ElevatorStates.MOVING);
-            Thread.sleep(2010);
+            Thread.sleep(2001);
             assertTrue(elevator.currFloor == 4);
             // elevator should notify we reached a new floor
             assertTrue(elevator.getCurrState() == ElevatorStates.NOTIFY);
