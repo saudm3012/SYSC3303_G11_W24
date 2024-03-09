@@ -132,7 +132,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
 
     int receiveFromElevator() {
         // Construct a DatagramPacket for receiving packets up to 1024 bytes long (the length of the byte array).
-        FloorRequest receiveData = new FloorRequest();
+        ElevatorData incoming_elev_data = new ElevatorData();
         byte receiveDataBytes[] = new byte[0];
         receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
 
@@ -146,6 +146,14 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             e.printStackTrace();
             System.exit(1);
         }
+
+        try {
+            incoming_elev_data.bytesToDataPacket(receivePacket.getData());
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        scheduler.setElevatorData(incoming_elev_data);
         return 1;
     }
 

@@ -9,8 +9,11 @@
  * @author Riya Arora (101190033)
  */
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.List;
+import java.util.Iterator;
 
 public class Scheduler implements Runnable {
 
@@ -28,9 +31,10 @@ public class Scheduler implements Runnable {
      * Queue for storing received data packets.
      */
     Queue<FloorRequest> receiveQueue;
-    Queue<FloorRequest> upQueue;
-    Queue<FloorRequest> downQueue;
-    FloorRequest endPacket;
+    List<FloorRequest> upQueue;
+    List<FloorRequest> downQueue;
+    FloorRequest elevatorEndPacket;
+    ElevatorData elevatorData;
 
     /**
      * The constructor for this class.
@@ -38,7 +42,9 @@ public class Scheduler implements Runnable {
     public Scheduler() {
         socket = new SchedulerSocket(this);
         receiveQueue = new LinkedList<>();
-        endPacket = new FloorRequest("","","","",true);
+        upQueue = new ArrayList<>();
+        downQueue = new ArrayList<>();
+        elevatorEndPacket = new FloorRequest("14:05:15","0","0","0",true);
     }
 
     /**
@@ -83,6 +89,8 @@ public class Scheduler implements Runnable {
         receiveQueue.add(data);
     }
 
+    public void setElevatorData(ElevatorData data) {this.elevatorData = data;}
+
     /**
      * Handles the IDLE state, waiting for the receive queue to fill up and then
      * sending data to the elevator.
@@ -116,6 +124,28 @@ public class Scheduler implements Runnable {
     private void select_request() {
         // Give the current elevator a req/ multiple request or nothing.
         //socket.sendToElevator(); whatever requests we want to give it
+        if(elevatorData.isEmpty()){
+            //Give it any request
+            if(upQueue.size() > downQueue.size()){
+                socket.sendToElevator(upQueue.removeFirst());
+            } else {
+                socket.sendToElevator(downQueue.removeFirst());
+            }
+        } else if(elevatorData.isUp()){
+            for(int i=0;i<upQueue.size();i++){
+                if(upQueue.get(i).getFloor() == elevatorData.getFloor()){
+                    socket.sendToElevator(upQueue.remove(i));
+                }
+            }
+        } else {
+            for(int i=0;i<downQueue.size();i++){
+                if(downQueue.get(i).getFloor() == elevatorData.getFloor()){
+                    socket.sendToElevator(downQueue.remove(i));
+                }
+            }
+        }
+        socket.sendToElevator(elevatorEndPacket);
+        this.state = SchedulerState.IDLE;
     }
 
     /**
