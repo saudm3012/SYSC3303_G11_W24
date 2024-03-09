@@ -157,7 +157,6 @@ public class Elevator extends Thread {
      */
     private void notifyScheduler() {
         FloorRequest floorRequest;
-        boolean pickUp = false;
 
         elevatorData.setIsEmpty(isEmpty()&!hasPickUpRequest());
         elevatorData.setDirection(direction);
@@ -169,8 +168,8 @@ public class Elevator extends Thread {
                 if (!floorRequest.isEnd()){
                     // Add the passangers destination floor to the floor buttons counter
                     elevatorButtons[floorRequest.getCarButton()-1] = true;
-                    // check if the passenger is waiting on the current floor
-                    if (floorRequest.getFloor() == currFloor) pickUp = true;
+                    // update the pickupFloor array
+                    pickUpFloor[floorRequest.getFloor()-1] = true;
                 } else {
                     break;
                 }
