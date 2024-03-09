@@ -17,8 +17,8 @@ import junit.framework.TestCase;
          * Called before every test case method.
          */
         protected void setUp() {
-            //create new elevator that listens on port 2005
-            elevator = new Elevator(5,5);
+            //create new elevator that listens on port 2006
+            elevator = new Elevator(6,5);
             try {
                 sendSocket = new DatagramSocket();
             } catch (SocketException e) {
@@ -47,8 +47,8 @@ import junit.framework.TestCase;
             }
 
             //DatagramPacket to send to elevator
-            sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, 2005);
-            sendEndPacket = new DatagramPacket(endDataBytes, endDataBytes.length, elevatorAddress, 2005);
+            sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, 2006);
+            sendEndPacket = new DatagramPacket(endDataBytes, endDataBytes.length, elevatorAddress, 2006);
 
             elevator.start();
         }

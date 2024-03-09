@@ -24,7 +24,7 @@ public class Scheduler implements Runnable {
     /**
      * The socket responsible for communication with elevators.
      */
-    private SchedulerSocket socket;
+    public SchedulerSocket socket;
 
     /**
      * The current state of the scheduler.
