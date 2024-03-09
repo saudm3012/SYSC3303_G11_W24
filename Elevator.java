@@ -19,20 +19,25 @@ public class Elevator extends Thread {
     // The current state of the elevator.
     public ElevatorStates state;
 
-    // Queue for receiving data packets.
+    // Queue for receiving data packets from scheduler.
     private Queue<FloorRequest> receiveQueue;
 
     // Flag indicating whether the elevator is ascending or not.
-    private boolean ascending;
+    private Direction direction;
 
     // The current floor of the elevator.
     public int currFloor;
 
-    // The floor request data packet.
-    private FloorRequest floorRequest;
+    // The elevators current data
+    private ElevatorData elevatorData;
 
-    // Queue for storing the next floors to visit
-    private Queue<Integer> nextFloorQueue;
+    private int numFloors;
+
+    /*
+     *  An array representing floor buttons (true is pressed false otherwise)
+     *  Each index represents the floor-1
+     */ 
+    private boolean floorButtons[];
 
     // Flag to control printing of state.
     private boolean printLatch;
@@ -42,13 +47,16 @@ public class Elevator extends Thread {
      *
      * @param elevatorNum The elevator number.
      */
-    public Elevator(int elevatorNum) {
+    public Elevator(int elevatorNum, int numFloors) {
         this.socket = new ElevatorSocket(2000 + elevatorNum, this);
         this.receiveQueue = new LinkedList<>();
-        this.nextFloorQueue = new LinkedList<>();
-        this.state = ElevatorStates.IDLE;
+        this.state = ElevatorStates.NOTIFY;
         this.currFloor = 1;
         this.printLatch = true;
+        this.direction = Direction.UP;
+        this.numFloors = numFloors;
+        this.floorButtons = new boolean[numFloors];
+        this.elevatorData = new ElevatorData(currFloor, direction, true);
     }
 
     /**
@@ -58,8 +66,6 @@ public class Elevator extends Thread {
      */
     public void processData(FloorRequest receivedData) {
         this.receiveQueue.add(receivedData);
-        // send data back to scheduler
-        // socket.send(receivedData);
     }
 
     /**
@@ -91,7 +97,7 @@ public class Elevator extends Thread {
     private void printCurrentFloor() {
         System.out.print("[ELEVATOR]: Reached Floor: ");
         System.out.print(currFloor);
-        System.out.println(" Direction: " + (ascending ? "UP" : "DOWN"));
+        System.out.println(" Direction: " + (direction==Direction.UP ? "UP" : "DOWN"));
     }
 
     /**
@@ -100,6 +106,19 @@ public class Elevator extends Thread {
     private void printState() {
         System.out.println("[ELEVATOR]: " + state);
         printLatch = false;
+    }
+
+    /**
+     * Returns if the elevator is empty or not
+     * @return true if empty false otherwise
+     */
+    private boolean isEmpty() {
+        for (boolean buttonPressed : floorButtons){
+            if (buttonPressed){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -113,26 +132,43 @@ public class Elevator extends Thread {
     }
 
     /**
-     * Handles the idle state of the elevator.
+     * Handles the NOTIFY state of the elevator.
      */
-    private void idle() {
-        // read and parse the next instruction from scheduler in the receive queue
-        sleep(100);
-        if (!receiveQueue.isEmpty()) {
-            floorRequest = receiveQueue.remove();
-            // Add the passangers floor to the destination queue
-            nextFloorQueue.add((Integer) floorRequest.getFloor());
-            // Add the passengers destination to the destination queue
-            nextFloorQueue.add((Integer) floorRequest.getCarButton());
-            // the instruction is to move to a floor change to moving state
-            state = ElevatorStates.MOVING;
-            printLatch = true;
-        } else if (!nextFloorQueue.isEmpty()) {
-            // if theres no instruction but theres a destination keep moving
-            state = ElevatorStates.MOVING;
-            printLatch = true;
+    private void notifyScheduler() {
+        FloorRequest floorRequest;
+        boolean pickUp = false;
+
+        elevatorData.setIsEmpty(isEmpty());
+        elevatorData.setDirection(direction);
+        elevatorData.setFloor(currFloor);
+        socket.send(elevatorData);
+        while (true){ 
+            if (!receiveQueue.isEmpty()) {
+                floorRequest = receiveQueue.remove();
+                if (!floorRequest.isEnd()){
+                    // Add the passangers destination floor to the floor buttons counter
+                    floorButtons[floorRequest.getCarButton()-1] = true;
+                    // check if the passenger is waiting on the current floor
+                    if (floorRequest.getFloor() == currFloor) pickUp = true;
+                } else {
+                    break;
+                }
+            }
         }
-        // stay idle otherwise
+        printLatch = true;
+        state = (pickUp) ? ElevatorStates.LOADING : ElevatorStates.CHECK;
+    }
+
+    /**
+     * Handles the CHECK state of the elevator.
+     */
+    private void checkButtons() {
+        if (!isEmpty()) {
+            state = ElevatorStates.MOVING;
+        } else{
+            state = ElevatorStates.NOTIFY;
+        }
+        printLatch = true;
     }
 
     /**
@@ -140,22 +176,23 @@ public class Elevator extends Thread {
      */
     private void move() {
         // move to next floor
-        sleep(1000); // TODO Traveling between floors should be 2 seconds
-        if (currFloor < nextFloorQueue.peek()) {
-            ascending = true;
+        sleep(2000); // Traveling between floors is 2 seconds
+        if (direction == Direction.UP) {
             currFloor++;
             printCurrentFloor();
-        } else if (currFloor > nextFloorQueue.peek()) {
-            ascending = false;
+        } else {
             currFloor--;
             printCurrentFloor();
-        } else {
-            // we have reached the destination
-            nextFloorQueue.remove();
-            // change the state to load/unload
-            state = (nextFloorQueue.isEmpty()) ? ElevatorStates.UNLOADING : ElevatorStates.LOADING;
-            printLatch = true;
+        } 
+        if (currFloor == numFloors) {
+            // reached the top floor, change direction
+            direction = Direction.DOWN;
+        } else if (currFloor == 1) {
+            // reached the bottom floor, change direction
+            direction = Direction.UP;
         }
+        state = (floorButtons[currFloor-1]) ? ElevatorStates.UNLOADING : ElevatorStates.NOTIFY;
+        printLatch = true;
     }
 
     /**
@@ -164,7 +201,7 @@ public class Elevator extends Thread {
     private void load() {
         // opening and closing door
         openCloseDoors();
-        state = ElevatorStates.MOVING;
+        state = ElevatorStates.CHECK;
         printLatch = true;
     }
 
@@ -173,10 +210,9 @@ public class Elevator extends Thread {
      */
     private void unload() {
         // opening and closing door
-        openCloseDoors();
-        // let scheduler know we have fulfilled a floor request
-        socket.send(floorRequest);
-        state = ElevatorStates.IDLE;
+        openCloseDoors();   
+        floorButtons[currFloor-1] = false; // update floor button
+        state = ElevatorStates.NOTIFY;
         printLatch = true;
     }
 
@@ -187,10 +223,15 @@ public class Elevator extends Thread {
         socket.start();
         while (true) {
             switch (state) {
-                case IDLE:
+                case NOTIFY:
                     if (printLatch)
                         printState();
-                    idle();
+                    notifyScheduler();
+                    break;
+                case CHECK:
+                    if (printLatch)
+                        printState();
+                    checkButtons();
                     break;
                 case MOVING:
                     if (printLatch)
@@ -208,7 +249,7 @@ public class Elevator extends Thread {
                 default:
                     if (printLatch)
                         printState();
-                    idle();
+                    notifyScheduler();
             }
         }
     }
