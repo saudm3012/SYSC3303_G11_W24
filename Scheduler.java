@@ -173,9 +173,10 @@ public class Scheduler implements Runnable {
         this.state = SchedulerState.IDLE;
     }
 
-    private synchronized void select_request() {
+    private void select_request() {
         // Give the current elevator a req/ multiple request or nothing.
         //socket.sendToElevator(); whatever requests we want to give it
+        sleep(10);
         ElevatorData elevatorData = elevatorQueueRemove();
         if(elevatorData.isEmpty()){
             //Give it any request
