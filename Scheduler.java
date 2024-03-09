@@ -9,6 +9,10 @@
  * @author Riya Arora (101190033)
  */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -41,6 +45,17 @@ public class Scheduler implements Runnable {
      */
     public Scheduler() {
         socket = new SchedulerSocket(this);
+        receiveQueue = new LinkedList<>();
+        upQueue = new ArrayList<>();
+        downQueue = new ArrayList<>();
+        elevatorEndPacket = new FloorRequest();
+    }
+
+    /**
+     * The constructor for this class when running on seperate machines.
+     */
+    public Scheduler(String elevatorAddress) {
+        socket = new SchedulerSocket(this, elevatorAddress);
         receiveQueue = new LinkedList<>();
         upQueue = new ArrayList<>();
         downQueue = new ArrayList<>();
@@ -168,8 +183,6 @@ public class Scheduler implements Runnable {
         }
     }
 
-
-
     /**
      * The main run method of the scheduler thread.
      */
@@ -180,6 +193,22 @@ public class Scheduler implements Runnable {
         }
     }
 
-
+    public static void main (String args[]) throws IOException {
+        String elevatorAddress = "";
+        BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
+        InetAddress schedulerAddress;
+        try {
+            schedulerAddress = InetAddress.getLocalHost();
+            System.out.println("Scheduler's Address is " + schedulerAddress.getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        System.out.println("Enter the Elevators IP address: ");
+        elevatorAddress = inputReader.readLine();
+        inputReader.close();
+        Thread scheduler =  new Thread(new Scheduler(elevatorAddress));
+        scheduler.start();
+    }
 
 }
