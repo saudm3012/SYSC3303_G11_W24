@@ -75,7 +75,7 @@ public class ElevatorSubsystem extends Thread{
         System.out.println("Enter the Schedulers IP address: ");
         schedulerAddress = inputReader.readLine();
         inputReader.close();
-        Thread elevatorSubystem = new ElevatorSubsystem(5,1, schedulerAddress);
+        Thread elevatorSubystem = new ElevatorSubsystem(5,3, schedulerAddress);
         elevatorSubystem.start();
     }
  }

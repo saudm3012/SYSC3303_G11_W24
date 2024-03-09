@@ -138,7 +138,7 @@ public class ElevatorSocket extends Thread
         try {
             receiveData.bytesToDataPacket(receiveDataBytes);
             // log the received datagram.
-            printReceivingInfo(receiveData.toString());
+            if (!receiveData.isEnd()) printReceivingInfo(receiveData.toString());
             elevator.processData(receiveData);
         } catch(IOException e){
             e.printStackTrace();
@@ -152,6 +152,7 @@ public class ElevatorSocket extends Thread
       public void closeSockets() {
         // We're finished, so close the sockets.
         this.sendReceiveSocket.close();
+        System.exit(1);
     }
 
     public void run() {
