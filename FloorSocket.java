@@ -7,6 +7,8 @@ public class FloorSocket extends Thread
    private DatagramPacket sendPacket, receivePacket; // packet sent and received 
    private DatagramSocket sendReceiveSocket; // socket at which data is sent or received
    private FloorSubsystem floorSubsystem; // System which will process the received data
+   private InetAddress schedulerAddress;
+   private final int SCHEDULER_PORT = 5000;
 
     /**
      * The constructor for this class.
@@ -23,6 +25,36 @@ public class FloorSocket extends Thread
             se.printStackTrace();
             System.exit(1);
          }
+         try {
+            schedulerAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+         this.floorSubsystem = floorSubsystem; 
+    }
+
+      /**
+     * The constructor for this class.
+     */
+    public FloorSocket (FloorSubsystem floorSubsystem, String schedulerAddress) {
+        try {
+            // Construct a datagram socket and bind it to any available 
+            // port on the local host machine. This socket will be used to
+            // send UDP Datagram packets.
+            sendReceiveSocket = new DatagramSocket();
+            
+            //receiveSocket.setSoTimeout(2000);
+         } catch (SocketException se) {
+            se.printStackTrace();
+            System.exit(1);
+         }
+         try {
+            this.schedulerAddress = InetAddress.getByName(schedulerAddress);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
          this.floorSubsystem = floorSubsystem; 
     }
 
@@ -60,7 +92,6 @@ public class FloorSocket extends Thread
     public void send(FloorRequest objToSend) {
         // serialize data into byte array
         byte[] sendDataBytes = new byte[0];
-        objToSend.setFromFloor();
         try{
             sendDataBytes = objToSend.dataPacketToBytes();
         } catch(IOException e){
@@ -70,13 +101,8 @@ public class FloorSocket extends Thread
 
         // Construct a datagram packet that is to be sent to port 5000 (scheduler)
         // on a specified host.
-        try {
-            sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length,
-                                            InetAddress.getLocalHost(), 5000);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, schedulerAddress, SCHEDULER_PORT);
+
 
         // log the datagram packet to be sent
         printSendingInfo(objToSend.toString());

@@ -6,6 +6,10 @@
  * @author Mohammad Saud 101195172
  */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.util.*;
 
 public class FloorSubsystem implements Runnable
@@ -19,6 +23,15 @@ public class FloorSubsystem implements Runnable
      */
     public FloorSubsystem () {
         socket = new FloorSocket(this);
+        inputQueue = new LinkedList<>();
+        inputData = new ArrayList<>();
+    }
+
+    /**
+     * The constructor for this class. Used when running on seperate machines
+     */
+    public FloorSubsystem (String schedulerAddress) {
+        socket = new FloorSocket(this, schedulerAddress);
         inputQueue = new LinkedList<>();
         inputData = new ArrayList<>();
     }
@@ -65,5 +78,26 @@ public class FloorSubsystem implements Runnable
             }
         }
 
+    }
+    public static void main (String args[]) throws IOException {
+        String schedulerAddress = "";
+        BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
+        InetAddress floorAddress;
+        InputReader datafile = new InputReader("data.txt");
+        FloorSubsystem floorSubsystem = new FloorSubsystem(schedulerAddress);
+        Thread floorThread = new Thread(floorSubsystem); 
+        try {
+            floorAddress = InetAddress.getLocalHost();
+            System.out.println("FloorSubsytem's Address is " + floorAddress.getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        System.out.println("Enter the Scheduler's IP address: ");
+        schedulerAddress = inputReader.readLine();
+        while(floorSubsystem.addPacketToQueue(datafile.getNextPacket())){};
+        floorSubsystem.addPacketToQueue(datafile.getNextPacket()); 
+        inputReader.close();
+        floorThread.start();
     }
 }

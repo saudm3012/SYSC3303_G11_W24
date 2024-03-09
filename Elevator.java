@@ -69,6 +69,24 @@ public class Elevator extends Thread {
     }
 
     /**
+     * The constructor for this class when running on seperate machines.
+     *
+     * @param elevatorNum The elevator number.
+     */
+    public Elevator(int elevatorNum, int numFloors, String schedulerAddress ) {
+        this.socket = new ElevatorSocket(2000 + elevatorNum, this, schedulerAddress);
+        this.receiveQueue = new LinkedList<>();
+        this.state = ElevatorStates.NOTIFY;
+        this.currFloor = 1;
+        this.printLatch = true;
+        this.direction = Direction.UP;
+        this.numFloors = numFloors;
+        this.elevatorButtons = new boolean[numFloors];
+        this.pickUpFloor = new boolean[numFloors];
+        this.elevatorData = new ElevatorData(currFloor, direction, true, elevatorNum);
+    }
+
+    /**
      * Processes the received data packet.
      *
      * @param receivedData The data packet received.

@@ -7,6 +7,8 @@ public class ElevatorSocket extends Thread
    private DatagramPacket sendPacket, receivePacket; // packet sent and received 
    private DatagramSocket sendReceiveSocket; // socket at which data is sent or received
    private Elevator elevator; // System which will process the received data
+   private InetAddress schedulerAddress;
+   private final int SCHEDULER_PORT = 4999;
 
     /**
      * The constructor for this class.
@@ -23,6 +25,36 @@ public class ElevatorSocket extends Thread
             se.printStackTrace();
             System.exit(1);
          }
+         try {
+            schedulerAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+         this.elevator = elevator; 
+    }
+
+    /**
+     * The constructor for this class.
+     */
+    public ElevatorSocket (int port, Elevator elevator, String schedulerAddress) {
+        try {
+            // Construct a datagram socket and bind it to 2000 + elevator num
+            // port on the local host machine. This socket will be used to
+            // send UDP Datagram packets.
+            sendReceiveSocket = new DatagramSocket(port);
+            
+            //receiveSocket.setSoTimeout(2000);
+         } catch (SocketException se) {
+            se.printStackTrace();
+            System.exit(1);
+         }
+        try {
+            this.schedulerAddress = InetAddress.getByName(schedulerAddress);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
          this.elevator = elevator; 
     }
 
@@ -67,15 +99,11 @@ public class ElevatorSocket extends Thread
             System.exit(1);
         } 
 
-        // Construct a datagram packet that is to be sent to port 5000 (scheduler)
+        // Construct a datagram packet that is to be sent to port 4999 (scheduler)
         // on a specified host.
-        try {
-            sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length,
-                                            InetAddress.getLocalHost(), 4999);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+
+            sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, schedulerAddress, SCHEDULER_PORT);
+
 
         // log the datagram packet to be sent
         printSendingInfo(objToSend.toString());
