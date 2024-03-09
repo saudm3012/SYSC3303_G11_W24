@@ -122,7 +122,7 @@ public class Elevator extends Thread {
      * Prints the current floor information.
      */
     private void printCurrentFloor() {
-        System.out.print("[ELEVATOR]: Reached Floor: ");
+        System.out.print("[ELEVATOR"+ elevatorData.getElevatorNum()+"]: Reached Floor: ");
         System.out.print(currFloor);
         System.out.println(" Direction: " + (direction==Direction.UP ? "UP" : "DOWN"));
     }
@@ -131,7 +131,7 @@ public class Elevator extends Thread {
      * Prints the current state information.
      */
     private void printState() {
-        System.out.println("[ELEVATOR]: " + state);
+        System.out.println("[ELEVATOR-"+ + elevatorData.getElevatorNum() + "]: " + state);
         printLatch = false;
     }
 
@@ -165,10 +165,10 @@ public class Elevator extends Thread {
      * Prints door opening and closing while mimicing their timings.
      */
     private void openCloseDoors() {
-        System.out.println("[ELEVATOR]: Door Opening");
-        sleep(1000); // TODO should be 6 seconds
-        System.out.println("[ELEVATOR]: Door Closing");
-        sleep(1000); // TODO should be 6 seconds
+        System.out.println("[ELEVATOR-" + elevatorData.getElevatorNum() + "]: Door Opening");
+        sleep(3000); 
+        System.out.println("[ELEVATOR-" + elevatorData.getElevatorNum() + "]: Door Closing");
+        sleep(3000); 
     }
 
     /**

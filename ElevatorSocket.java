@@ -62,7 +62,7 @@ public class ElevatorSocket extends Thread
      * Outputs sendPacket to the console
      */
     private void printSendingInfo(String dataPacket){
-       System.out.println("\nElevator: Sending packet:");
+       System.out.println("\nElevator-"+sendReceiveSocket.getLocalPort()%2000+": Sending packet:");
        System.out.println("To host: " + sendPacket.getAddress());
        System.out.println("Destination host port: " + sendPacket.getPort());
        int len = sendPacket.getLength();
@@ -75,7 +75,7 @@ public class ElevatorSocket extends Thread
      * Outputs receivePacket to the console
      */
     private void printReceivingInfo(String dataPacket){
-       System.out.println("\nElevator: Packet received:");
+       System.out.println("\nElevator-"+sendReceiveSocket.getLocalPort()%2000+": Packet received:");
        System.out.println("From host: " + receivePacket.getAddress());
        System.out.println("Host port: " + receivePacket.getPort());
        int len = receivePacket.getLength();
