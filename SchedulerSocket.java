@@ -10,8 +10,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
     private Scheduler scheduler;
     InetAddress floorAddress;
     InetAddress elevatorAddress;
-    private int elevatorPort;
-    private int floorPort;
+    private final int ELEVATOR_PORT = 2000;
 
 
     public SchedulerSocket(Scheduler scheduler){
@@ -39,7 +38,6 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             e.printStackTrace();
             System.exit(1);
         }
-        elevatorPort = 2000;
         this.scheduler = scheduler;
     }
 
@@ -71,10 +69,10 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
 
         // Construct a datagram packet that is to be sent to either floor subsystem or
         // elevator.
-        sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, 2000+elevatorNum);
+        sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, ELEVATOR_PORT+elevatorNum);
 
         // log the datagram packet to be sent
-        printSendingInfo(packet.toString(), packet.isFromFloor());
+        printSendingInfo(packet.toString(), false);
 
         // Send the datagram packet to the server via the send/receive socket.
         try {
@@ -114,18 +112,12 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
         try {
             receiveData.bytesToDataPacket(receiveDataBytes);
             // log the received datagram.
-            printReceivingInfo(receiveData.toString(), receiveData.isFromFloor());
+            printReceivingInfo(receiveData.toString(), true);
             // add to receive queue
             scheduler.receiveQueueAdd(receiveData);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
-        }
-
-        // get IP and port info from floor (necessary for the first transmission)
-        if (receiveData.isFromFloor()) {
-            floorAddress = receivePacket.getAddress();
-            floorPort = receivePacket.getPort();
         }
     }
 

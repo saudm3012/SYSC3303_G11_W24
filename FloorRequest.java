@@ -12,7 +12,6 @@ public class FloorRequest implements Serializable {
     private boolean goingUp;
     private int car;
     private boolean isEmpty;
-    private boolean isFromFloor;
     private boolean endPacket;
 
     /**
@@ -20,7 +19,6 @@ public class FloorRequest implements Serializable {
      */
     public FloorRequest() {
         this.isEmpty = true;
-        this.isFromFloor = false;
         this.endPacket = true;
     }
 
@@ -96,28 +94,6 @@ public class FloorRequest implements Serializable {
     }
 
     /**
-     *
-     * @return boolean, true if was sent by floor subsystem, false otherwise.
-     */
-    public boolean isFromFloor() {
-        return this.isFromFloor;
-    }
-
-    /**
-     * set isFromFloor to true
-     */
-    public void setFromFloor() {
-        this.isFromFloor = true;
-    }
-    
-    /**
-     * set isFromFloor to false
-     */
-    public void setFromElevator() {
-        this.isFromFloor = false;
-    }
-
-    /**
      * @return String, all fields of Dataacket in String representation
      */
     public String toString() {
@@ -178,7 +154,6 @@ public class FloorRequest implements Serializable {
             this.floor = temp.floor;
             this.goingUp = temp.goingUp;
             this.car = temp.car;
-            this.isFromFloor = temp.isFromFloor;
             this.endPacket = temp.endPacket;
             in.close();
         } catch (ClassNotFoundException e) {

@@ -60,7 +60,6 @@ public class FloorSocket extends Thread
     public void send(FloorRequest objToSend) {
         // serialize data into byte array
         byte[] sendDataBytes = new byte[0];
-        objToSend.setFromFloor();
         try{
             sendDataBytes = objToSend.dataPacketToBytes();
         } catch(IOException e){
