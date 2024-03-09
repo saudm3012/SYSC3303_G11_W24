@@ -178,11 +178,11 @@ public class Elevator extends Thread {
             }
         }
         printLatch = true;
-        state = ElevatorStates.PROCESS;
+        state = ElevatorStates.PROCESSING;
     }
 
     /**
-     * Handles the PROCESS state of the elevator.
+     * Handles the PROCESSING state of the elevator.
      */
     private void processRequests() {
         if (elevatorButtons[currFloor-1] || pickUpFloor[currFloor-1]){
@@ -242,7 +242,7 @@ public class Elevator extends Thread {
         openCloseDoors();
         elevatorButtons[currFloor-1] = false; // update floor button
         pickUpFloor[currFloor-1] = false; // update pickup requests
-        state = ElevatorStates.PROCESS;
+        state = ElevatorStates.PROCESSING;
         printLatch = true;
     }
 
@@ -258,7 +258,7 @@ public class Elevator extends Thread {
                         printState();
                     notifyScheduler();
                     break;
-                case PROCESS:
+                case PROCESSING:
                     if (printLatch)
                         printState();
                     processRequests();

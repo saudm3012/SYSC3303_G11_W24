@@ -1,3 +1,3 @@
 public enum ElevatorStates {
-    NOTIFY, PROCESS, MOVING, IDLE
+    NOTIFY, PROCESSING, MOVING, IDLE
 }
