@@ -152,6 +152,7 @@ public class ElevatorSocket extends Thread
       public void closeSockets() {
         // We're finished, so close the sockets.
         this.sendReceiveSocket.close();
+        System.exit(1);
     }
 
     public void run() {
