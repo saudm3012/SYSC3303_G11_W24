@@ -34,10 +34,17 @@ public class Elevator extends Thread {
     private int numFloors;
 
     /*
-     *  An array representing floor buttons (true is pressed false otherwise)
+     *  An array representing the elevator floor buttons (true is pressed false otherwise)
      *  Each index represents the floor-1
      */ 
-    private boolean floorButtons[];
+    private boolean elevatorButtons[];
+
+    /*
+     *  An array representing the floors in which a passenger is waiting to be picked up
+     *  Each index represents the floor-1
+     */ 
+    private boolean pickUpFloor[];
+
 
     // Flag to control printing of state.
     private boolean printLatch;
@@ -55,7 +62,8 @@ public class Elevator extends Thread {
         this.printLatch = true;
         this.direction = Direction.UP;
         this.numFloors = numFloors;
-        this.floorButtons = new boolean[numFloors];
+        this.elevatorButtons = new boolean[numFloors];
+        this.pickUpFloor = new boolean[numFloors];
         this.elevatorData = new ElevatorData(currFloor, direction, true);
     }
 
@@ -109,11 +117,24 @@ public class Elevator extends Thread {
     }
 
     /**
+     * Returns if the elevator is servicing a pick up request or not
+     * @return true if if servicing false otherwise
+     */
+    private boolean hasPickUpRequest() {
+        for (boolean request : pickUpFloor){
+            if (request){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns if the elevator is empty or not
-     * @return true if empty false otherwise
+     * @return true if elevator is empty false otherwise
      */
     private boolean isEmpty() {
-        for (boolean buttonPressed : floorButtons){
+        for (boolean buttonPressed : elevatorButtons){
             if (buttonPressed){
                 return false;
             }
@@ -138,7 +159,7 @@ public class Elevator extends Thread {
         FloorRequest floorRequest;
         boolean pickUp = false;
 
-        elevatorData.setIsEmpty(isEmpty());
+        elevatorData.setIsEmpty(isEmpty()&!hasPickUpRequest());
         elevatorData.setDirection(direction);
         elevatorData.setFloor(currFloor);
         socket.send(elevatorData);
@@ -147,7 +168,7 @@ public class Elevator extends Thread {
                 floorRequest = receiveQueue.remove();
                 if (!floorRequest.isEnd()){
                     // Add the passangers destination floor to the floor buttons counter
-                    floorButtons[floorRequest.getCarButton()-1] = true;
+                    elevatorButtons[floorRequest.getCarButton()-1] = true;
                     // check if the passenger is waiting on the current floor
                     if (floorRequest.getFloor() == currFloor) pickUp = true;
                 } else {
@@ -156,16 +177,32 @@ public class Elevator extends Thread {
             }
         }
         printLatch = true;
-        state = (pickUp) ? ElevatorStates.LOADING : ElevatorStates.CHECK;
+        state = ElevatorStates.PROCESS;
     }
 
     /**
-     * Handles the CHECK state of the elevator.
+     * Handles the PROCESS state of the elevator.
      */
-    private void checkButtons() {
-        if (!isEmpty()) {
+    private void processRequests() {
+        if (elevatorButtons[currFloor-1] || pickUpFloor[currFloor-1]){
+            state = ElevatorStates.IDLE;
+        } else if (!isEmpty()) {
+            // have passengers to service
             state = ElevatorStates.MOVING;
-        } else{
+        } else if (hasPickUpRequest()) {
+            // we dont have a passenger but need to pick them up
+            // see if we need to change direction to get them
+            int destFloor = 0;
+            for (int idx = 0; idx < numFloors; idx++){
+                if (pickUpFloor[idx]){
+                    destFloor = idx + 1;
+                    break;
+                }
+            }
+            direction = (destFloor > currFloor) ? Direction.UP: Direction.DOWN;
+            state = ElevatorStates.MOVING;
+        }
+        else {
             state = ElevatorStates.NOTIFY;
         }
         printLatch = true;
@@ -191,28 +228,19 @@ public class Elevator extends Thread {
             // reached the bottom floor, change direction
             direction = Direction.UP;
         }
-        state = (floorButtons[currFloor-1]) ? ElevatorStates.UNLOADING : ElevatorStates.NOTIFY;
+        state = ElevatorStates.NOTIFY;
         printLatch = true;
     }
 
     /**
      * Handles the load state of the elevator.
      */
-    private void load() {
+    private void idle() {
         // opening and closing door
         openCloseDoors();
-        state = ElevatorStates.CHECK;
-        printLatch = true;
-    }
-
-    /**
-     * Handles the unload state of the elevator.
-     */
-    private void unload() {
-        // opening and closing door
-        openCloseDoors();   
-        floorButtons[currFloor-1] = false; // update floor button
-        state = ElevatorStates.NOTIFY;
+        elevatorButtons[currFloor-1] = false; // update floor button
+        pickUpFloor[currFloor-1] = false; // update pickup requests
+        state = ElevatorStates.PROCESS;
         printLatch = true;
     }
 
@@ -228,23 +256,19 @@ public class Elevator extends Thread {
                         printState();
                     notifyScheduler();
                     break;
-                case CHECK:
+                case PROCESS:
                     if (printLatch)
                         printState();
-                    checkButtons();
+                    processRequests();
                     break;
                 case MOVING:
                     if (printLatch)
                         printState();
                     move();
                     break;
-                case LOADING:
+                case IDLE:
                     printState();
-                    load();
-                    break;
-                case UNLOADING:
-                    printState();
-                    unload();
+                    idle();
                     break;
                 default:
                     if (printLatch)
