@@ -59,7 +59,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
     }
 
 
-    void sendToElevator(FloorRequest packet) {
+    void sendToElevator(FloorRequest packet, int elevatorNum) {
         // serialize data into byte array
         byte[] sendDataBytes = new byte[0];
         try {
@@ -71,7 +71,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
 
         // Construct a datagram packet that is to be sent to either floor subsystem or
         // elevator.
-        sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, elevatorPort);
+        sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, 2000+elevatorNum);
 
         // log the datagram packet to be sent
         printSendingInfo(packet.toString(), packet.isFromFloor());

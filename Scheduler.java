@@ -127,24 +127,24 @@ public class Scheduler implements Runnable {
         if(elevatorData.isEmpty()){
             //Give it any request
             if(upQueue.size() > downQueue.size()){
-                socket.sendToElevator(upQueue.removeFirst());
+                socket.sendToElevator(upQueue.removeFirst(), elevatorData.getElevatorNum());
             } else {
-                socket.sendToElevator(downQueue.removeFirst());
+                socket.sendToElevator(downQueue.removeFirst(), elevatorData.getElevatorNum());
             }
         } else if(elevatorData.isUp()){
             for(int i=0;i<upQueue.size();i++){
                 if(upQueue.get(i).getFloor() == elevatorData.getFloor()){
-                    socket.sendToElevator(upQueue.remove(i));
+                    socket.sendToElevator(upQueue.remove(i), elevatorData.getElevatorNum());
                 }
             }
         } else {
             for(int i=0;i<downQueue.size();i++){
                 if(downQueue.get(i).getFloor() == elevatorData.getFloor()){
-                    socket.sendToElevator(downQueue.remove(i));
+                    socket.sendToElevator(downQueue.remove(i), elevatorData.getElevatorNum());
                 }
             }
         }
-        socket.sendToElevator(elevatorEndPacket);
+        socket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
         this.state = SchedulerState.IDLE;
     }
 
