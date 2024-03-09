@@ -65,51 +65,54 @@ import junit.framework.TestCase;
         /**
          * Tests the behavior of the Traffic Light state machine when a pedestrian arrives early.
          */
-        public void testEarlyPedestrian() {
-        //Start at IDLE state
-        assertTrue(elevator.state == ElevatorStates.STOP);
+        public void testElevator() {
+        //Start at NOTIFY state
+        assertTrue(elevator.getCurrState() == ElevatorStates.NOTIFY);
 
         try {
+            Thread.sleep(10);
+            // Send a floor request
             sendSocket.send(sendPacket);
-            Thread.sleep(1000);
+            Thread.sleep(10);
             sendSocket.send(sendEndPacket);
-
-
-            Thread.sleep(1000);
-            sendSocket.send(sendEndPacket);
-            //Wait for elevator to move to floor 1
-            assertTrue(elevator.state == ElevatorStates.MOVING);
+            Thread.sleep(10);
+            assertTrue(elevator.getCurrState() == ElevatorStates.MOVING);
             assertTrue(elevator.currFloor == 1);
 
-            Thread.sleep(1000);
-            sendSocket.send(sendEndPacket);
-
-            //Elevator moves 1 floor every 1 second
+            // Wait for elevator to move to floor 1
+            Thread.sleep(2010);
             assertTrue(elevator.currFloor == 2);
-
-            Thread.sleep(1000);
+            // elevator should notfiy we reached a new floor
+            assertTrue(elevator.getCurrState() == ElevatorStates.NOTIFY);
             sendSocket.send(sendEndPacket);
-
-            //Reaches floor to load passenger
-            assertTrue(elevator.state == ElevatorStates.STOP);
-
-            Thread.sleep(2000);
+            Thread.sleep(10);
+            // We are at the floor to pickup passenger so we should stop
+            assertTrue(elevator.getCurrState() == ElevatorStates.STOP);
+            // wait for doors to close
+            Thread.sleep(6010);
+            // Elevator moves 1 floor towards drop-off
+            assertTrue(elevator.getCurrState() == ElevatorStates.MOVING);
+            // wait to move floor
+            Thread.sleep(2010);
+            assertTrue(elevator.currFloor == 3);
+            // elevator should notify we reached a new floor
+            assertTrue(elevator.getCurrState() == ElevatorStates.NOTIFY);
             sendSocket.send(sendEndPacket);
-
-            //moving towards destination floor
-            assertTrue(elevator.state == ElevatorStates.MOVING);
-
-            Thread.sleep(3000);
+            Thread.sleep(10);
+            //Elevator moves 1 floor towards drop-off
+            assertTrue(elevator.getCurrState() == ElevatorStates.MOVING);
+            Thread.sleep(2010);
+            assertTrue(elevator.currFloor == 4);
+            // elevator should notify we reached a new floor
+            assertTrue(elevator.getCurrState() == ElevatorStates.NOTIFY);
             sendSocket.send(sendEndPacket);
-
-            // reaches destination floor then unloads
-            assertTrue(elevator.state == ElevatorStates.STOP);
-            Thread.sleep(2000);
-            sendSocket.send(sendEndPacket);
-
-
-            //back to idle after opening/closing doors for 2 seconds
-            assertTrue(elevator.state == ElevatorStates.STOP);
+            Thread.sleep(10);
+            // we are at the destination floor so we should let the passenger off
+            assertTrue(elevator.getCurrState() == ElevatorStates.STOP);
+            // wait for doors to close
+            Thread.sleep(6030);
+            // Elevator should notify of no requests to handle
+            assertTrue(elevator.getCurrState() == ElevatorStates.NOTIFY);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

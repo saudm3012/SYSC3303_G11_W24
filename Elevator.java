@@ -18,7 +18,7 @@ public class Elevator extends Thread {
     private ElevatorSocket socket;
 
     // The current state of the elevator.
-    public ElevatorStates state;
+    private ElevatorStates state;
 
     // Queue for receiving data packets from scheduler.
     private Queue<FloorRequest> receiveQueue;
@@ -133,6 +133,13 @@ public class Elevator extends Thread {
     private void printState() {
         System.out.println("[ELEVATOR-"+ + elevatorData.getElevatorNum() + "]: " + state);
         printLatch = false;
+    }
+
+    /**
+     * returns the current state of the elevator.
+     */
+    public ElevatorStates getCurrState() {
+       return state;
     }
 
     /**
