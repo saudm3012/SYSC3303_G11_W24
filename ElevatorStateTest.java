@@ -63,7 +63,7 @@ import junit.framework.TestCase;
         }
     
         /**
-         * Tests the behavior of the Traffic Light state machine when a pedestrian arrives early.
+         * Tests the behavior of the Elevator state machine
          */
         public void testElevator() {
         //Start at NOTIFY state
