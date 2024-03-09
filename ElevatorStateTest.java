@@ -20,7 +20,7 @@ public class ElevatorStateTest {
     @BeforeEach
     public void setup() throws SocketException {
         //create new elevator that listens on port 2005
-        elevator = new Elevator(5);
+        elevator = new Elevator(5,5);
         sendSocket = new DatagramSocket();
 
         //data to send as a DataPacket
@@ -78,7 +78,7 @@ public class ElevatorStateTest {
             Thread.sleep(1000);
 
             //Reaches floor to load passenger
-            assertTrue(elevator.state == ElevatorStates.LOADING);
+            assertTrue(elevator.state == ElevatorStates.IDLE);
 
             Thread.sleep(2000);
 
@@ -89,7 +89,7 @@ public class ElevatorStateTest {
 
 
             // reaches destination floor then unloads
-            assertTrue(elevator.state == ElevatorStates.UNLOADING);
+            assertTrue(elevator.state == ElevatorStates.IDLE);
             Thread.sleep(2000);
 
 

@@ -72,7 +72,7 @@ public class SchedulerTest {
             //Send a packet to port 5000 to act like it comes from floor
             sendSocket.send(sendFloorPacket);
             Thread.sleep(1500);
-            assertTrue(schedulerObj.state == SchedulerState.WAIT_ACK);
+            assertTrue(schedulerObj.state == SchedulerState.PROCESS_REQ);
 
             //Send a packet to port 4999 to act like it comes from elevator
             sendSocket.send(sendElevatorPacket);

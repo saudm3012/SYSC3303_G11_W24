@@ -202,6 +202,7 @@ public class Elevator extends Thread {
             state = ElevatorStates.MOVING;
         }
         else {
+            sleep(10);
             state = ElevatorStates.NOTIFY;
         }
         printLatch = true;
