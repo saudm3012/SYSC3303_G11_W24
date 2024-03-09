@@ -10,6 +10,7 @@ public class ElevatorData implements Serializable {
     private int floor;
     private Direction direction;
     private boolean isEmpty;
+    private int elevatorNum;
 
 
     /**
@@ -28,10 +29,11 @@ public class ElevatorData implements Serializable {
      * @param direction Direction, elevator direction
      * @param isEmpty   boolean, if elevator is empty or not
      */
-    public ElevatorData(int floor, Direction direction, boolean empty) {
+    public ElevatorData(int floor, Direction direction, boolean empty, int elevatorNum) {
         this.floor = floor;
         this.direction = direction;
         this.isEmpty = empty;
+        this.elevatorNum = elevatorNum;
     }
 
     public boolean isEmpty() {
@@ -54,6 +56,10 @@ public class ElevatorData implements Serializable {
         return floor;
     }
 
+    public int getElevatorNum() {
+        return elevatorNum;
+    }
+
     public void setIsEmpty(boolean isEmpty) {
         this.isEmpty = isEmpty;
     }
@@ -74,6 +80,7 @@ public class ElevatorData implements Serializable {
                 "\t Floor: " + this.floor + "\n" +
                 "\t Direction: " + ((this.isUp()) ? "UP" : "DOWN") + "\n" +
                 "\t isEmpty: " + ((this.isEmpty) ? "True" : "False") + "\n" +
+                "\t ElevatorNum: " + this.elevatorNum + "\n" +
                 "}\n";
     }
 
@@ -125,6 +132,7 @@ public class ElevatorData implements Serializable {
             this.direction = temp.direction;
             this.floor = temp.floor;
             this.isEmpty = temp.isEmpty;
+            this.elevatorNum = temp.elevatorNum;
             in.close();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

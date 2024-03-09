@@ -65,7 +65,7 @@ public class Elevator extends Thread {
         this.numFloors = numFloors;
         this.elevatorButtons = new boolean[numFloors];
         this.pickUpFloor = new boolean[numFloors];
-        this.elevatorData = new ElevatorData(currFloor, direction, true);
+        this.elevatorData = new ElevatorData(currFloor, direction, true, elevatorNum);
     }
 
     /**
