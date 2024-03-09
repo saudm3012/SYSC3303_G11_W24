@@ -75,7 +75,11 @@ public class SchedulerElevatorSocket extends Thread implements  AutoCloseable{
         sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, ELEVATOR_PORT+elevatorNum);
 
         // log the datagram packet to be sent
-        if (!packet.isEnd()) printSendingInfo(packet.toString());
+        if (!packet.isEnd()) {
+            printSendingInfo(packet.toString());
+        } else {
+            System.out.println("[SCHEDULER]: SENDING END PACKET to ELEVATOR-" + elevatorNum + "\n");
+        }
 
         // Send the datagram packet to the server via the send/receive socket.
         try {
