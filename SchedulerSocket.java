@@ -186,7 +186,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
      * Outputs sendPacket to the console
      */
     void printSendingInfo(String dataPacket, boolean isToFloor) {
-        System.out.println("\nScheduler: Sending packet to: " + (isToFloor ? "Elevator" : "Floor Subsystem"));
+        System.out.println("\nScheduler: Sending packet to: " + (isToFloor ? "Floor Subsystem": "Elevator"));
         System.out.println("To host: " + sendPacket.getAddress());
         System.out.println("Destination host port: " + sendPacket.getPort());
         int len = sendPacket.getLength();

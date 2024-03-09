@@ -204,7 +204,7 @@ public class Elevator extends Thread {
      */
     private void processRequests() {
         if (elevatorButtons[currFloor-1] || pickUpFloor[currFloor-1]){
-            state = ElevatorStates.IDLE;
+            state = ElevatorStates.STOP;
         } else if (!isEmpty()) {
             // have passengers to service
             state = ElevatorStates.MOVING;
@@ -253,9 +253,9 @@ public class Elevator extends Thread {
     }
 
     /**
-     * Handles the load state of the elevator.
+     * Handles the stop state of the elevator.
      */
-    private void idle() {
+    private void elevatorStop() {
         // opening and closing door
         openCloseDoors();
         elevatorButtons[currFloor-1] = false; // update floor button
@@ -286,9 +286,9 @@ public class Elevator extends Thread {
                         printState();
                     move();
                     break;
-                case IDLE:
+                case STOP:
                     printState();
-                    idle();
+                    elevatorStop();
                     break;
                 default:
                     if (printLatch)

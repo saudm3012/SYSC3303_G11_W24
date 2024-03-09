@@ -97,7 +97,7 @@ public class FloorRequest implements Serializable {
      * @return String, all fields of Dataacket in String representation
      */
     public String toString() {
-        return (!endPacket) ? "DataPacket { \n" +
+        return (!endPacket) ? "FloorRequest { \n" +
                 "\t time: " + this.time + "\n" +
                 "\t floor: " + this.floor + "\n" +
                 "\t directionIsUp: " + this.goingUp + "\n" +
