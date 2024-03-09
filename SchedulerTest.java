@@ -12,6 +12,9 @@ public class SchedulerTest {
     public static Scheduler schedulerObj;
     DatagramSocket sendSocket;
     private FloorRequest data;
+
+    private ElevatorData elevatorData;
+
     private DatagramPacket sendFloorPacket;
     private DatagramPacket sendElevatorPacket;
 
@@ -29,11 +32,20 @@ public class SchedulerTest {
         schedulerObj = new Scheduler();
         //data to send as a DataPacket
         data = new FloorRequest("14:05:15.0", "2", "Up", "4", false);
+        elevatorData = new ElevatorData(1, Direction.UP, true, 10);
 
         byte[] sendDataBytes = new byte[0];
+        byte[] sendElevatorDataBytes = new byte[0];
 
         try {
             sendDataBytes = data.dataPacketToBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        try {
+            sendElevatorDataBytes = elevatorData.dataPacketToBytes();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -48,7 +60,7 @@ public class SchedulerTest {
 
         //DatagramPacket to send to elevator
         sendFloorPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, localAddress, 5000);
-        sendElevatorPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, localAddress, 4999);
+        sendElevatorPacket = new DatagramPacket(sendElevatorDataBytes, sendElevatorDataBytes.length, localAddress, 4999);
 
         Thread scheduler =  new Thread(schedulerObj);
         scheduler.start();
@@ -66,18 +78,23 @@ public class SchedulerTest {
     @Test
     public void testElevatorStateMachine(){
         try {
+
+
             // Check if scheduler is in idle
             assertTrue(schedulerObj.state == SchedulerState.IDLE);
 
             //Send a packet to port 5000 to act like it comes from floor
             sendSocket.send(sendFloorPacket);
-            System.out.println(schedulerObj.state);
+            Thread.sleep(100);
+            assertTrue(!schedulerObj.receiveQueueIsEmpty());
+            System.out.println("PASS");
 
             //Send a packet to port 4999 to act like it comes from elevator
+            Thread.sleep(1500);
             sendSocket.send(sendElevatorPacket);
             Thread.sleep(1500);
-            assertTrue(schedulerObj.state == SchedulerState.IDLE);
 
+            assertTrue(schedulerObj.state == SchedulerState.IDLE);
 
         } catch (IOException e) {
             e.printStackTrace();
