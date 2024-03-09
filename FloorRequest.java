@@ -67,6 +67,12 @@ public class FloorRequest implements Serializable {
 
     /**
      *
+     * @return
+     */
+    public boolean isEnd() { return this.endPacket;}
+
+    /**
+     *
      * @return boolean, car direction
      */
     public boolean getDirection() {
