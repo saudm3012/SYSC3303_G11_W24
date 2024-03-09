@@ -74,7 +74,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
         sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, 2000+elevatorNum);
 
         // log the datagram packet to be sent
-        printSendingInfo(packet.toString(), packet.isFromFloor());
+        printSendingInfo(packet.toString(), false);
 
         // Send the datagram packet to the server via the send/receive socket.
         try {

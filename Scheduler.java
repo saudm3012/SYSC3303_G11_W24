@@ -126,18 +126,29 @@ public class Scheduler implements Runnable {
         //socket.sendToElevator(); whatever requests we want to give it
         if(elevatorData.isEmpty()){
             //Give it any request
-            if(upQueue.size() > downQueue.size()){
+            if(upQueue.size() > downQueue.size() && !upQueue.isEmpty()){
                 socket.sendToElevator(upQueue.removeFirst(), elevatorData.getElevatorNum());
-            } else {
+            } else if(!downQueue.isEmpty()) {
                 socket.sendToElevator(downQueue.removeFirst(), elevatorData.getElevatorNum());
+            } else {
+                socket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
+                return;
             }
         } else if(elevatorData.isUp()){
+            if(upQueue.isEmpty()){
+                socket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
+                return;
+            }
             for(int i=0;i<upQueue.size();i++){
                 if(upQueue.get(i).getFloor() == elevatorData.getFloor()){
                     socket.sendToElevator(upQueue.remove(i), elevatorData.getElevatorNum());
                 }
             }
         } else {
+            if(downQueue.isEmpty()){
+                socket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
+                return;
+            }
             for(int i=0;i<downQueue.size();i++){
                 if(downQueue.get(i).getFloor() == elevatorData.getFloor()){
                     socket.sendToElevator(downQueue.remove(i), elevatorData.getElevatorNum());
