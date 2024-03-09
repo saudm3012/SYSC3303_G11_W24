@@ -122,7 +122,7 @@ public class Elevator extends Thread {
      * Prints the current floor information.
      */
     private void printCurrentFloor() {
-        System.out.print("[ELEVATOR"+ elevatorData.getElevatorNum()+"]: Reached Floor: ");
+        System.out.print("[ELEVATOR-"+ elevatorData.getElevatorNum()+"]: Reached Floor: ");
         System.out.print(currFloor);
         System.out.println(" Direction: " + (direction==Direction.UP ? "UP" : "DOWN"));
     }

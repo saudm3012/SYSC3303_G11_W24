@@ -29,7 +29,7 @@ public class ElevatorSubsystem extends Thread{
       * @param numElevators the number of elevators in the system
       * @param schedulerAddress the address of the scheduler
       */
-      public ElevatorSubsystem(int numFloors, int numElevators, String schedulerAddress) {
+      public ElevatorSubsystem(int numFloors, int numElevators, String schedulerAddress){
         elevatorList = new Elevator[numElevators];
         
         //Initialize the elevators
@@ -57,8 +57,16 @@ public class ElevatorSubsystem extends Thread{
          System.out.println("ELEVATOR SUBSYSTEM: " + message);
      }
      public void run() {
-        for (Elevator e: elevatorList) {
-			e.start();
+        for (Elevator elevator: elevatorList) {
+
+            try{
+                Thread.sleep(1000);
+            }
+            catch (InterruptedException e){
+                e.printStackTrace();
+                System.exit(0);
+            }
+			elevator.start();
 		}
     }
     public static void main (String args[]) throws IOException {

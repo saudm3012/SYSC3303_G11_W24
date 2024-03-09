@@ -79,18 +79,17 @@ public class SchedulerTest {
     public void testElevatorStateMachine(){
         try {
 
+            assertTrue(schedulerObj.receiveQueueIsEmpty());
 
             // Check if scheduler is in idle
             assertTrue(schedulerObj.state == SchedulerState.IDLE);
 
             //Send a packet to port 5000 to act like it comes from floor
             sendSocket.send(sendFloorPacket);
-            Thread.sleep(100);
-            assertTrue(!schedulerObj.receiveQueueIsEmpty());
-            System.out.println("PASS");
-
+            Thread.sleep(500);
+            assertTrue(!schedulerObj.receiveUpQueueIsEmpty());
             //Send a packet to port 4999 to act like it comes from elevator
-            Thread.sleep(1500);
+            Thread.sleep(1000);
             sendSocket.send(sendElevatorPacket);
             Thread.sleep(1500);
 
