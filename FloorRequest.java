@@ -21,7 +21,7 @@ public class FloorRequest implements Serializable {
     public FloorRequest() {
         this.isEmpty = true;
         this.isFromFloor = false;
-        this.endPacket = false;
+        this.endPacket = true;
     }
 
     /**
@@ -121,12 +121,12 @@ public class FloorRequest implements Serializable {
      * @return String, all fields of Dataacket in String representation
      */
     public String toString() {
-        return "DataPacket { \n" +
+        return (!endPacket) ? "DataPacket { \n" +
                 "\t time: " + this.time + "\n" +
                 "\t floor: " + this.floor + "\n" +
                 "\t directionIsUp: " + this.goingUp + "\n" +
                 "\t carButton: " + this.car + "\n" +
-                "}\n";
+                "}\n": "End DataPacket\n";
     }
 
     @Override
@@ -179,6 +179,7 @@ public class FloorRequest implements Serializable {
             this.goingUp = temp.goingUp;
             this.car = temp.car;
             this.isFromFloor = temp.isFromFloor;
+            this.endPacket = temp.endPacket;
             in.close();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

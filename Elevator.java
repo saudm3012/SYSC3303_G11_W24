@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Elevator extends Thread {
+
     // communicator helper thread to send and receive data
     private ElevatorSocket socket;
 
@@ -22,7 +23,7 @@ public class Elevator extends Thread {
     // Queue for receiving data packets from scheduler.
     private Queue<FloorRequest> receiveQueue;
 
-    // Flag indicating whether the elevator is ascending or not.
+    // Direction of the Elevator
     private Direction direction;
 
     // The current floor of the elevator.
@@ -162,7 +163,8 @@ public class Elevator extends Thread {
         elevatorData.setDirection(direction);
         elevatorData.setFloor(currFloor);
         socket.send(elevatorData);
-        while (true){ 
+        while (true){
+            sleep(1);
             if (!receiveQueue.isEmpty()) {
                 floorRequest = receiveQueue.remove();
                 if (!floorRequest.isEnd()){
