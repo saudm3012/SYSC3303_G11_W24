@@ -112,7 +112,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             System.exit(1);
         }
 
-        System.out.println("Scheduler: Packet sent.\n");
+        System.out.println("Scheduler: Packet sent to [ELEVATOR-" + elevatorNum + "] .\n");
         sleep(100);
 
     }
@@ -175,6 +175,8 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             e.printStackTrace();
             System.exit(1);
         }
+        System.out.print("[SCHEDULER]: Received request from Elevator-"+ incoming_elev_data.getElevatorNum()+"\n");
+
         scheduler.setElevatorData(incoming_elev_data);
         return 1;
     }
