@@ -59,6 +59,7 @@ public class ElevatorSubsystem extends Thread{
      public void run() {
         for (Elevator elevator: elevatorList) {
 
+
             try{
                 Thread.sleep(1000);
             }

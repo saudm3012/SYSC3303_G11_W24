@@ -1,21 +1,16 @@
+
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.*;
-
-public class SchedulerSocket extends Thread implements  AutoCloseable{
+public class SchedulerElevatorSocket extends Thread implements  AutoCloseable{
+    DatagramSocket elevatorReceiveSocket;
+    InetAddress elevatorAddress;
+    DatagramSocket sendSocket;
+    Scheduler scheduler;
     DatagramPacket sendPacket;
     DatagramPacket receivePacket;
-    DatagramSocket sendSocket;
-    DatagramSocket floorReceiveSocket;
-    DatagramSocket elevatorReceiveSocket;
-    private Scheduler scheduler;
-    InetAddress elevatorAddress;
     private final int ELEVATOR_PORT = 2000;
-
-
-    /*
-     * The Constructor of this class.
-     */
-    public SchedulerSocket(Scheduler scheduler){
+    public SchedulerElevatorSocket(Scheduler scheduler){
         try {
             // Construct a datagram socket and bind it to any available
             // port on the local host machine. This socket will be used to
@@ -25,9 +20,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             // Construct a datagram socket and bind it to port 5000
             // on the local host machine. This socket will be used to
             // receive UDP Datagram packets from floor subsystem and elevators.
-            floorReceiveSocket = new DatagramSocket(5000);
-            elevatorReceiveSocket = new DatagramSocket(4999);
-            elevatorReceiveSocket.setSoTimeout(10);
+            elevatorReceiveSocket = new DatagramSocket(4998);
 
         } catch (SocketException se) {
             se.printStackTrace();
@@ -41,10 +34,8 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
         }
         this.scheduler = scheduler;
     }
-    /*
-     * The Constructor of this class. Used when running on seperate machnines to get IP address.
-     */
-    public SchedulerSocket(Scheduler scheduler, String elevatorAddress){
+
+    public SchedulerElevatorSocket(Scheduler scheduler, String elevatorAddress){
         try {
             // Construct a datagram socket and bind it to any available
             // port on the local host machine. This socket will be used to
@@ -54,9 +45,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             // Construct a datagram socket and bind it to port 5000
             // on the local host machine. This socket will be used to
             // receive UDP Datagram packets from floor subsystem and elevators.
-            floorReceiveSocket = new DatagramSocket(5000);
             elevatorReceiveSocket = new DatagramSocket(4999);
-            elevatorReceiveSocket.setSoTimeout(100);
 
         } catch (SocketException se) {
             se.printStackTrace();
@@ -70,22 +59,6 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
         }
         this.scheduler = scheduler;
     }
-
-    /**
-     * Issue a sleep
-     *
-     * @param ms time in milliseconds
-     */
-    void sleep(int ms) {
-        // Slow things down (wait 5 seconds)
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
 
     void sendToElevator(FloorRequest packet, int elevatorNum) {
         // serialize data into byte array
@@ -102,7 +75,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
         sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, ELEVATOR_PORT+elevatorNum);
 
         // log the datagram packet to be sent
-        if (!packet.isEnd()) printSendingInfo(packet.toString(), false);
+        if (!packet.isEnd()) printSendingInfo(packet.toString());
 
         // Send the datagram packet to the server via the send/receive socket.
         try {
@@ -113,44 +86,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
         }
 
         System.out.println("Scheduler: Packet sent to [ELEVATOR-" + elevatorNum + "] .\n");
-        sleep(100);
-
     }
-
-    /**
-     * Receive on receiveSocket
-     */
-    void receive() {
-        //System.out.println("Inside receive method");
-
-        // Construct a DatagramPacket for receiving packets up to 1024 bytes long (the length of the byte array).
-        FloorRequest receiveData = new FloorRequest();
-        byte receiveDataBytes[] = new byte[1024];
-        receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
-
-        //System.out.println("Before receiving packet");
-
-        try {
-            // Block until a datagram is received via sendReceiveSocket.
-            floorReceiveSocket.receive(receivePacket);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-        // convert received data and have the elevator process it
-        try {
-            receiveData.bytesToDataPacket(receiveDataBytes);
-            // log the received datagram.
-            printReceivingInfo(receiveData.toString(), true);
-            // add to receive queue
-            scheduler.receiveQueueAdd(receiveData);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
 
     int receiveFromElevator() {
         // Construct a DatagramPacket for receiving packets up to 1024 bytes long (the length of the byte array).
@@ -175,36 +111,19 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             e.printStackTrace();
             System.exit(1);
         }
-        System.out.print("[SCHEDULER]: Received request from Elevator-"+ incoming_elev_data.getElevatorNum()+"\n");
-
-        //scheduler.setElevatorData(incoming_elev_data);
+        System.out.print("[SCHEDULER]: Received request from ELEVATOR-" + incoming_elev_data.getElevatorNum()+"\n");
+        scheduler.elevatorQueueAdd(incoming_elev_data);
         return 1;
     }
-
-
-
 
     /**
      * Outputs sendPacket to the console
      */
-    void printSendingInfo(String dataPacket, boolean isToFloor) {
-        System.out.println("\nScheduler: Sending packet to: " + (isToFloor ? "Floor Subsystem": "Elevator"));
+    void printSendingInfo(String dataPacket) {
+        System.out.println("\nScheduler: Sending packet to: Elevator");
         System.out.println("To host: " + sendPacket.getAddress());
         System.out.println("Destination host port: " + sendPacket.getPort());
         int len = sendPacket.getLength();
-        System.out.println("Length: " + len);
-        System.out.print("Containing: ");
-        System.out.println(dataPacket);
-    }
-
-    /**
-     * Outputs receivePacket to the console
-     */
-    void printReceivingInfo(String dataPacket, boolean isFromFloor) {
-        System.out.println("\nScheduler: Packet received from: " + (isFromFloor ? "Floor Subsystem" : "Elevator"));
-        System.out.println("From host: " + receivePacket.getAddress());
-        System.out.println("Host port: " + receivePacket.getPort());
-        int len = receivePacket.getLength();
         System.out.println("Length: " + len);
         System.out.print("Containing: ");
         System.out.println(dataPacket);
@@ -219,21 +138,15 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             sendSocket.close();
         }
 
-        if (floorReceiveSocket != null && !floorReceiveSocket.isClosed()) {
-            floorReceiveSocket.close();
-        }
-
         if (elevatorReceiveSocket != null && !elevatorReceiveSocket.isClosed()) {
             elevatorReceiveSocket.close();
         }
     }
 
-
     public void run(){
         while(true){
-            receive();
+            receiveFromElevator();
         }
     }
-
 
 }

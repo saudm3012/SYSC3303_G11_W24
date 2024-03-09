@@ -8,7 +8,7 @@ public class ElevatorSocket extends Thread
    private DatagramSocket sendReceiveSocket; // socket at which data is sent or received
    private Elevator elevator; // System which will process the received data
    private InetAddress schedulerAddress;
-   private final int SCHEDULER_PORT = 4999;
+   private final int SCHEDULER_PORT = 4998;
 
     /**
      * The constructor for this class.
@@ -138,7 +138,11 @@ public class ElevatorSocket extends Thread
         try {
             receiveData.bytesToDataPacket(receiveDataBytes);
             // log the received datagram.
-            if (!receiveData.isEnd()) printReceivingInfo(receiveData.toString());
+            if (!receiveData.isEnd()) {
+                printReceivingInfo(receiveData.toString());
+            } else {
+                System.out.println("End packet received");
+            }
             elevator.processData(receiveData);
         } catch(IOException e){
             e.printStackTrace();

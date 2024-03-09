@@ -9,6 +9,7 @@
  * @author Riya Arora (101190033)
  */
 
+import javax.swing.plaf.ListUI;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,6 +26,7 @@ public class Scheduler implements Runnable {
      * The socket responsible for communication with elevators.
      */
     public SchedulerSocket socket;
+    public SchedulerElevatorSocket elevatorSocket;
 
     /**
      * The current state of the scheduler.
@@ -38,16 +40,19 @@ public class Scheduler implements Runnable {
     List<FloorRequest> upQueue;
     List<FloorRequest> downQueue;
     FloorRequest elevatorEndPacket;
-    ElevatorData elevatorData;
+    Queue<ElevatorData> elevatorQueue;
+
 
     /**
      * The constructor for this class.
      */
     public Scheduler() {
         socket = new SchedulerSocket(this);
+        elevatorSocket = new SchedulerElevatorSocket(this);
         receiveQueue = new LinkedList<>();
         upQueue = new ArrayList<>();
         downQueue = new ArrayList<>();
+        elevatorQueue = new LinkedList<>();
         elevatorEndPacket = new FloorRequest();
     }
 
@@ -56,6 +61,7 @@ public class Scheduler implements Runnable {
      */
     public Scheduler(String elevatorAddress) {
         socket = new SchedulerSocket(this, elevatorAddress);
+        elevatorSocket = new SchedulerElevatorSocket(this, elevatorAddress);
         receiveQueue = new LinkedList<>();
         upQueue = new ArrayList<>();
         downQueue = new ArrayList<>();
@@ -122,7 +128,16 @@ public class Scheduler implements Runnable {
         receiveQueue.add(data);
     }
 
-    public void setElevatorData(ElevatorData data) {this.elevatorData = data;}
+    public void elevatorQueueAdd(ElevatorData data) {
+        System.out.println("ELEV size before "+ elevatorQueue.size());
+        elevatorQueue.add(data);
+        System.out.println("ELEV size after"+ elevatorQueue.size());
+    }
+
+    public ElevatorData elevatorQueueRemove(){
+        System.out.println("ELEV QUEUE REMOVE");
+        return elevatorQueue.remove();
+    }
 
     /**
      * Handles the IDLE state, waiting for the receive queue to fill up and then
@@ -131,16 +146,20 @@ public class Scheduler implements Runnable {
 
     private void idle() {
         while(true) {
-            if (socket.receiveFromElevator() == 1) {
+            if(!elevatorQueue.isEmpty()){
+                // Elevator has reached a floor and wants a request
+                System.out.println("Something in elevator queue");
                 this.state = SchedulerState.SELECT_REQ;
-                break;
-            } else {
-                if (!receiveQueue.isEmpty()) {
-                    sleep(100);
-                    this.state = SchedulerState.PROCESS_REQ;
-                    break;
-                }
+                return;
             }
+            if(!receiveQueue.isEmpty()) {
+                // We have a new floor request
+                System.out.println("Something in receive queue");
+                sleep(100);
+                this.state = SchedulerState.PROCESS_REQ;
+                return;
+            }
+            sleep(100);
         }
     }
 
@@ -154,41 +173,42 @@ public class Scheduler implements Runnable {
         this.state = SchedulerState.IDLE;
     }
 
-    private void select_request() {
+    private synchronized void select_request() {
         // Give the current elevator a req/ multiple request or nothing.
         //socket.sendToElevator(); whatever requests we want to give it
+        ElevatorData elevatorData = elevatorQueueRemove();
         if(elevatorData.isEmpty()){
             //Give it any request
             if(upQueue.size() > downQueue.size() && !upQueue.isEmpty()){
-                socket.sendToElevator(upQueue.removeFirst(), elevatorData.getElevatorNum());
+                elevatorSocket.sendToElevator(upQueue.removeFirst(), elevatorData.getElevatorNum());
             } else if(!downQueue.isEmpty()) {
-                socket.sendToElevator(downQueue.removeFirst(), elevatorData.getElevatorNum());
+                elevatorSocket.sendToElevator(downQueue.removeFirst(), elevatorData.getElevatorNum());
             } else {
-                socket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
+                elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
                 return;
             }
         } else if(elevatorData.isUp()){
             if(upQueue.isEmpty()){
-                socket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
+                elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
                 return;
             }
             for(int i=0;i<upQueue.size();i++){
                 if(upQueue.get(i).getFloor() == elevatorData.getFloor()){
-                    socket.sendToElevator(upQueue.remove(i), elevatorData.getElevatorNum());
+                    elevatorSocket.sendToElevator(upQueue.remove(i), elevatorData.getElevatorNum());
                 }
             }
         } else {
             if(downQueue.isEmpty()){
-                socket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
+                elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
                 return;
             }
             for(int i=0;i<downQueue.size();i++){
                 if(downQueue.get(i).getFloor() == elevatorData.getFloor()){
-                    socket.sendToElevator(downQueue.remove(i), elevatorData.getElevatorNum());
+                    elevatorSocket.sendToElevator(downQueue.remove(i), elevatorData.getElevatorNum());
                 }
             }
         }
-        socket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
+        elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
         this.state = SchedulerState.IDLE;
     }
 
@@ -217,6 +237,7 @@ public class Scheduler implements Runnable {
      */
     public void run() {
         socket.start();
+        elevatorSocket.start();
         while (true) {
             execute();
         }
