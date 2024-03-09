@@ -6,6 +6,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/**
+ * Elevator Data that contains info on elevators direction
+ * @author Zakariya Khan 101186641
+ */
 public class ElevatorData implements Serializable {
     private int floor;
     private Direction direction;
@@ -27,7 +31,7 @@ public class ElevatorData implements Serializable {
      *
      * @param floor     int, floor elevator is on
      * @param direction Direction, elevator direction
-     * @param isEmpty   boolean, if elevator is empty or not
+     * @param empty   boolean, if elevator is empty or not
      */
     public ElevatorData(int floor, Direction direction, boolean empty, int elevatorNum) {
         this.floor = floor;
@@ -39,17 +43,9 @@ public class ElevatorData implements Serializable {
     public boolean isEmpty() {
         return isEmpty;
     }
-
-    public Direction getDirection() {
-        return direction;
-    }
     
     public boolean isUp() {
         return (direction==Direction.UP ? true : false);
-    }
-
-    public boolean isDown() {
-        return (direction==Direction.UP ? false : true);
     }
 
     public int getFloor() {
