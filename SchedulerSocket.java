@@ -6,7 +6,6 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
     DatagramPacket receivePacket;
     DatagramSocket sendSocket;
     DatagramSocket floorReceiveSocket;
-    DatagramSocket elevatorReceiveSocket;
     private Scheduler scheduler;
     InetAddress elevatorAddress;
     private final int ELEVATOR_PORT = 2000;
@@ -26,8 +25,6 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             // on the local host machine. This socket will be used to
             // receive UDP Datagram packets from floor subsystem and elevators.
             floorReceiveSocket = new DatagramSocket(5000);
-            elevatorReceiveSocket = new DatagramSocket(4999);
-            elevatorReceiveSocket.setSoTimeout(10);
 
         } catch (SocketException se) {
             se.printStackTrace();
@@ -55,8 +52,6 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             // on the local host machine. This socket will be used to
             // receive UDP Datagram packets from floor subsystem and elevators.
             floorReceiveSocket = new DatagramSocket(5000);
-            elevatorReceiveSocket = new DatagramSocket(4999);
-            elevatorReceiveSocket.setSoTimeout(100);
 
         } catch (SocketException se) {
             se.printStackTrace();
@@ -84,37 +79,6 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             e.printStackTrace();
             System.exit(1);
         }
-    }
-
-
-    void sendToElevator(FloorRequest packet, int elevatorNum) {
-        // serialize data into byte array
-        byte[] sendDataBytes = new byte[0];
-        try {
-            sendDataBytes = packet.dataPacketToBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-        // Construct a datagram packet that is to be sent to either floor subsystem or
-        // elevator.
-        sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, ELEVATOR_PORT+elevatorNum);
-
-        // log the datagram packet to be sent
-        if (!packet.isEnd()) printSendingInfo(packet.toString(), false);
-
-        // Send the datagram packet to the server via the send/receive socket.
-        try {
-            sendSocket.send(sendPacket);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-        System.out.println("Scheduler: Packet sent to [ELEVATOR-" + elevatorNum + "] .\n");
-        sleep(100);
-
     }
 
     /**
@@ -150,39 +114,6 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
             System.exit(1);
         }
     }
-
-
-    int receiveFromElevator() {
-        // Construct a DatagramPacket for receiving packets up to 1024 bytes long (the length of the byte array).
-        ElevatorData incoming_elev_data = new ElevatorData();
-        byte receiveDataBytes[] = new byte[1024];
-        receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
-
-        try {
-            // Block until a datagram is received via sendReceiveSocket.
-            elevatorReceiveSocket.receive(receivePacket);
-        } catch (IOException e) {
-            if(e instanceof SocketTimeoutException){
-                return 0;
-            }
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-        try {
-            incoming_elev_data.bytesToDataPacket(receivePacket.getData());
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        System.out.print("[SCHEDULER]: Received request from Elevator-"+ incoming_elev_data.getElevatorNum()+"\n");
-
-        //scheduler.setElevatorData(incoming_elev_data);
-        return 1;
-    }
-
-
-
 
     /**
      * Outputs sendPacket to the console
@@ -221,10 +152,6 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
 
         if (floorReceiveSocket != null && !floorReceiveSocket.isClosed()) {
             floorReceiveSocket.close();
-        }
-
-        if (elevatorReceiveSocket != null && !elevatorReceiveSocket.isClosed()) {
-            elevatorReceiveSocket.close();
         }
     }
 
