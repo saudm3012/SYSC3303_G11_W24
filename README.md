@@ -24,14 +24,19 @@ NOTE: A seperate folder without jupiter was included as we do not have a MAC to 
 * Elevator - class represents an elevator in your system that communicates with a Scheduler. It handles the movement, loading, and unloading of the elevator, receiving instructions from the scheduler and interacting with the building's floors.
 * ElevatorSocket - Used by Elevator for communication with Scheduler
 * FloorSocket - Used by FloorSubsystem for communication with Scheduler
-* FloorSubsystem - Acts as floor in the system, is loaded with data from input reader, and sends/receives data to/from scheduler
+* FloorSubsystem - The FloorSubsystem thread simulates the arrival of passengers to the elevators and for simulating all button presses and lamps at the floor.
 * InputReader - Gets and imports data from textfile.
 * Main - Initializes and runs program
 * ElevatorSubsytem - component of the Elevator System project and is responsible for managing a group of elevators. It creates and initializes a specified number of elevators, each represented by an Elevator object.
 * Scheduler - managing communication between FloorSocket and ElevatorSocket in an elevator system. Handling the flow of data packets between floors and elevators.
 * SchedulerSocket - managing communication between the scheduler and elevators or floor subsystems in an elevator system. It handles the sending and receiving of data packets through UDP using DatagramSockets.
+* ScheulerElevatorSocket.java - manages communication between the elevator and the elevators. Handles sending and receieving of data between elevator and scheduler through UDP and Datagram sockets
 * SchedulerState - defines an enumeration SchedulerState with two possible states: IDLE and WAIT_ACK
 * ElevatorStates - defines an enumeration ElevatorStates with four possible states: IDLE, MOVING, LOADING, and UNLOADING.
+* Direction.java - Defines enumeration of the direction that the elevator is currently moving
+* ElevatorData.java - Contains info on the elevators direction
+
+
   
 Test files
 * InputReaderTest - Tests if input reader receives data packet info correctly from data.txt file
@@ -74,5 +79,5 @@ For testing Junit must be installed
 * Scheduler (all files)- Mohammad
 * Test files - Jatin/Ali
 * UML Diagrams - Zakariya/Jatin
-* README - Riya/Jatin
+* README - Riya/Jatin/Ali
 

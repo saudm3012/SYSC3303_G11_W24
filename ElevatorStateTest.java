@@ -1,8 +1,10 @@
 import java.io.IOException;
 import java.net.*;
-import junit.framework.TestCase;
 
-    public class ElevatorStateTest extends TestCase {
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class ElevatorStateTest{
         
         public static Elevator elevator;
         DatagramSocket sendSocket;
@@ -60,6 +62,7 @@ import junit.framework.TestCase;
          */
         protected void tearDown()
         {
+            sendSocket.close();
         }
     
         /**

@@ -66,6 +66,11 @@ public class SchedulerTest {
         scheduler.start();
     }
 
+    protected void tearDown()
+    {
+        sendSocket.close();
+    }
+
     /**
      * Tests scheduler state machine through all states.
      * Sequence: Sends a packet to port 5000 acting as a request from floor

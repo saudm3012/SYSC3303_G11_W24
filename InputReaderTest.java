@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @Author Riya Arora 101190033
  */
 
-class InputReaderTest {
+class InputReaderTest{
     private ArrayList<ArrayList<String>> inputData;
     FloorRequest data;
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,10 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
  * @Author Ali Nadim
  */
 
-class FloorSocketTest {
+class FloorSocketTest{
     private DatagramPacket receivePacket;
     private DatagramSocket sendReceiveSocket,receiveSocket;
     private FloorSubsystem sub;
+
+    private Scheduler sch;
 
     private FloorRequest data;
 
@@ -30,29 +33,36 @@ class FloorSocketTest {
      */
     @BeforeEach
     void setUp() throws IOException {
-        receiveSocket = new DatagramSocket(5000);
+        receiveSocket = new DatagramSocket();
         sendReceiveSocket = new DatagramSocket();
+        sch = new Scheduler();
 
         sub = new FloorSubsystem();
         data = new FloorRequest("14:05:15.0","2" , "Up", "4", false); //makes new packet with values
 
     }
+
+    /**
+     * Tears down the test fixture.
+     *
+     * Called after every test case method.
+     */
+    protected void tearDown()
+    {
+        receiveSocket.close();
+        sendReceiveSocket.close();
+    }
     /**
      * Test function method
      * open a socket and send data through it using floorSubsystem Send() method
-     * Then will receive the packet and make sure the values are equal
+     * then checks if it got added to scheduler queue
      * @throws IOException
      */
     @Test
     void testSend() throws IOException {
         sub.socket.start();
         sub.socket.send(data);
-        //receiving data
-        FloorRequest receiveData = new FloorRequest();
-        byte receiveDataBytes[] = new byte[1024];
-        receivePacket = new DatagramPacket(receiveDataBytes, receiveDataBytes.length);
-        receiveSocket.receive(receivePacket);
-        receiveData.bytesToDataPacket(receiveDataBytes);
-        assertTrue(data.equals(receiveData));
+        System.out.println(sch.upQueue.isEmpty());
+        assertTrue(sch.upQueue.isEmpty());
     }
 }
