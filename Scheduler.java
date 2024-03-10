@@ -129,13 +129,10 @@ public class Scheduler implements Runnable {
     }
 
     public void elevatorQueueAdd(ElevatorData data) {
-        System.out.println("ELEV size before "+ elevatorQueue.size());
         elevatorQueue.add(data);
-        System.out.println("ELEV size after"+ elevatorQueue.size());
     }
 
     public ElevatorData elevatorQueueRemove(){
-        System.out.println("ELEV QUEUE REMOVE");
         return elevatorQueue.remove();
     }
 
@@ -148,13 +145,11 @@ public class Scheduler implements Runnable {
         while(true) {
             if(!elevatorQueue.isEmpty()){
                 // Elevator has reached a floor and wants a request
-                System.out.println("Something in elevator queue");
                 this.state = SchedulerState.SELECT_REQ;
                 return;
             }
             if(!receiveQueue.isEmpty()) {
                 // We have a new floor request
-                System.out.println("Something in receive queue");
                 sleep(100);
                 this.state = SchedulerState.PROCESS_REQ;
                 return;
