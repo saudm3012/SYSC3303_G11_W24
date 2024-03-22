@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9e49a950-f552-48aa-b95e-37143f5e7b40" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Direction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Elevator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElevatorData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElevatorSocket.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElevatorStateTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElevatorStates.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElevatorSubsystem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FloorRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FloorRequestTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FloorSocket.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FloorSocketTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FloorSubsystem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/InputReader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/InputReaderTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SchedulerElevatorSocket.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SchedulerSocket.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SchedulerState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SchedulerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/State_Diagrams/Iteration_2_Elevator_State_Diagrams.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/State_Diagrams/Iteration_2_Scheduler_State_Diagram.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/State_Diagrams/Iteration_3_Elevator_State_Diagram.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/State_Diagrams/Iteration_3_Scheduler_State_Machine.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UML_Diagrams/Iteration_3_Class_Diagram.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UML_Diagrams/Iteration_3_Sequence_Diagram.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data.txt" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="2e3y4FF5PWJqGAzF33uK0ohfmrC" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-20.0.2-corretto-20.0.2.1-4caba194b151-5bc9ecd2" />
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9e49a950-f552-48aa-b95e-37143f5e7b40" name="Changes" comment="" />
+      <created>1711147364438</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1711147364438</updated>
+    </task>
+    <servers />
+  </component>
+</project>
