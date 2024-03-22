@@ -66,6 +66,7 @@ public class Scheduler implements Runnable {
         upQueue = new ArrayList<>();
         downQueue = new ArrayList<>();
         elevatorEndPacket = new FloorRequest();
+        elevatorQueue = new LinkedList<>();
     }
 
     /**
