@@ -64,6 +64,11 @@ public class InputReader {
             String floor = rowData.get(1);
             String floorButton = rowData.get(2);
             String carButton = rowData.get(3);
+            try {
+                String fault = rowData.get(4);
+                cursor++;
+                return new FloorRequest(time, floor, floorButton, carButton, false, fault);
+            } catch (IndexOutOfBoundsException e){}
             cursor++;
             return new FloorRequest(time, floor, floorButton, carButton, false);
         }

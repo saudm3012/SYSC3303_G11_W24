@@ -57,7 +57,7 @@ public class FloorRequest implements Serializable {
      * @param endPacket boolean, end packet of transmition? true false otherwise
      * @param fault     Fault, enum specifying fault associated with request
      */
-    public FloorRequest(String time, String floor, String direction, String car, boolean end, Fault fault){
+    public FloorRequest(String time, String floor, String direction, String car, boolean end, String fault){
         this.time = LocalTime.parse(time);
         this.floor = Integer.parseInt(floor);
         if(direction.equals("Up")){this.goingUp = true;}
@@ -65,7 +65,12 @@ public class FloorRequest implements Serializable {
         this.car = Integer.parseInt(car);
         this.isEmpty = false;
         this.endPacket = end;
-        this.fault = fault;
+        try{
+            this.fault = Fault.valueOf(fault);
+        }
+        catch (IllegalArgumentException e){
+            this.fault = Fault.NONE;
+        }
     }
 
     /**
