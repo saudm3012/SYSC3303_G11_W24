@@ -4,5 +4,5 @@ Time, Floor, Floor Button, Car Button, (Fault)
 14:06:15.0 2 Up 3 
 14:06:15.0 2 Down 3 FLOOR
 14:06:15.0 2 Up 4
-14:06:15.0 3 Up 4 DOOR_CLOSED
-14:06:15.0 2 Down 3 DOOR_OPENED
+14:06:15.0 3 Up 4 DOOR
+14:06:15.0 2 Down 3

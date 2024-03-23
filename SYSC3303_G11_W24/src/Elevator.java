@@ -42,7 +42,7 @@ public class Elevator extends Thread {
     private boolean floorFault;
 
     // Flag to indicate door stuck open fault was received 
-    private boolean doorOpenFault;
+    private boolean doorFault;
 
     // Flag to indicate door stuck closed fault was received 
     private boolean doorClosedFault;
@@ -85,7 +85,7 @@ public class Elevator extends Thread {
         this.pickUpFloor = new boolean[numFloors];
         this.elevatorData = new ElevatorData(currFloor, direction, true, elevatorNum);
         this.faultTimer = new Timer(this);
-        this.doorOpenFault = false;
+        this.doorFault = false;
         this.doorClosedFault = false;
         this.floorFault = false;
         this.terminate = false;
@@ -194,15 +194,16 @@ public class Elevator extends Thread {
         System.out.println(name() + "Door Opening");
         // set timer to detect fault
         faultTimer.set(3100);
-        if (!doorOpenFault){
+        if (!doorFault){
             sleep(3000);
             faultTimer.interrupt();
         } else {
-            doorOpenFault = false; // clear fault flag
+            doorFault = false; // clear fault flag
             try {
-                Thread.sleep(6000); // Door fault 
+                Thread.sleep(Long.MAX_VALUE); // Door fault 
             } catch (InterruptedException e) {
                 System.out.println(name()+ "Door Fault Detected! Door stuck open.");
+                sleep(2900); // 6 seconds total to handle door fault
             }
         }
         System.out.println(name() + "Door Closing");
@@ -229,11 +230,8 @@ public class Elevator extends Thread {
                         case FLOOR:
                             this.floorFault = true;
                             break;
-                        case DOOR_CLOSED:
-                            this.doorClosedFault = true;
-                            break;
-                        case DOOR_OPENED:
-                            this.doorOpenFault = true;
+                        case DOOR:
+                            this.doorFault = true;
                             break;
                         case NONE:
                             break;
@@ -325,19 +323,6 @@ public class Elevator extends Thread {
      * Handles the stop state of the elevator.
      */
     private void elevatorStop() {
-        // set timer to detect fault
-        faultTimer.set(100);
-        if (!doorClosedFault){
-            sleep(10);
-            faultTimer.interrupt();
-        } else {
-            doorClosedFault = false; // clear fault flag
-            try {
-                Thread.sleep(3000); // Door stuck closed fault 
-            } catch (InterruptedException e) {
-                System.out.println(name()+ "Door Fault Detected! Door stuck closed.");
-            }
-        }
         // opening and closing door
         openCloseDoors();
         completedRequestsCount += elevatorButtons[currFloor-1]; 
