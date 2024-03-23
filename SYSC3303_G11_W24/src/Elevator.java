@@ -250,11 +250,11 @@ public class Elevator extends Thread {
             }
         }
         printLatch = true;
-        processRequests();
+        state = ElevatorStates.PROCESSING;
     }
 
     /**
-     * Handles the processing of the elevator requests and changes the state accordingly.
+     * Handles the PROCESSING state of the elevator.
      */
     private void processRequests() {
         if (elevatorButtons[currFloor-1] != 0 || pickUpFloor[currFloor-1]){
@@ -343,7 +343,7 @@ public class Elevator extends Thread {
         completedRequestsCount += elevatorButtons[currFloor-1]; 
         elevatorButtons[currFloor-1] = 0; // update floor button
         pickUpFloor[currFloor-1] = false; // update pickup requests
-        processRequests();
+        state = ElevatorStates.PROCESSING;
         printLatch = true;
     }
 
@@ -359,6 +359,11 @@ public class Elevator extends Thread {
                     if (printLatch)
                         printState();
                     notifyScheduler();
+                    break;
+                case PROCESSING:
+                    if (printLatch)
+                        printState();
+                    processRequests();
                     break;
                 case MOVING:
                     if (printLatch)
