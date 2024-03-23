@@ -58,9 +58,11 @@ public class FloorSubsystem implements Runnable
     }
 
     public void run() {
+        int noRequests = 0; //Counts number of requests sent by floor
         socket.start();
         while(!inputQueue.isEmpty()) {
             socket.send(inputQueue.remove());
+            noRequests += 1;
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -68,6 +70,7 @@ public class FloorSubsystem implements Runnable
                 System.exit(1);
             }
         }
+        System.out.println("Number of requests sent by FloorSubsystem: " + noRequests);
 
     }
     public static void main (String args[]) throws IOException {
