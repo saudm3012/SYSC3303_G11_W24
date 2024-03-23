@@ -61,7 +61,7 @@ public class ElevatorSocket extends Thread
        System.out.print("Containing: ");
        System.out.println(dataPacket);
     }
-    public void setprintLatch(boolean set){
+    public void setPrintLatch(boolean set){
         this.printlatch = set;
     }
     /**
@@ -86,7 +86,7 @@ public class ElevatorSocket extends Thread
 
 
         // log the datagram packet to be sent
-        if (printlatch) printSendingInfo(objToSend.toString());
+        //if (printlatch) printSendingInfo(objToSend.toString());
 
         // Send the datagram packet to the server via the send/receive socket. 
         try {
@@ -96,7 +96,6 @@ public class ElevatorSocket extends Thread
             System.exit(1);
         }
 
-        System.out.println("Elevator: Packet sent.\n");
     }
 
     private void receive() {
@@ -119,10 +118,10 @@ public class ElevatorSocket extends Thread
             receiveData.bytesToDataPacket(receiveDataBytes);
             // log the received datagram.
             if (!receiveData.isEnd()) {
-                 if (printlatch) printReceivingInfo(receiveData.toString());
-            } else {
-                System.out.println("End packet received");
-            }
+                 printReceivingInfo(receiveData.toString());
+            } /*else {
+                if (printlatch)System.out.println("Elevator-"+sendReceiveSocket.getLocalPort()%2000+": End Packet received");
+            }*/
             elevator.processData(receiveData);
         } catch(IOException e){
             e.printStackTrace();

@@ -54,7 +54,7 @@ public class Elevator extends Thread {
      *  An array representing the elevator floor buttons (true is pressed false otherwise)
      *  Each index represents the floor-1
      */ 
-    private boolean elevatorButtons[];
+    private int elevatorButtons[];
 
     /*
      *  An array representing the floors in which a passenger is waiting to be picked up
@@ -62,6 +62,8 @@ public class Elevator extends Thread {
      */ 
     private boolean pickUpFloor[];
 
+    // counter to keep track of the number of completed floor requests
+    private int completedRequestsCount;
 
     // Flag to control printing of state.
     private boolean printLatch;
@@ -79,7 +81,7 @@ public class Elevator extends Thread {
         this.printLatch = true;
         this.direction = Direction.UP;
         this.numFloors = numFloors;
-        this.elevatorButtons = new boolean[numFloors];
+        this.elevatorButtons = new int[numFloors];
         this.pickUpFloor = new boolean[numFloors];
         this.elevatorData = new ElevatorData(currFloor, direction, true, elevatorNum);
         this.faultTimer = new Timer(this);
@@ -87,6 +89,7 @@ public class Elevator extends Thread {
         this.doorClosedFault = false;
         this.floorFault = false;
         this.terminate = false;
+        this.completedRequestsCount = 0;
     }
 
     /**
@@ -134,7 +137,20 @@ public class Elevator extends Thread {
     private void printCurrentFloor() {
         System.out.print(name() + "Reached Floor: ");
         System.out.print(currFloor);
-        System.out.println(" Direction: " + (direction==Direction.UP ? "UP" : "DOWN"));
+        System.out.print(" | Direction: " + (direction==Direction.UP ? "UP" : "DOWN"));
+        System.out.println(" | Elevator Buttons: " + elevatorButtonsToString());
+    }
+
+    /**
+     * returns a string of the current elevator buttons
+     */
+    private String elevatorButtonsToString() {
+        String requestString = "[";
+        for (int i = 0; i<elevatorButtons.length; i++ ){
+            if (i<elevatorButtons.length-1) requestString += (elevatorButtons[i] == 0) ? ("F"+(i+1)+": "+"0, ") : ("F"+(i+1)+": "+"1, ");
+            else requestString += (elevatorButtons[i] == 0) ? ("F"+(i+1)+": "+"0]") : ("F"+(i+1)+": "+"1]");
+        }
+        return requestString;
     }
 
     /**
@@ -159,12 +175,12 @@ public class Elevator extends Thread {
     }
 
     /**
-     * Returns if the elevator is empty or not
+     * Returns if the elevator is empty or not by checking the elevator buttons
      * @return true if elevator is empty false otherwise
      */
     private boolean isEmpty() {
-        for (boolean buttonPressed : elevatorButtons){
-            if (buttonPressed){
+        for (int buttonPressed : elevatorButtons){
+            if (buttonPressed!=0){
                 return false;
             }
         }
@@ -180,7 +196,7 @@ public class Elevator extends Thread {
         faultTimer.set(3100);
         if (!doorOpenFault){
             sleep(3000);
-            faultTimer.clear();
+            faultTimer.interrupt();
         } else {
             doorOpenFault = false; // clear fault flag
             try {
@@ -225,7 +241,7 @@ public class Elevator extends Thread {
                             break;
                     }
                     // Add the passangers destination floor to the floor buttons counter
-                    elevatorButtons[floorRequest.getCarButton()-1] = true;
+                    elevatorButtons[floorRequest.getCarButton()-1] ++;
                     // update the pickupFloor array
                     pickUpFloor[floorRequest.getFloor()-1] = true;
                 } else {
@@ -241,7 +257,7 @@ public class Elevator extends Thread {
      * Handles the PROCESSING state of the elevator.
      */
     private void processRequests() {
-        if (elevatorButtons[currFloor-1] || pickUpFloor[currFloor-1]){
+        if (elevatorButtons[currFloor-1] != 0 || pickUpFloor[currFloor-1]){
             // stop to pick/drop off passenger(s)
             state = ElevatorStates.STOP;
         } else if (!isEmpty()) {
@@ -261,9 +277,14 @@ public class Elevator extends Thread {
             state = ElevatorStates.MOVING;
         }
         else {
+            // no requests to handle and empty elevator
             state = ElevatorStates.NOTIFY;
+            if (!printLatch) socket.setPrintLatch(false); // to prevent spamming logs
+            else System.out.println(name() + "# of Completed Requests: " + completedRequestsCount);
+            return;
         }
         printLatch = true;
+        socket.setPrintLatch(true);
     }
 
     /**
@@ -275,7 +296,7 @@ public class Elevator extends Thread {
         faultTimer.set(2100);
         if (!floorFault){
             sleep(2000); // Traveling between floors is 2 seconds
-            faultTimer.clear(); 
+            faultTimer.interrupt();
         } else {
             try {
                 Thread.sleep(Long.MAX_VALUE); // Floor fault
@@ -311,18 +332,19 @@ public class Elevator extends Thread {
         faultTimer.set(100);
         if (!doorClosedFault){
             sleep(10);
-            faultTimer.clear();
+            faultTimer.interrupt();
         } else {
             doorClosedFault = false; // clear fault flag
             try {
-                Thread.sleep(1000); // Door stuck closed fault 
+                Thread.sleep(3000); // Door stuck closed fault 
             } catch (InterruptedException e) {
                 System.out.println(name()+ "Door Fault Detected! Door stuck closed.");
             }
         }
         // opening and closing door
         openCloseDoors();
-        elevatorButtons[currFloor-1] = false; // update floor button
+        completedRequestsCount += elevatorButtons[currFloor-1]; 
+        elevatorButtons[currFloor-1] = 0; // update floor button
         pickUpFloor[currFloor-1] = false; // update pickup requests
         state = ElevatorStates.PROCESSING;
         printLatch = true;

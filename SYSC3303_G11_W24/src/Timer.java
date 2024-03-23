@@ -47,22 +47,18 @@ public class Timer extends Thread {
         while(true){
             if (isSet) {
                 try {
-                    Thread.sleep(1); 
-                    setTime--;
-                    if (setTime == 0){
-                         wrapper.interrupt(); // Interrupt the thread to indicate timeout 
-                        isSet = false; // Reset the timer flag
-                    }
+                    Thread.sleep(setTime); 
+                    wrapper.interrupt(); // Interrupt the thread to indicate timeout 
+                    isSet = false; // Reset the timer flag
+                    
                 } catch (InterruptedException e){
-                    e.printStackTrace();
-                    System.exit(1);
+                    clear();
                 }
             } else {
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e){
-                    e.printStackTrace();
-                    System.exit(1);
+                    clear();
                 }
             }
         }
