@@ -41,6 +41,7 @@ public class Scheduler implements Runnable {
     List<FloorRequest> downQueue;
     FloorRequest elevatorEndPacket;
     Queue<ElevatorData> elevatorQueue;
+    Queue<Integer> emptyElevatorList;
 
 
     /**
@@ -54,6 +55,7 @@ public class Scheduler implements Runnable {
         downQueue = new ArrayList<>();
         elevatorQueue = new LinkedList<>();
         elevatorEndPacket = new FloorRequest();
+        emptyElevatorList = new LinkedList<>();
     }
 
     /**
@@ -148,6 +150,11 @@ public class Scheduler implements Runnable {
 
     private void process_request() {
         FloorRequest currentReq = receiveQueue.remove();
+        if(!emptyElevatorList.isEmpty()){
+            int elevNum = emptyElevatorList.remove();
+            elevatorSocket.sendToElevator(currentReq, elevNum);
+            elevatorSocket.sendToElevator(elevatorEndPacket, elevNum);
+        }
         if(currentReq.isUp()){
             upQueue.add(currentReq);
         } else {
@@ -160,7 +167,13 @@ public class Scheduler implements Runnable {
         // Give the current elevator a req/ multiple request or nothing.
         //socket.sendToElevator(); whatever requests we want to give it
         sleep(1000);
-        ElevatorData elevatorData = elevatorQueueRemove();
+        ElevatorData elevatorData;
+        if(!elevatorQueue.isEmpty()) {
+            elevatorData = elevatorQueueRemove();
+        } else {
+            this.state = SchedulerState.IDLE;
+            return;
+        }
         if(elevatorData.isEmpty()){
             //Give it any request
             if(upQueue.size() > downQueue.size() && !upQueue.isEmpty()){
@@ -168,7 +181,11 @@ public class Scheduler implements Runnable {
             } else if(!downQueue.isEmpty()) {
                 elevatorSocket.sendToElevator(downQueue.removeFirst(), elevatorData.getElevatorNum());
             } else {
-                elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
+                //elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
+                //Store the empty elevator if not already in there
+                if(!emptyElevatorList.contains(elevatorData.getElevatorNum())) {
+                    emptyElevatorList.add(elevatorData.getElevatorNum());
+                }
                 return;
             }
         } else if(elevatorData.isUp()){
