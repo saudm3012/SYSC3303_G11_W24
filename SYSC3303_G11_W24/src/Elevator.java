@@ -279,12 +279,9 @@ public class Elevator extends Thread {
         else {
             // no requests to handle and empty elevator
             state = ElevatorStates.NOTIFY;
-            if (!printLatch) socket.setPrintLatch(false); // to prevent spamming logs
-            else System.out.println(name() + "# of Completed Requests: " + completedRequestsCount);
-            return;
+            System.out.println(name() + "Completed Requests: " + completedRequestsCount);
         }
         printLatch = true;
-        socket.setPrintLatch(true);
     }
 
     /**
