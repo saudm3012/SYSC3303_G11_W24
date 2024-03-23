@@ -35,6 +35,7 @@ public class Timer extends Thread {
      */
     public void clear(){
         isSet = false;
+        setTime = 0;
     }
     
     /**
@@ -46,9 +47,12 @@ public class Timer extends Thread {
         while(true){
             if (isSet) {
                 try {
-                    Thread.sleep(setTime); // Sleep for the specified time duration
-                    isSet = false; // Reset the timer flag
-                    wrapper.interrupt(); // Interrupt the thread to indicate timeout 
+                    Thread.sleep(1); 
+                    setTime--;
+                    if (setTime == 0){
+                         wrapper.interrupt(); // Interrupt the thread to indicate timeout 
+                        isSet = false; // Reset the timer flag
+                    }
                 } catch (InterruptedException e){
                     e.printStackTrace();
                     System.exit(1);

@@ -9,6 +9,7 @@ public class ElevatorSocket extends Thread
    private Elevator elevator; // System which will process the received data
    private InetAddress schedulerAddress;
    private final int SCHEDULER_PORT = 4998;
+   private boolean printlatch; // used to control prints
 
     /**
      * The constructor for this class.
@@ -32,6 +33,7 @@ public class ElevatorSocket extends Thread
             System.exit(1);
         }
          this.elevator = elevator; 
+         this.printlatch = false;
     }
 
     /**
@@ -59,7 +61,9 @@ public class ElevatorSocket extends Thread
        System.out.print("Containing: ");
        System.out.println(dataPacket);
     }
-    
+    public void setprintLatch(boolean set){
+        this.printlatch = set;
+    }
     /**
      *  Sends a packet to the scheduler and receives the expected reply.
      *  Both packet sent and received packet are logged to the console.
@@ -82,7 +86,7 @@ public class ElevatorSocket extends Thread
 
 
         // log the datagram packet to be sent
-        printSendingInfo(objToSend.toString());
+        if (printlatch) printSendingInfo(objToSend.toString());
 
         // Send the datagram packet to the server via the send/receive socket. 
         try {
@@ -115,7 +119,7 @@ public class ElevatorSocket extends Thread
             receiveData.bytesToDataPacket(receiveDataBytes);
             // log the received datagram.
             if (!receiveData.isEnd()) {
-                printReceivingInfo(receiveData.toString());
+                 if (printlatch) printReceivingInfo(receiveData.toString());
             } else {
                 System.out.println("End packet received");
             }

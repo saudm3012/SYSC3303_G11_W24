@@ -216,10 +216,9 @@ public class Elevator extends Thread {
                         case DOOR_CLOSED:
                             this.doorClosedFault = true;
                             break;
-                        case DOOR_OPEN:
+                        case DOOR_OPENED:
                             this.doorOpenFault = true;
                             break;
-
                         case NONE:
                             break;
                         default:
@@ -243,6 +242,7 @@ public class Elevator extends Thread {
      */
     private void processRequests() {
         if (elevatorButtons[currFloor-1] || pickUpFloor[currFloor-1]){
+            // stop to pick/drop off passenger(s)
             state = ElevatorStates.STOP;
         } else if (!isEmpty()) {
             // have passengers to service
@@ -333,6 +333,7 @@ public class Elevator extends Thread {
      */
     public void run() {
         socket.start();
+        faultTimer.start();
         while (!terminate) {
             switch (state) {
                 case NOTIFY:
