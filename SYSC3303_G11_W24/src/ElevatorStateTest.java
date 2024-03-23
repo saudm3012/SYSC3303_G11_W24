@@ -8,8 +8,8 @@ class ElevatorStateTest{
         
     public static Elevator elevator;
     DatagramSocket sendSocket;
-    private FloorRequest data, endData;
-    private DatagramPacket sendPacket, sendEndPacket;
+    private FloorRequest data, dataFault, endData;
+    private DatagramPacket sendPacket, sendFaultPacket, sendEndPacket;
 
     InetAddress elevatorAddress;
         
@@ -30,12 +30,16 @@ class ElevatorStateTest{
 
         //data to send as a DataPacket
         data = new FloorRequest("14:05:15.0","2" , "Up", "4", false);
+        dataFault = new FloorRequest("15:05:15.0","3" , "Down", "1", false, "DOOR");
+
         endData = new FloorRequest();
 
         byte[] sendDataBytes = new byte[0];
+        byte[] sendFaultDataBytes = new byte[0];
         byte[] endDataBytes = new byte[0];
         try {
             sendDataBytes = data.dataPacketToBytes();
+            sendFaultDataBytes = dataFault.dataPacketToBytes();
             endDataBytes = endData.dataPacketToBytes();
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,6 +55,7 @@ class ElevatorStateTest{
 
         //DatagramPacket to send to elevator
         sendPacket = new DatagramPacket(sendDataBytes, sendDataBytes.length, elevatorAddress, 2006);
+        sendFaultPacket = new DatagramPacket(sendFaultDataBytes, sendDataBytes.length, elevatorAddress, 2006);
         sendEndPacket = new DatagramPacket(endDataBytes, endDataBytes.length, elevatorAddress, 2006);
 
         elevator.start();
@@ -118,6 +123,49 @@ class ElevatorStateTest{
                 Thread.sleep(6001);
                 // Elevator should notify of no requests to handle
                 assertTrue(elevator.state == ElevatorStates.NOTIFY);
+                Thread.sleep(1000);
+
+                // Iteration 4
+                // Fault recovery
+                sendSocket.send(sendFaultPacket);
+                Thread.sleep(10);
+                sendSocket.send(sendEndPacket);
+                Thread.sleep(10);
+                assertTrue(elevator.state == ElevatorStates.MOVING);
+                Thread.sleep(2000);
+                assertTrue(elevator.state == ElevatorStates.NOTIFY);
+
+                sendSocket.send(sendEndPacket);
+                Thread.sleep(10);
+                assertTrue(elevator.state == ElevatorStates.MOVING);
+                Thread.sleep(2000);
+                assertTrue(elevator.state == ElevatorStates.NOTIFY);
+
+                sendSocket.send(sendEndPacket);
+                Thread.sleep(10);
+                assertTrue(elevator.state == ElevatorStates.MOVING);
+                assertTrue(elevator.currFloor == 4);
+                Thread.sleep(2000);
+
+                sendSocket.send(sendEndPacket);
+                Thread.sleep(10);
+                assertTrue(elevator.currFloor == 3);
+
+                //reaches beginning floor
+                assertTrue(elevator.state == ElevatorStates.STOP);
+                Thread.sleep(6000);
+
+                //Check that door was stuck
+                assertTrue(elevator.state == ElevatorStates.STOP);
+
+                Thread.sleep(3000);
+
+                //Check that door is unstuck
+                assertTrue(elevator.state == ElevatorStates.MOVING);
+
+                Thread.sleep(3000);
+
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {
