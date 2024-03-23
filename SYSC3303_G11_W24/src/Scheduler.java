@@ -57,19 +57,6 @@ public class Scheduler implements Runnable {
     }
 
     /**
-     * The constructor for this class when running on seperate machines.
-     */
-    public Scheduler(String elevatorAddress) {
-        socket = new SchedulerSocket(this, elevatorAddress);
-        elevatorSocket = new SchedulerElevatorSocket(this, elevatorAddress);
-        receiveQueue = new LinkedList<>();
-        upQueue = new ArrayList<>();
-        downQueue = new ArrayList<>();
-        elevatorEndPacket = new FloorRequest();
-        elevatorQueue = new LinkedList<>();
-    }
-
-    /**
      * Delays the execution of the thread for the specified time.
      *
      * @param ms Time in milliseconds to sleep.
@@ -241,20 +228,7 @@ public class Scheduler implements Runnable {
     }
 
     public static void main (String args[]) throws IOException {
-        String elevatorAddress = "";
-        BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
-        InetAddress schedulerAddress;
-        try {
-            schedulerAddress = InetAddress.getLocalHost();
-            System.out.println("Scheduler's Address is " + schedulerAddress.getHostAddress());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        System.out.println("Enter the Elevators IP address: ");
-        elevatorAddress = inputReader.readLine();
-        inputReader.close();
-        Thread scheduler =  new Thread(new Scheduler(elevatorAddress));
+        Thread scheduler =  new Thread(new Scheduler());
         scheduler.start();
     }
 

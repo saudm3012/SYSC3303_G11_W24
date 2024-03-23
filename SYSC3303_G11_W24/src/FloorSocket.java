@@ -34,30 +34,6 @@ public class FloorSocket extends Thread
          this.floorSubsystem = floorSubsystem; 
     }
 
-      /**
-     * The constructor for this class.
-     */
-    public FloorSocket (FloorSubsystem floorSubsystem, String schedulerAddress) {
-        try {
-            // Construct a datagram socket and bind it to any available 
-            // port on the local host machine. This socket will be used to
-            // send UDP Datagram packets.
-            sendReceiveSocket = new DatagramSocket();
-            
-            //receiveSocket.setSoTimeout(2000);
-         } catch (SocketException se) {
-            se.printStackTrace();
-            System.exit(1);
-         }
-         try {
-            this.schedulerAddress = InetAddress.getByName(schedulerAddress);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-         this.floorSubsystem = floorSubsystem; 
-    }
-
     /**
      * Outputs sendPacket to the console
      */

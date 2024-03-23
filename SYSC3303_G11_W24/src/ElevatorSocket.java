@@ -35,30 +35,6 @@ public class ElevatorSocket extends Thread
     }
 
     /**
-     * The constructor for this class.
-     */
-    public ElevatorSocket (int port, Elevator elevator, String schedulerAddress) {
-        try {
-            // Construct a datagram socket and bind it to 2000 + elevator num
-            // port on the local host machine. This socket will be used to
-            // send UDP Datagram packets.
-            sendReceiveSocket = new DatagramSocket(port);
-            
-            //receiveSocket.setSoTimeout(2000);
-         } catch (SocketException se) {
-            se.printStackTrace();
-            System.exit(1);
-         }
-        try {
-            this.schedulerAddress = InetAddress.getByName(schedulerAddress);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-         this.elevator = elevator; 
-    }
-
-    /**
      * Outputs sendPacket to the console
      */
     private void printSendingInfo(String dataPacket){

@@ -3,88 +3,60 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 
-public class ElevatorSubsystem extends Thread{
-     
-     //List of elevators
-     private Elevator elevatorList[];
-     
-     
-     /**
-      * Create a new elevator subsystem with numElevators and numFloors
-      * @param numElevators the number of elevators in the system
-      */
-     public ElevatorSubsystem(int numFloors, int numElevators) {
-         elevatorList = new Elevator[numElevators];
-         
-         //Initialize the elevators
-         for (int i = 0; i < numElevators; i ++) {
-             elevatorList[i] = ((new Elevator(i,numFloors)));
-         }
+public class ElevatorSubsystem extends Thread {
 
-     }
+    // List of elevators
+    private Elevator elevatorList[];
 
-     /**
-      * Create a new elevator subsystem with numElevators and numFloors
-      * @param numFloors the number of floors in the system
-      * @param numElevators the number of elevators in the system
-      * @param schedulerAddress the address of the scheduler
-      */
-      public ElevatorSubsystem(int numFloors, int numElevators, String schedulerAddress){
+    /**
+     * Create a new elevator subsystem with numElevators and numFloors
+     * 
+     * @param numElevators the number of elevators in the system
+     */
+    public ElevatorSubsystem(int numFloors, int numElevators) {
         elevatorList = new Elevator[numElevators];
-        
-        //Initialize the elevators
-        for (int i = 0; i < numElevators; i ++) {
-            elevatorList[i] = ((new Elevator(i,numFloors,schedulerAddress)));
+
+        // Initialize the elevators
+        for (int i = 0; i < numElevators; i++) {
+            elevatorList[i] = ((new Elevator(i, numFloors)));
         }
 
     }
-          
-     /**
-      * Close the sockets of all elevators
-      */
-     public void closeSockets() {
-         // We're finished, so close the sockets.
-         for (Elevator e: elevatorList) {
-             e.closeSockets();
-         }
-     }
-     
-     /**
-      * Print a status message in the console
-      * @param message the message to be printed
-      */
-     public void print(String message) {
-         System.out.println("ELEVATOR SUBSYSTEM: " + message);
-     }
-     public void run() {
-        for (Elevator elevator: elevatorList) {
 
+    /**
+     * Close the sockets of all elevators
+     */
+    public void closeSockets() {
+        // We're finished, so close the sockets.
+        for (Elevator e : elevatorList) {
+            e.closeSockets();
+        }
+    }
 
-            try{
+    /**
+     * Print a status message in the console
+     * 
+     * @param message the message to be printed
+     */
+    public void print(String message) {
+        System.out.println("ELEVATOR SUBSYSTEM: " + message);
+    }
+
+    public void run() {
+        for (Elevator elevator : elevatorList) {
+
+            try {
                 Thread.sleep(1000);
-            }
-            catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.exit(0);
             }
-			elevator.start();
-		}
-    }
-    public static void main (String args[]) throws IOException {
-        String schedulerAddress = "";
-        BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
-        InetAddress elevatorAddress;
-        try {
-            elevatorAddress = InetAddress.getLocalHost();
-            System.out.println("ElevatorSubsystem's Address is " + elevatorAddress.getHostAddress());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            System.exit(1);
+            elevator.start();
         }
-        System.out.println("Enter the Schedulers IP address: ");
-        schedulerAddress = inputReader.readLine();
-        inputReader.close();
-        Thread elevatorSubystem = new ElevatorSubsystem(5,3, schedulerAddress);
+    }
+
+    public static void main(String args[]) throws IOException {
+        Thread elevatorSubystem = new ElevatorSubsystem(5, 3);
         elevatorSubystem.start();
     }
- }
+}

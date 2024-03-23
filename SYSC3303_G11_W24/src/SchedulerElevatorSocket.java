@@ -35,31 +35,6 @@ public class SchedulerElevatorSocket extends Thread implements  AutoCloseable{
         this.scheduler = scheduler;
     }
 
-    public SchedulerElevatorSocket(Scheduler scheduler, String elevatorAddress){
-        try {
-            // Construct a datagram socket and bind it to any available
-            // port on the local host machine. This socket will be used to
-            // send UDP Datagram packets.
-            sendSocket = new DatagramSocket();
-
-            // Construct a datagram socket and bind it to port 5000
-            // on the local host machine. This socket will be used to
-            // receive UDP Datagram packets from floor subsystem and elevators.
-            elevatorReceiveSocket = new DatagramSocket(4999);
-
-        } catch (SocketException se) {
-            se.printStackTrace();
-            System.exit(1);
-        }
-        try {
-            this.elevatorAddress = InetAddress.getByName(elevatorAddress);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        this.scheduler = scheduler;
-    }
-
     void sendToElevator(FloorRequest packet, int elevatorNum) {
         // serialize data into byte array
         byte[] sendDataBytes = new byte[0];

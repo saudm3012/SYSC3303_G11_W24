@@ -8,7 +8,6 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
     DatagramSocket floorReceiveSocket;
     private Scheduler scheduler;
     InetAddress elevatorAddress;
-    private final int ELEVATOR_PORT = 2000;
 
 
     /*
@@ -32,33 +31,6 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
         }
         try {
             elevatorAddress = InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        this.scheduler = scheduler;
-    }
-    /*
-     * The Constructor of this class. Used when running on seperate machnines to get IP address.
-     */
-    public SchedulerSocket(Scheduler scheduler, String elevatorAddress){
-        try {
-            // Construct a datagram socket and bind it to any available
-            // port on the local host machine. This socket will be used to
-            // send UDP Datagram packets.
-            sendSocket = new DatagramSocket();
-
-            // Construct a datagram socket and bind it to port 5000
-            // on the local host machine. This socket will be used to
-            // receive UDP Datagram packets from floor subsystem and elevators.
-            floorReceiveSocket = new DatagramSocket(5000);
-
-        } catch (SocketException se) {
-            se.printStackTrace();
-            System.exit(1);
-        }
-        try {
-            this.elevatorAddress = InetAddress.getByName(elevatorAddress);
         } catch (UnknownHostException e) {
             e.printStackTrace();
             System.exit(1);

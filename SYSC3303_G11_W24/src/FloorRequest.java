@@ -13,6 +13,7 @@ public class FloorRequest implements Serializable {
     private int car;
     private boolean isEmpty;
     private boolean endPacket;
+    private Fault fault;
 
     /**
      * Creates a new empty Data packet.
@@ -20,6 +21,7 @@ public class FloorRequest implements Serializable {
     public FloorRequest() {
         this.isEmpty = true;
         this.endPacket = true;
+        this.fault = Fault.NONE;
     }
 
     /**
@@ -30,6 +32,8 @@ public class FloorRequest implements Serializable {
      * @param floor     String, floor where request was made
      * @param direction String, car direction
      * @param car       String, requested car number
+     * @param endPacket boolean, end packet of transmition? true false otherwise
+     * @param fault     Fault, enum specifying fault associated with request
      */
     public FloorRequest(String time, String floor, String direction, String car, boolean end){
         this.time = LocalTime.parse(time);
@@ -39,6 +43,29 @@ public class FloorRequest implements Serializable {
         this.car = Integer.parseInt(car);
         this.isEmpty = false;
         this.endPacket = end;
+        this.fault = Fault.NONE;
+    }
+
+    /**
+     * Instantiates a new Data packet
+     * with the specified information.
+     *
+     * @param time      String, time of request
+     * @param floor     String, floor where request was made
+     * @param direction String, car direction
+     * @param car       String, requested car number
+     * @param endPacket boolean, end packet of transmition? true false otherwise
+     * @param fault     Fault, enum specifying fault associated with request
+     */
+    public FloorRequest(String time, String floor, String direction, String car, boolean end, Fault fault){
+        this.time = LocalTime.parse(time);
+        this.floor = Integer.parseInt(floor);
+        if(direction.equals("Up")){this.goingUp = true;}
+        else if (direction.equals("Down")) {this.goingUp = false;}
+        this.car = Integer.parseInt(car);
+        this.isEmpty = false;
+        this.endPacket = end;
+        this.fault = fault;
     }
 
     /**
@@ -55,6 +82,14 @@ public class FloorRequest implements Serializable {
      */
     public int getFloor() {
         return this.floor;
+    }
+
+    /**
+     * *
+     * @return Fault the fault associated with the request if there is one.
+     */
+    public Fault getFault() {
+        return this.fault;
     }
 
     /**
@@ -102,6 +137,7 @@ public class FloorRequest implements Serializable {
                 "\t floor: " + this.floor + "\n" +
                 "\t directionIsUp: " + this.goingUp + "\n" +
                 "\t carButton: " + this.car + "\n" +
+                "\t fault: " + this.fault + "\n" +
                 "}\n": "End DataPacket\n";
     }
 
@@ -155,6 +191,7 @@ public class FloorRequest implements Serializable {
             this.goingUp = temp.goingUp;
             this.car = temp.car;
             this.endPacket = temp.endPacket;
+            this.fault = temp.fault;
             in.close();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

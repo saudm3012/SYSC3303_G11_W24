@@ -28,15 +28,6 @@ public class FloorSubsystem implements Runnable
     }
 
     /**
-     * The constructor for this class. Used when running on seperate machines
-     */
-    public FloorSubsystem (String schedulerAddress) {
-        socket = new FloorSocket(this, schedulerAddress);
-        inputQueue = new LinkedList<>();
-        inputData = new ArrayList<>();
-    }
-
-    /**
      *
      * @param p DataPacket to be added to input queue
      * @return
@@ -80,24 +71,12 @@ public class FloorSubsystem implements Runnable
 
     }
     public static void main (String args[]) throws IOException {
-        String schedulerAddress = "";
-        BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
-        InetAddress floorAddress;
         InputReader datafile = new InputReader("data.txt");
-        FloorSubsystem floorSubsystem = new FloorSubsystem(schedulerAddress);
+        FloorSubsystem floorSubsystem = new FloorSubsystem();
         Thread floorThread = new Thread(floorSubsystem); 
-        try {
-            floorAddress = InetAddress.getLocalHost();
-            System.out.println("FloorSubsytem's Address is " + floorAddress.getHostAddress());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
         System.out.println("Enter the Scheduler's IP address: ");
-        schedulerAddress = inputReader.readLine();
         while(floorSubsystem.addPacketToQueue(datafile.getNextPacket())){};
-        floorSubsystem.addPacketToQueue(datafile.getNextPacket()); 
-        inputReader.close();
+        floorSubsystem.addPacketToQueue(datafile.getNextPacket());
         floorThread.start();
     }
 }
