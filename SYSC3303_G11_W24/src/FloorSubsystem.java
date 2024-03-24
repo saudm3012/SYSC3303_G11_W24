@@ -80,7 +80,6 @@ public class FloorSubsystem implements Runnable
         InputReader datafile = new InputReader("data.txt");
         FloorSubsystem floorSubsystem = new FloorSubsystem();
         Thread floorThread = new Thread(floorSubsystem); 
-        System.out.println("Enter the Scheduler's IP address: ");
         while(floorSubsystem.addPacketToQueue(datafile.getNextPacket())){};
         floorSubsystem.addPacketToQueue(datafile.getNextPacket());
         floorThread.start();
