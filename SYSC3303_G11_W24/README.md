@@ -1,6 +1,6 @@
 SYSC 3303 G11 W24 - Elvator System Project - Iteration 4
 
-The goal of this iteration is to expand the Scheduler to handle and deal with faults that may occcur
+The goal of this iteration is to expand the elevator system to handle faults that may occcur
 
 ### Team Members
 
@@ -16,8 +16,6 @@ The goal of this iteration is to expand the Scheduler to handle and deal with fa
 
 ### Included directories/files
 
-NOTE: A seperate folder without jupiter was included as we do not have a MAC to set if our test steps worked. They work on our windows devices.
-
 * SYSC3303_G11_W24' - IntelliJ project directory
 * data.txt - input file to be read with specified header
 * FloorRequest.java - Data that contains info from each row of input (time, floor, direction, car)
@@ -31,30 +29,29 @@ NOTE: A seperate folder without jupiter was included as we do not have a MAC to 
 * Scheduler - managing communication between FloorSocket and ElevatorSocket in an elevator system. Handling the flow of data packets between floors and elevators.
 * SchedulerSocket - managing communication between the scheduler and elevators or floor subsystems in an elevator system. It handles the sending and receiving of data packets through UDP using DatagramSockets.
 * ScheulerElevatorSocket.java - manages communication between the elevator and the elevators. Handles sending and receieving of data between elevator and scheduler through UDP and Datagram sockets
-* SchedulerState - defines an enumeration SchedulerState with two possible states: IDLE and WAIT_ACK
-* ElevatorStates - defines an enumeration ElevatorStates with four possible states: IDLE, MOVING, LOADING, and UNLOADING.
+* SchedulerState - defines an enumeration with possible states the scheduler can be in
+* ElevatorStates - defines an enumeration with possible states the elevator can be in
 * Direction.java - Defines enumeration of the direction that the elevator is currently moving
 * ElevatorData.java - Contains info on the elevators direction
 * Fault.java - Defines enumeration of the different Faults that could occur
 * Timer.java - simple timer that can be used to manage timeouts in a state machine
-
-
   
 Test files
+* ElevatorStateTest - JUnit test class designed to test the state transitions of an Elevator object in an elevator system. The test focuses on the elevator state machine, simulating the process of receiving a request, moving to the specified floor, loading/unloading passengers, and returning to an idle state.
+For iteration 4, handling of faults was included
 * InputReaderTest - Tests if input reader receives data packet info correctly from data.txt file
 * FloorSocketTest - Tests FloorSubsystem send() functionality and make sure info send is correct
 * ElevatorSocketTest - Tests Elevators ProcessData() functionality and make sure info send is correct
 * FloorRequestTest - Tests conversion between bytes and FloorRequest type
-* ElevatorStateTest - JUnit test class designed to test the state transitions of an Elevator object in an elevator system. The test focuses on the elevator state machine, simulating the process of receiving a request, moving to the specified floor, loading/unloading passengers, and returning to an idle state.
 * SchedulerTest - JUnit test case for the Scheduler to test if scheduler transitions from its states on time
 
-### Set-up Instructions (For Iteration 3)
+### Set-up Instructions (For Iteration 4)
 
 Instructions below for macOS Users (assuming no pre-installations have been done):
 
 1. Download Zip File L1_G11_iteration_1.zip
 2. Open IntelliJ IDEA CE and select "open"
-3. Navigate to the folder under L1_G11_iteration_1 called SYSC3303_G11_W24 and click "open"
+3. Navigate to the folder SYSC3303_G11_W24 and click "open"
 4. A pop-up screen will appear, select "Trust Project"
 5. Let the project load for a few minutes
 6. Under DataPacketTest.java, line 1 is import org.junit.jupiter.api.BeforeEach;
@@ -72,14 +69,14 @@ Instructions below for macOS Users (assuming no pre-installations have been done
 
 Project has been developed and tested using IntelliJ
 - Download project and run the main() class, actions that take place to initaite a Fault during normal operation.
-- or run scheduler main(), then elevatorsubsystem main() then floorsubsystem Main()
+- or run Scheduler main(), then Elevatorsubsystem main() then Floorsubsystem Main()
 
 For testing Junit must be installed
 - To run tests run test files above
 
 ### Breakdown of Responsibilities for Iteration 4
 * Floor (all files) - Zakariya/Mohammad/Jatin
-* InputReader - Jatin/Mohammad
+* InputReader - Jatin/Mohammad/Zakariya
 * Elevator (all files) - Zakariya
 * Scheduler (all files)- Mohammad
 * Test files - Jatin/Ali
