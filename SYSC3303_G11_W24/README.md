@@ -1,6 +1,6 @@
-SYSC 3303 G11 W24 - Elvator System Project - Iteration 3
+SYSC 3303 G11 W24 - Elvator System Project - Iteration 4
 
-The goal of this iteration is to add multiple elevators and maximize throughput
+The goal of this iteration is to expand the Scheduler to handle and deal with faults that may occcur
 
 ### Team Members
 
@@ -35,6 +35,8 @@ NOTE: A seperate folder without jupiter was included as we do not have a MAC to 
 * ElevatorStates - defines an enumeration ElevatorStates with four possible states: IDLE, MOVING, LOADING, and UNLOADING.
 * Direction.java - Defines enumeration of the direction that the elevator is currently moving
 * ElevatorData.java - Contains info on the elevators direction
+* Fault.java - Defines enumeration of the different Faults that could occur
+* Timer.java - simple timer that can be used to manage timeouts in a state machine
 
 
   
@@ -66,13 +68,16 @@ Instructions below for macOS Users (assuming no pre-installations have been done
 14. Select Main.java in the project directory, and click on the green play button in the top right corner 
 15. The project should run, and output should appear in the output console below
 
+### Running system - intructions for Iteration 4
+
 Project has been developed and tested using IntelliJ
-- Download project and run the Main() class, actions that take place to show data transfer are displayed on console
+- Download project and run the main() class, actions that take place to initaite a Fault during normal operation.
+- or run scheduler main(), then elevatorsubsystem main() then floorsubsystem Main()
 
 For testing Junit must be installed
 - To run tests run test files above
 
-### Breakdown of Responsibilities for Iteration 3
+### Breakdown of Responsibilities for Iteration 4
 * Floor (all files) - Zakariya/Mohammad/Jatin
 * InputReader - Jatin/Mohammad
 * Elevator (all files) - Zakariya
