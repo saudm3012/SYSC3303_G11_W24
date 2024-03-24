@@ -92,24 +92,6 @@ public class Scheduler implements Runnable {
     }
 
     /**
-     * Checks if the receive queue is empty.
-     *
-     * @return true if the receive queue is empty, false otherwise.
-     */
-    public boolean receiveDownQueueIsEmpty() {
-        return upQueue.isEmpty();
-    }
-
-    /**
-     * Removes and returns the next data packet from the receive queue.
-     *
-     * @return The next data packet in the receive queue.
-     */
-    public FloorRequest receiveQueueRemove() {
-        return receiveQueue.remove();
-    }
-
-    /**
      * Adds a data packet to the receive queue.
      *
      * @param data The data packet to be added.

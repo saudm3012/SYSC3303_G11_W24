@@ -18,6 +18,9 @@ public class FloorSubsystem implements Runnable
     public FloorSocket socket; // communicator helper thread to send and receive data
     private ArrayList<ArrayList<String>> inputData;
 
+    public int numRequests;
+
+
     /**
      * The constructor for this class.
      */
@@ -58,11 +61,11 @@ public class FloorSubsystem implements Runnable
     }
 
     public void run() {
-        int noRequests = 0; //Counts number of requests sent by floor
+        numRequests = 0; //Counts number of requests sent by floor
         socket.start();
         while(!inputQueue.isEmpty()) {
             socket.send(inputQueue.remove());
-            noRequests += 1;
+            numRequests += 1;
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -70,7 +73,7 @@ public class FloorSubsystem implements Runnable
                 System.exit(1);
             }
         }
-        System.out.println("Number of requests sent by FloorSubsystem: " + noRequests);
+        System.out.println("Number of requests sent by FloorSubsystem: " + numRequests);
 
     }
     public static void main (String args[]) throws IOException {
