@@ -260,6 +260,28 @@ public class Elevator extends Thread {
             state = ElevatorStates.STOP;
         } else if (!isEmpty()) {
             // have passengers to service
+            // check if we need to change direction 
+            boolean changeDirection = true;
+            if (direction == Direction.UP){
+                // if we are currently going up check if there is a person to drop off/pickup at a floor above
+                for (int nextFloor = currFloor; nextFloor < numFloors; nextFloor++){
+                    if (elevatorButtons[nextFloor] >= 1 || pickUpFloor[nextFloor]){
+                        changeDirection = false;
+                        break;
+                    }
+                }
+            } else {
+                // if we are currently going down check if there is a person to drop off/pickup at a floor below
+                for (int nextFloor = 0; nextFloor < currFloor; nextFloor++){
+                    if (elevatorButtons[nextFloor] >= 1 || pickUpFloor[nextFloor]){
+                        changeDirection = false;
+                        break;
+                    }
+            }
+        }
+            if (changeDirection){
+                direction = (direction == Direction.DOWN) ? Direction.UP : Direction.DOWN;
+            }
             state = ElevatorStates.MOVING;
         } else if (hasPickUpRequest()) {
             // we dont have a passenger but need to pick them up
