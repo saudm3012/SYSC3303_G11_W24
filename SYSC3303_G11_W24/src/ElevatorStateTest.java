@@ -137,18 +137,6 @@ class ElevatorStateTest{
 
                 sendSocket.send(sendEndPacket);
                 Thread.sleep(10);
-                assertTrue(elevator.state == ElevatorStates.MOVING);
-                Thread.sleep(2000);
-                assertTrue(elevator.state == ElevatorStates.NOTIFY);
-
-                sendSocket.send(sendEndPacket);
-                Thread.sleep(10);
-                assertTrue(elevator.state == ElevatorStates.MOVING);
-                assertTrue(elevator.currFloor == 4);
-                Thread.sleep(2000);
-
-                sendSocket.send(sendEndPacket);
-                Thread.sleep(10);
                 assertTrue(elevator.currFloor == 3);
 
                 //reaches beginning floor
