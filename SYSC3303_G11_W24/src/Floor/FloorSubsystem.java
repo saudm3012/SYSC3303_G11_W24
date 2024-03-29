@@ -1,15 +1,12 @@
-/**
- * The FloorSubsystem thread simulates the arrival of passengers to the elevators and for simulating all button 
+package Floor; /**
+ * The Floor.FloorSubsystem thread simulates the arrival of passengers to the elevators and for simulating all button
  * presses and lamps at the floor.
  *
  * @author  Zakariya Khan 101186641
  * @author Mohammad Saud 101195172
  */
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.*;
 import java.util.*;
 
 public class FloorSubsystem implements Runnable
@@ -73,7 +70,7 @@ public class FloorSubsystem implements Runnable
                 System.exit(1);
             }
         }
-        System.out.println("Number of requests sent by FloorSubsystem: " + numRequests);
+        System.out.println("Number of requests sent by Floor.FloorSubsystem: " + numRequests);
 
     }
     public static void main (String args[]) throws IOException {

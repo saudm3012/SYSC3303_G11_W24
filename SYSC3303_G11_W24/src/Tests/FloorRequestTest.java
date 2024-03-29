@@ -1,3 +1,6 @@
+package Tests;
+
+import Floor.FloorRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

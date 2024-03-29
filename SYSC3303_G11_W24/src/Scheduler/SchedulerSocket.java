@@ -1,3 +1,7 @@
+package Scheduler;
+
+import Floor.FloorRequest;
+
 import java.io.IOException;
 import java.net.*;
 
@@ -91,7 +95,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
      * Outputs sendPacket to the console
      */
     void printSendingInfo(String dataPacket, boolean isToFloor) {
-        System.out.println("\nScheduler: Sending packet to: " + (isToFloor ? "Floor Subsystem": "Elevator"));
+        System.out.println("\nScheduler.Scheduler: Sending packet to: " + (isToFloor ? "Floor Subsystem": "Elevator"));
         System.out.println("To host: " + sendPacket.getAddress());
         System.out.println("Destination host port: " + sendPacket.getPort());
         int len = sendPacket.getLength();
@@ -104,7 +108,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
      * Outputs receivePacket to the console
      */
     void printReceivingInfo(String dataPacket, boolean isFromFloor) {
-        System.out.println("\nScheduler: Packet received from: " + (isFromFloor ? "Floor Subsystem" : "Elevator"));
+        System.out.println("\nScheduler.Scheduler: Packet received from: " + (isFromFloor ? "Floor Subsystem" : "Elevator"));
         System.out.println("From host: " + receivePacket.getAddress());
         System.out.println("Host port: " + receivePacket.getPort());
         int len = receivePacket.getLength();
@@ -114,7 +118,7 @@ public class SchedulerSocket extends Thread implements  AutoCloseable{
     }
 
     /**
-     * Close resources when the Scheduler is no longer needed.
+     * Close resources when the Scheduler.Scheduler is no longer needed.
      */
     @Override
     public void close() {

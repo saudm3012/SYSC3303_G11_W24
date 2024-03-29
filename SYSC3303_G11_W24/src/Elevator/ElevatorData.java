@@ -1,3 +1,5 @@
+package Elevator;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * Elevator Data that contains info on elevators direction
+ * Elevator.Elevator Data that contains info on elevators direction
  * @author Zakariya Khan 101186641
  */
 public class ElevatorData implements Serializable {
@@ -30,7 +32,7 @@ public class ElevatorData implements Serializable {
      * with the specified information.
      *
      * @param floor     int, floor elevator is on
-     * @param direction Direction, elevator direction
+     * @param direction Elevator.Direction, elevator direction
      * @param empty   boolean, if elevator is empty or not
      */
     public ElevatorData(int floor, Direction direction, boolean empty, int elevatorNum) {
@@ -45,7 +47,7 @@ public class ElevatorData implements Serializable {
     }
     
     public boolean isUp() {
-        return (direction==Direction.UP ? true : false);
+        return (direction== Direction.UP ? true : false);
     }
 
     public int getFloor() {
@@ -72,9 +74,9 @@ public class ElevatorData implements Serializable {
      * @return String, all fields of Dataacket in String representation
      */
     public String toString() {
-        return "ElevatorData { \n" +
+        return "Elevator.ElevatorData { \n" +
                 "\t Floor: " + this.floor + "\n" +
-                "\t Direction: " + ((this.isUp()) ? "UP" : "DOWN") + "\n" +
+                "\t Elevator.Direction: " + ((this.isUp()) ? "UP" : "DOWN") + "\n" +
                 "\t isEmpty: " + ((this.isEmpty) ? "True" : "False") + "\n" +
                 "\t ElevatorNum: " + this.elevatorNum + "\n" +
                 "}\n";

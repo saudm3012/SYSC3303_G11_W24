@@ -1,24 +1,22 @@
-
+package Scheduler;
 /**
- * The Scheduler class that manages communication between FloorSocket and ElevatorSocket.
+ * The Scheduler.Scheduler class that manages communication between Floor.FloorSocket and Elevator.ElevatorSocket.
  *
- * This class acts as the central controller, receiving data packets from FloorSocket,
- * and forwarding them to ElevatorSocket. It transitions between the IDLE and WAIT_ACK states.
+ * This class acts as the central controller, receiving data packets from Floor.FloorSocket,
+ * and forwarding them to Elevator.ElevatorSocket. It transitions between the IDLE and WAIT_ACK states.
  *
  * @author Mohammad Saud
  * @author Riya Arora (101190033)
  */
 
-import javax.swing.plaf.ListUI;
-import java.io.BufferedReader;
+import Elevator.ElevatorData;
+import Floor.FloorRequest;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.List;
-import java.util.Iterator;
 
 public class Scheduler implements Runnable {
 
@@ -116,7 +114,7 @@ public class Scheduler implements Runnable {
     private void idle() {
         while(true) {
             if(!elevatorQueue.isEmpty()){
-                // Elevator has reached a floor and wants a request
+                // Elevator.Elevator has reached a floor and wants a request
                 this.state = SchedulerState.SELECT_REQ;
                 return;
             }
@@ -200,15 +198,15 @@ public class Scheduler implements Runnable {
      */
     public void execute() {
         switch (this.state) {
-            case IDLE:
+            case SchedulerState.IDLE:
                 System.out.println("[SCHEDULER]: IDLE");
                 this.idle();
                 break;
-            case PROCESS_REQ:
+            case SchedulerState.PROCESS_REQ:
                 System.out.println("[SCHEDULER]: PROCESS_REQ");
                 this.process_request();
                 break;
-            case SELECT_REQ:
+            case SchedulerState.SELECT_REQ:
                 System.out.println("[SCHEDULER] SELECT_REQ");
                 this.select_request();
                 break;

@@ -1,5 +1,10 @@
+package Elevator;
+
 import java.io.IOException;
 import java.net.*;
+
+import Elevator.Elevator;
+import Floor.FloorRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,7 +77,7 @@ class ElevatorStateTest{
         }
     
         /**
-         * Tests the behavior of the Elevator state machine
+         * Tests the behavior of the Elevator.Elevator state machine
          */
         @Test
         public void testElevatorStateMachine() {
@@ -100,7 +105,7 @@ class ElevatorStateTest{
                 assertTrue(elevator.state == ElevatorStates.STOP);
                 // wait for doors to close
                 Thread.sleep(6020);
-                // Elevator moves 1 floor towards drop-off
+                // Elevator.Elevator moves 1 floor towards drop-off
                 assertTrue(elevator.state == ElevatorStates.MOVING);
                 // wait to move floor
                 Thread.sleep(2001);
@@ -109,7 +114,7 @@ class ElevatorStateTest{
                 assertTrue(elevator.state == ElevatorStates.NOTIFY);
                 sendSocket.send(sendEndPacket);
                 Thread.sleep(10);
-                //Elevator moves 1 floor towards drop-off
+                //Elevator.Elevator moves 1 floor towards drop-off
                 assertTrue(elevator.state == ElevatorStates.MOVING);
                 Thread.sleep(2020);
                 assertTrue(elevator.currFloor == 4);
@@ -121,12 +126,12 @@ class ElevatorStateTest{
                 assertTrue(elevator.state == ElevatorStates.STOP);
                 // wait for doors to close
                 Thread.sleep(6001);
-                // Elevator should notify of no requests to handle
+                // Elevator.Elevator should notify of no requests to handle
                 assertTrue(elevator.state == ElevatorStates.NOTIFY);
                 Thread.sleep(1000);
 
                 // Iteration 4
-                // Fault recovery
+                // Floor.Fault recovery
                 sendSocket.send(sendFaultPacket);
                 Thread.sleep(10);
                 sendSocket.send(sendEndPacket);

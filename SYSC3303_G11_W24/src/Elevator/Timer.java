@@ -1,5 +1,7 @@
+package Elevator;
+
 /**
- * The Timer class represents a simple timer that can be used to manage timeouts in a state machine.
+ * The Elevator.Timer class represents a simple timer that can be used to manage timeouts in a state machine.
  * It extends the Thread class to run as a separate thread.
  * 
  * @author Zakariya Khan 101186641
@@ -11,7 +13,7 @@ public class Timer extends Thread {
     private int setTime; // Time duration for the timer in milliseconds
 
     /**
-     * Constructs a new Timer object with a reference to the context wrapper.
+     * Constructs a new Elevator.Timer object with a reference to the context wrapper.
      *
      * @param wrapper The context wrapper for the state machine.
      */
@@ -39,7 +41,7 @@ public class Timer extends Thread {
     }
     
     /**
-     * The run method of the Timer thread.
+     * The run method of the Elevator.Timer thread.
      * It continuously checks whether the timer is set and triggers the timeout event in the context wrapper
      * after the specified time duration elapses.
      */

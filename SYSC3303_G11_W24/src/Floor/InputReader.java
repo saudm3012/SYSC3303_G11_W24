@@ -1,3 +1,7 @@
+package Floor;
+
+import Floor.FloorRequest;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +23,7 @@ public class InputReader {
 
     /**
      *
-     * @param fileReadName File InputReader object will be bound to read from
+     * @param fileReadName File Floor.InputReader object will be bound to read from
      */
     public InputReader(String fileReadName) {
         this.fileName = fileReadName;

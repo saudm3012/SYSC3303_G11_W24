@@ -1,13 +1,15 @@
-
+package Elevator;
 /**
- * The Elevator class represents an elevator system that communicates with a Scheduler.
+ * The Elevator.Elevator class represents an elevator system that communicates with a Scheduler.Scheduler.
  *
  * This class handles the movement, loading, and unloading of the elevator, 
- * receiving instructions from the Scheduler and interacting with the building's floors.
+ * receiving instructions from the Scheduler.Scheduler and interacting with the building's floors.
  * 
  * @author Zakariya Khan 101186641
  * @author Jatin Jain 101184197
  */
+
+import Floor.FloorRequest;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -23,7 +25,7 @@ public class Elevator extends Thread {
     // Queue for receiving data packets from scheduler.
     private Queue<FloorRequest> receiveQueue;
 
-    // Direction of the Elevator
+    // Elevator.Direction of the Elevator.Elevator
     private Direction direction;
 
     // The current floor of the elevator.
@@ -125,7 +127,7 @@ public class Elevator extends Thread {
     }
 
     /**
-     * returns the current Elevator.
+     * returns the current Elevator.Elevator.
      */
     private String name() {
         return "[ELEVATOR-"+ elevatorData.getElevatorNum()+"]: ";
@@ -137,8 +139,8 @@ public class Elevator extends Thread {
     private void printCurrentFloor() {
         System.out.print(name() + "Reached Floor: ");
         System.out.print(currFloor);
-        System.out.print(" | Direction: " + (direction==Direction.UP ? "UP" : "DOWN"));
-        System.out.println(" | Elevator Buttons: " + elevatorButtonsToString());
+        System.out.print(" | Elevator.Direction: " + (direction== Direction.UP ? "UP" : "DOWN"));
+        System.out.println(" | Elevator.Elevator Buttons: " + elevatorButtonsToString());
     }
 
     /**
@@ -202,7 +204,7 @@ public class Elevator extends Thread {
             try {
                 Thread.sleep(Long.MAX_VALUE); // Door fault 
             } catch (InterruptedException e) {
-                System.out.println(name()+ "Door Fault Detected! Door stuck open.");
+                System.out.println(name()+ "Door Floor.Fault Detected! Door stuck open.");
                 sleep(2900); // 6 seconds total to handle door fault
             }
         }
@@ -318,7 +320,7 @@ public class Elevator extends Thread {
             try {
                 Thread.sleep(Long.MAX_VALUE); // Floor fault
             } catch (InterruptedException e) {
-                System.out.println(name()+ "Floor Fault Detected! Terminating...");
+                System.out.println(name()+ "Floor Floor.Fault Detected! Terminating...");
                 terminate = true;
                 return;
             }
@@ -362,22 +364,22 @@ public class Elevator extends Thread {
         faultTimer.start();
         while (!terminate) {
             switch (state) {
-                case NOTIFY:
+                case ElevatorStates.NOTIFY:
                     if (printLatch)
                         printState();
                     notifyScheduler();
                     break;
-                case PROCESSING:
+                case ElevatorStates.PROCESSING:
                     if (printLatch)
                         printState();
                     processRequests();
                     break;
-                case MOVING:
+                case ElevatorStates.MOVING:
                     if (printLatch)
                         printState();
                     move();
                     break;
-                case STOP:
+                case ElevatorStates.STOP:
                     printState();
                     elevatorStop();
                     break;

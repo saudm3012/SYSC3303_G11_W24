@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9e49a950-f552-48aa-b95e-37143f5e7b40" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/SYSC3303_G11_W24/src/Elevator.java" beforeDir="false" afterPath="$PROJECT_DIR$/SYSC3303_G11_W24/src/Elevator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SYSC3303_G11_W24/src/ElevatorSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/SYSC3303_G11_W24/src/ElevatorSocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SYSC3303_G11_W24/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SYSC3303_G11_W24/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SYSC3303_G11_W24/SYSC3303_G11_W24.iml" beforeDir="false" afterPath="$PROJECT_DIR$/SYSC3303_G11_W24/SYSC3303_G11_W24.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +22,7 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2e3y4FF5PWJqGAzF33uK0ohfmrC" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -31,13 +33,14 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Zakariya Khan/OneDrive - Carleton University/Carleton University/3rd Year/SYSC 3303 Real-Time Concurrent Systems/SYSC3303_G11_W24/SYSC3303_G11_W24"
+    "last_opened_file_path": "/Users/riyaarora/Documents/4th year/SYSC 3303/project-fr"
   }
 }]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.1-openjdk-21.0.1-4caba194b151-23eed401" />
+        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-2f79fb23" />
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-322ed176" />
       </set>
     </attachedChunks>
   </component>
