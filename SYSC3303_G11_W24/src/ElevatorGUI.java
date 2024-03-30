@@ -9,20 +9,20 @@ public class ElevatorGUI extends JFrame {
     private static JLabel[] elevatorPassengers;
     private static ElevatorPanel[] elevatorPanels;
 
-    public ElevatorGUI(int numElevators) {
+    public ElevatorGUI() {
         // Set up the main window
         super("Elevator GUI");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
-        setLayout(new GridLayout(2, numElevators));
+        setLayout(new GridLayout(2, 3)); // 2 rows, 3 elevators
 
         // Create the elevator status panels
-        elevatorCurrentFloor = new JLabel[numElevators];
-        elevatorDestinationFloor = new JLabel[numElevators];
-        elevatorCurrentStatus = new JLabel[numElevators];
-        elevatorPassengers = new JLabel[numElevators];
-        JPanel[] elevatorStatusPanels = new JPanel[numElevators];
-        for (int i = 0; i < numElevators; i++) {
+        elevatorCurrentFloor = new JLabel[3]; // 3 elevators
+        elevatorDestinationFloor = new JLabel[3]; // 3 elevators
+        elevatorCurrentStatus = new JLabel[3]; // 3 elevators
+        elevatorPassengers = new JLabel[3]; // 3 elevators
+        JPanel[] elevatorStatusPanels = new JPanel[3]; // 3 elevators
+        for (int i = 0; i < 3; i++) { // 3 elevators
             elevatorCurrentFloor[i] = new JLabel("Elevator" + (i + 1) + " current floor: 0");
             elevatorDestinationFloor[i] = new JLabel("Elevator" + (i + 1) + " destination floor: 0");
             elevatorCurrentStatus[i] = new JLabel("Elevator" + (i + 1)  + " state: IDLE");
@@ -39,8 +39,8 @@ public class ElevatorGUI extends JFrame {
         }
 
         // Create the elevator panels
-        elevatorPanels = new ElevatorPanel[numElevators];
-        for (int i = 0; i < numElevators; i++) {
+        elevatorPanels = new ElevatorPanel[3]; // 3 elevators
+        for (int i = 0; i < 3; i++) { // 3 elevators
             elevatorPanels[i] = new ElevatorPanel();
             add(elevatorPanels[i]);
         }
@@ -68,8 +68,8 @@ public class ElevatorGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        // Create and show the GUI with 4 elevators
-        SwingUtilities.invokeLater(() -> new ElevatorGUI(4));
+        // Create and show the GUI with 3 elevators and 5 floors
+        SwingUtilities.invokeLater(ElevatorGUI::new);
     }
 
     public class ElevatorPanel extends JPanel {
@@ -84,16 +84,16 @@ public class ElevatorGUI extends JFrame {
             super.paintComponent(g);
             // Draw the elevator
             g.setColor(Color.RED); // Elevator color
-            g.fillRect(50 + 200 * (getWidth() / 800), getHeight() - currentFloor * (getHeight() / 21) - 20, 100, 20);
+            g.fillRect(50 + 200 * (getWidth() / 800), getHeight() - currentFloor * (getHeight() / 6) - 20, 100, 20);
             g.setColor(Color.BLACK);
-            g.drawRect(50 + 200 * (getWidth() / 800), getHeight() - currentFloor * (getHeight() / 21) - 20, 100, 20);
+            g.drawRect(50 + 200 * (getWidth() / 800), getHeight() - currentFloor * (getHeight() / 6) - 20, 100, 20);
 
             // Draw the floors
             g.setColor(Color.BLUE); // Floor color
             g.setFont(new Font("Arial", Font.PLAIN, 12));
-            for (int i = 0; i <= 21; i++) {
-                g.drawString(Integer.toString(i), 5 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 21) + 5);
-                g.drawLine(50 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 21), 150 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 21));
+            for (int i = 0; i < 6; i++) { // 5 floors
+                g.drawString(Integer.toString(i), 5 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 6) + 5);
+                g.drawLine(50 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 6), 150 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 6));
             }
         }
     }
