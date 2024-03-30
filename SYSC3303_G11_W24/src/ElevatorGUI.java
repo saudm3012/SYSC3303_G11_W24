@@ -82,11 +82,23 @@ public class ElevatorGUI extends JFrame {
 
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            // Draw the elevator
+
+            // Draw the elevator cabin
             g.setColor(Color.RED); // Elevator color
-            g.fillRect(50 + 200 * (getWidth() / 800), getHeight() - currentFloor * (getHeight() / 6) - 20, 100, 20);
+            int elevatorWidth = 100;
+            int elevatorHeight = 20;
+            int elevatorX = 50 + 200 * (getWidth() / 800);
+            int elevatorY = getHeight() - currentFloor * (getHeight() / 6) - 20;
+            g.fill3DRect(elevatorX, elevatorY, elevatorWidth, elevatorHeight, true); // Fill with 3D effect
             g.setColor(Color.BLACK);
-            g.drawRect(50 + 200 * (getWidth() / 800), getHeight() - currentFloor * (getHeight() / 6) - 20, 100, 20);
+            g.drawRect(elevatorX, elevatorY, elevatorWidth, elevatorHeight); // Draw outline
+
+            // Draw the rope
+            g.setColor(Color.GRAY);
+            int ropeX = elevatorX + elevatorWidth / 2;
+            int ropeY = 0;
+            int ropeEndY = elevatorY;
+            g.drawLine(ropeX, ropeY, ropeX, ropeEndY); // Draw rope
 
             // Draw the floors
             g.setColor(Color.BLUE); // Floor color
@@ -96,5 +108,6 @@ public class ElevatorGUI extends JFrame {
                 g.drawLine(50 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 6), 150 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 6));
             }
         }
+
     }
 }
