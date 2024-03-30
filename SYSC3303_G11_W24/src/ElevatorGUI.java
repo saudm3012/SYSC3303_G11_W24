@@ -59,7 +59,7 @@ public class ElevatorGUI extends JFrame {
     }
 
     public int getCurrentFloor(int elevatorId) {
-        // Your elevator logic to get the current floor of the elevator with ID elevatorId goes here
+        //elevator logic to get the current floor of the elevator with ID elevatorId goes here
         return elevatorPanels[elevatorId].currentFloor;
     }
 
