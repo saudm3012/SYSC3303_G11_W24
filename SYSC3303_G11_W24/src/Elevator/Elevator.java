@@ -196,6 +196,17 @@ public class Elevator extends Thread {
     }
 
     /**
+     * returns a number of passengers in the elevator
+     */
+    private int getNumPassengers() {
+        int total = 0;
+        for (int count : elevatorButtons){
+            total += count;
+        }
+        return total;
+    }
+
+    /**
      * Prints door opening and closing while mimicing their timings.
      */
     private void openCloseDoors() {
@@ -227,7 +238,7 @@ public class Elevator extends Thread {
         elevatorData.setIsEmpty(isEmpty()&!hasPickUpRequest());
         elevatorData.setDirection(direction);
         elevatorData.setFloor(currFloor);
-        elevatorData.setNumPassengers(receiveQueue.size());
+        elevatorData.setNumPassengers(getNumPassengers());
         socket.send(elevatorData);
         while (true){
             sleep(1);
@@ -346,8 +357,6 @@ public class Elevator extends Thread {
             // reached the bottom floor, change direction
             direction = Direction.UP;
         }
-        //public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor) {
-        //TODO! Pass correct number of passengers and the destination floor
         //if we are going up destination floor = curr + 1 else -1
         int destinationFloor = 0;
         if (direction == Direction.UP) {
@@ -355,7 +364,8 @@ public class Elevator extends Thread {
         } else {
             destinationFloor = currFloor --;
         }
-        gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), elevatorData.getNumPassengers(), destinationFloor);
+        // public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor)
+        if (gui != null) gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), destinationFloor);
         state = ElevatorStates.NOTIFY;
         printLatch = true;
     }
@@ -370,8 +380,8 @@ public class Elevator extends Thread {
         elevatorButtons[currFloor-1] = 0; // update floor button
         pickUpFloor[currFloor-1] = false; // update pickup requests
         state = ElevatorStates.PROCESSING;
-        //TODO! Pass on the correct number of passengers and destination floor
-        gui.updateStatus(elevatorData.getElevatorNum(),currFloor, state.toString(), elevatorData.getNumPassengers(), 0);
+        // public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor)
+        if (gui != null)  gui.updateStatus(elevatorData.getElevatorNum(),currFloor, state.toString(), getNumPassengers(), 0);
         printLatch = true;
     }
 
@@ -383,22 +393,22 @@ public class Elevator extends Thread {
         faultTimer.start();
         while (!terminate) {
             switch (state) {
-                case ElevatorStates.NOTIFY:
+                case NOTIFY:
                     if (printLatch)
                         printState();
                     notifyScheduler();
                     break;
-                case ElevatorStates.PROCESSING:
+                case PROCESSING:
                     if (printLatch)
                         printState();
                     processRequests();
                     break;
-                case ElevatorStates.MOVING:
+                case MOVING:
                     if (printLatch)
                         printState();
                     move();
                     break;
-                case ElevatorStates.STOP:
+                case STOP:
                     printState();
                     elevatorStop();
                     break;
