@@ -8,7 +8,7 @@ import javax.swing.*;
 
 import java.io.IOException;
 
-// @author Riya Arora for GUI (101190033)
+// @author Riya Arora for GUI integration (101190033)
 
 public class Main {
     public static void main (String args[]) throws IOException {
