@@ -138,7 +138,8 @@ public class Elevator extends Thread {
         System.out.print(name() + "Reached Floor: ");
         System.out.print(currFloor);
         System.out.print(" | Direction: " + (direction==Direction.UP ? "UP" : "DOWN"));
-        System.out.println(" | Elevator Buttons: " + elevatorButtonsToString());
+        System.out.print(" | Elevator Buttons: " + elevatorButtonsToString());
+        System.out.println(" | Passengers: " + getTotalPassengers());
     }
 
     /**
@@ -151,6 +152,17 @@ public class Elevator extends Thread {
             else requestString += (elevatorButtons[i] == 0) ? ("F"+(i+1)+": "+"0]") : ("F"+(i+1)+": "+"1]");
         }
         return requestString;
+    }
+
+    /**
+     * returns a total number of passengers in the elevator
+     */
+    private int getTotalPassengers() {
+        int total = 0;
+        for (int count : elevatorButtons){
+            total += count;
+        }
+        return total;
     }
 
     /**
