@@ -13,6 +13,7 @@ package Elevator;
 import Floor.FloorRequest;
 import view.ElevatorGUI;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -48,9 +49,6 @@ public class Elevator extends Thread {
     // Flag to indicate door stuck open fault was received
     private boolean doorFault;
 
-    // Flag to indicate door stuck closed fault was received
-    private boolean doorClosedFault;
-
     // Flag to indicate elevator to terminate
     private boolean terminate;
 
@@ -67,7 +65,7 @@ public class Elevator extends Thread {
      *  An array representing the floors in which a passenger is waiting to be picked up
      *  Each index represents the floor-1
      */
-    private boolean pickUpFloor[];
+    private ArrayList<ArrayList<FloorRequest>> pickUpRequests;
 
     // counter to keep track of the number of completed floor requests
     private int completedRequestsCount;
@@ -89,11 +87,13 @@ public class Elevator extends Thread {
         this.direction = Direction.UP;
         this.numFloors = numFloors;
         this.elevatorButtons = new int[numFloors];
-        this.pickUpFloor = new boolean[numFloors];
+        this.pickUpRequests = new ArrayList<ArrayList<FloorRequest>>(numFloors);
+        for (int floor = 0; floor < numFloors; floor++){
+            pickUpRequests.add(floor, new ArrayList<FloorRequest>());
+        }
         this.elevatorData = new ElevatorData(currFloor, direction, true, elevatorNum, 0);
         this.faultTimer = new Timer(this);
         this.doorFault = false;
-        this.doorClosedFault = false;
         this.floorFault = false;
         this.terminate = false;
         this.completedRequestsCount = 0;
@@ -174,8 +174,8 @@ public class Elevator extends Thread {
      * @return true if if servicing false otherwise
      */
     private boolean hasPickUpRequest() {
-        for (boolean request : pickUpFloor){
-            if (request){
+        for (int floor = 0; floor < numFloors; floor++){
+            if (pickUpRequests.get(floor).size() !=0 ){
                 return true;
             }
         }
@@ -258,10 +258,13 @@ public class Elevator extends Thread {
                         default:
                             break;
                     }
-                    // Add the passengers destination floor to the floor buttons counter
-                    elevatorButtons[floorRequest.getCarButton()-1] ++;
-                    // update the pickupFloor array
-                    pickUpFloor[floorRequest.getFloor()-1] = true;
+                    // (passenger is being picked up right away at this floor) Add the passengers destination floor to the floor buttons counter
+                    if (floorRequest.getFloor() == currFloor) {
+                        elevatorButtons[floorRequest.getCarButton()-1] ++;
+                    } else{
+                        // (passenger needs to be picked up) update the pickUpRequests array
+                        pickUpRequests.get(floorRequest.getFloor()-1).add(floorRequest);
+                    }
                 } else {
                     break;
                 }
@@ -275,7 +278,7 @@ public class Elevator extends Thread {
      * Handles the PROCESSING state of the elevator.
      */
     private void processRequests() {
-        if (elevatorButtons[currFloor-1] != 0 || pickUpFloor[currFloor-1]){
+        if (elevatorButtons[currFloor-1] != 0 || pickUpRequests.get(currFloor-1).size() != 0){
             // stop to pick/drop off passenger(s)
             state = ElevatorStates.STOP;
         } else if (!isEmpty()) {
@@ -285,7 +288,7 @@ public class Elevator extends Thread {
             if (direction == Direction.UP){
                 // if we are currently going up check if there is a person to drop off/pickup at a floor above
                 for (int nextFloor = currFloor; nextFloor < numFloors; nextFloor++){
-                    if (elevatorButtons[nextFloor] >= 1 || pickUpFloor[nextFloor]){
+                    if (elevatorButtons[nextFloor] >= 1 || pickUpRequests.get(currFloor-1).size() != 0){
                         changeDirection = false;
                         break;
                     }
@@ -293,7 +296,7 @@ public class Elevator extends Thread {
             } else {
                 // if we are currently going down check if there is a person to drop off/pickup at a floor below
                 for (int nextFloor = 0; nextFloor < currFloor; nextFloor++){
-                    if (elevatorButtons[nextFloor] >= 1 || pickUpFloor[nextFloor]){
+                    if (elevatorButtons[nextFloor] >= 1 || pickUpRequests.get(currFloor-1).size() != 0){
                         changeDirection = false;
                         break;
                     }
@@ -308,7 +311,7 @@ public class Elevator extends Thread {
             // see if we need to change direction to get them
             int destFloor = 0;
             for (int idx = 0; idx < numFloors; idx++){
-                if (pickUpFloor[idx]){
+                if (pickUpRequests.get(idx).size()!=0){
                     destFloor = idx + 1;
                     break;
                 }
@@ -376,9 +379,12 @@ public class Elevator extends Thread {
     private void elevatorStop() {
         // opening and closing door
         openCloseDoors();
+        // update pickup requests and elevator buttons
+        for (int reqIdx = 0 ; reqIdx < pickUpRequests.get(currFloor-1).size(); reqIdx++) {
+           elevatorButtons[pickUpRequests.get(currFloor-1).remove(reqIdx).getCarButton()-1] += 1;
+        } 
         completedRequestsCount += elevatorButtons[currFloor-1];
         elevatorButtons[currFloor-1] = 0; // update floor button
-        pickUpFloor[currFloor-1] = false; // update pickup requests
         state = ElevatorStates.PROCESSING;
         // public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor)
         if (gui != null)  gui.updateStatus(elevatorData.getElevatorNum(),currFloor, state.toString(), getNumPassengers(), 0);
