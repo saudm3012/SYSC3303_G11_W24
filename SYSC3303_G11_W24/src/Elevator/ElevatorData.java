@@ -8,6 +8,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+// @author editted by Riya Arora for GUI integration (101190033)
+
 /**
  * Elevator.Elevator Data that contains info on elevators direction
  * @author Zakariya Khan 101186641
@@ -17,6 +19,7 @@ public class ElevatorData implements Serializable {
     private Direction direction;
     private boolean isEmpty;
     private int elevatorNum;
+    private int numPassengers;
 
 
     /**
@@ -25,9 +28,10 @@ public class ElevatorData implements Serializable {
     public ElevatorData() {
         this.isEmpty = true;
         this.floor = 0;
+        this.numPassengers = 0;
     }
 
-     /**
+    /**
      * Instantiates a new Data packet
      * with the specified information.
      *
@@ -35,7 +39,7 @@ public class ElevatorData implements Serializable {
      * @param direction Elevator.Direction, elevator direction
      * @param empty   boolean, if elevator is empty or not
      */
-    public ElevatorData(int floor, Direction direction, boolean empty, int elevatorNum) {
+    public ElevatorData(int floor, Direction direction, boolean empty, int elevatorNum, int numPassengers) {
         this.floor = floor;
         this.direction = direction;
         this.isEmpty = empty;
@@ -45,7 +49,7 @@ public class ElevatorData implements Serializable {
     public boolean isEmpty() {
         return isEmpty;
     }
-    
+
     public boolean isUp() {
         return (direction== Direction.UP ? true : false);
     }
@@ -68,6 +72,14 @@ public class ElevatorData implements Serializable {
 
     public void setFloor(int floor) {
         this.floor = floor;
+    }
+
+    public int getNumPassengers() {
+        return this.numPassengers;
+    }
+
+    public void setNumPassengers(int numPassengers) {
+        this.numPassengers = numPassengers;
     }
 
     /**

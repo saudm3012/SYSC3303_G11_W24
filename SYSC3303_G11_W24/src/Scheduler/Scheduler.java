@@ -11,6 +11,7 @@ package Scheduler;
 
 import Elevator.ElevatorData;
 import Floor.FloorRequest;
+import view.ElevatorGUI;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,12 +41,13 @@ public class Scheduler implements Runnable {
     FloorRequest elevatorEndPacket;
     Queue<ElevatorData> elevatorQueue;
     Queue<Integer> emptyElevatorList;
+    private ElevatorGUI elevatorGUI;
 
 
     /**
      * The constructor for this class.
      */
-    public Scheduler() {
+    public Scheduler(ElevatorGUI ui) {
         socket = new SchedulerSocket(this);
         elevatorSocket = new SchedulerElevatorSocket(this);
         receiveQueue = new LinkedList<>();
@@ -54,6 +56,7 @@ public class Scheduler implements Runnable {
         elevatorQueue = new LinkedList<>();
         elevatorEndPacket = new FloorRequest();
         emptyElevatorList = new LinkedList<>();
+        this.elevatorGUI = ui;
     }
 
     /**
@@ -134,6 +137,7 @@ public class Scheduler implements Runnable {
             int elevNum = emptyElevatorList.remove();
             elevatorSocket.sendToElevator(currentReq, elevNum);
             elevatorSocket.sendToElevator(elevatorEndPacket, elevNum);
+            updateElevatorGUI(elevNum, currentReq.getFloor(), "MOVING", 1, currentReq.getFloor());
         }
         if(currentReq.isUp()){
             upQueue.add(currentReq);
@@ -224,9 +228,8 @@ public class Scheduler implements Runnable {
         }
     }
 
-    public static void main (String args[]) throws IOException {
-        Thread scheduler =  new Thread(new Scheduler());
-        scheduler.start();
+    public void updateElevatorGUI(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor) {
+        elevatorGUI.updateStatus(elevatorId, currentFloor, state, numPassengers, destinationFloor);
     }
 
 }

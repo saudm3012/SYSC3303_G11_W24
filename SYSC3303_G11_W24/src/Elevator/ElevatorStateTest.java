@@ -9,24 +9,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+// @author editted by Riya Arora for GUI integration (101190033)
+
 class ElevatorStateTest{
-        
+
     public static Elevator elevator;
     DatagramSocket sendSocket;
     private FloorRequest data, dataFault, endData;
     private DatagramPacket sendPacket, sendFaultPacket, sendEndPacket;
 
     InetAddress elevatorAddress;
-        
+
     /**
      * Initialize the test harness.
-     * 
+     *
      * @throws SocketException
      */
     @BeforeEach
     public void setup() throws SocketException {
         //create new elevator that listens on port 2006
-        elevator = new Elevator(6,5);
+        elevator = new Elevator(6,5,null);
         try {
             sendSocket = new DatagramSocket();
         } catch (SocketException e) {
@@ -65,104 +67,104 @@ class ElevatorStateTest{
 
         elevator.start();
     }
-    
-        /**
-         * Tears down the test fixture.
-         *
-         * Called after every test case method.
-         */
-        protected void tearDown()
-        {
-            sendSocket.close();
-        }
-    
-        /**
-         * Tests the behavior of the Elevator.Elevator state machine
-         */
-        @Test
-        public void testElevatorStateMachine() {
-            //Start at NOTIFY state
+
+    /**
+     * Tears down the test fixture.
+     *
+     * Called after every test case method.
+     */
+    protected void tearDown()
+    {
+        sendSocket.close();
+    }
+
+    /**
+     * Tests the behavior of the Elevator.Elevator state machine
+     */
+    @Test
+    public void testElevatorStateMachine() {
+        //Start at NOTIFY state
+        assertTrue(elevator.state == ElevatorStates.NOTIFY);
+
+        try {
+            Thread.sleep(1);
+            // Send a floor request
+            sendSocket.send(sendPacket);
+            Thread.sleep(1);
+            sendSocket.send(sendEndPacket);
+            Thread.sleep(50);
+            assertTrue(elevator.state == ElevatorStates.MOVING);
+            assertTrue(elevator.currFloor == 1);
+
+            // Wait for elevator to move to floor 1
+            Thread.sleep(2010);
+            assertTrue(elevator.currFloor == 2);
+            // elevator should notfiy we reached a new floor
+            assertTrue(elevator.state == ElevatorStates.NOTIFY);
+            sendSocket.send(sendEndPacket);
+            Thread.sleep(10);
+            // We are at the floor to pickup passenger so we should stop
+            assertTrue(elevator.state == ElevatorStates.STOP);
+            // wait for doors to close
+            Thread.sleep(6020);
+            // Elevator.Elevator moves 1 floor towards drop-off
+            assertTrue(elevator.state == ElevatorStates.MOVING);
+            // wait to move floor
+            Thread.sleep(2001);
+            assertTrue(elevator.currFloor == 3);
+            // elevator should notify we reached a new floor
+            assertTrue(elevator.state == ElevatorStates.NOTIFY);
+            sendSocket.send(sendEndPacket);
+            Thread.sleep(10);
+            //Elevator.Elevator moves 1 floor towards drop-off
+            assertTrue(elevator.state == ElevatorStates.MOVING);
+            Thread.sleep(2020);
+            assertTrue(elevator.currFloor == 4);
+            // elevator should notify we reached a new floor
+            assertTrue(elevator.state == ElevatorStates.NOTIFY);
+            sendSocket.send(sendEndPacket);
+            Thread.sleep(10);
+            // we are at the destination floor so we should let the passenger off
+            assertTrue(elevator.state == ElevatorStates.STOP);
+            // wait for doors to close
+            Thread.sleep(6001);
+            // Elevator.Elevator should notify of no requests to handle
+            assertTrue(elevator.state == ElevatorStates.NOTIFY);
+            Thread.sleep(1000);
+
+            // Iteration 4
+            // Floor.Fault recovery
+            sendSocket.send(sendFaultPacket);
+            Thread.sleep(10);
+            sendSocket.send(sendEndPacket);
+            Thread.sleep(10);
+            assertTrue(elevator.state == ElevatorStates.MOVING);
+            Thread.sleep(2000);
             assertTrue(elevator.state == ElevatorStates.NOTIFY);
 
-            try {
-                Thread.sleep(1);
-                // Send a floor request
-                sendSocket.send(sendPacket);
-                Thread.sleep(1);
-                sendSocket.send(sendEndPacket);
-                Thread.sleep(50);
-                assertTrue(elevator.state == ElevatorStates.MOVING);
-                assertTrue(elevator.currFloor == 1);
+            sendSocket.send(sendEndPacket);
+            Thread.sleep(10);
+            assertTrue(elevator.currFloor == 3);
 
-                // Wait for elevator to move to floor 1
-                Thread.sleep(2010);
-                assertTrue(elevator.currFloor == 2);
-                // elevator should notfiy we reached a new floor
-                assertTrue(elevator.state == ElevatorStates.NOTIFY);
-                sendSocket.send(sendEndPacket);
-                Thread.sleep(10);
-                // We are at the floor to pickup passenger so we should stop
-                assertTrue(elevator.state == ElevatorStates.STOP);
-                // wait for doors to close
-                Thread.sleep(6020);
-                // Elevator.Elevator moves 1 floor towards drop-off
-                assertTrue(elevator.state == ElevatorStates.MOVING);
-                // wait to move floor
-                Thread.sleep(2001);
-                assertTrue(elevator.currFloor == 3);
-                // elevator should notify we reached a new floor
-                assertTrue(elevator.state == ElevatorStates.NOTIFY);
-                sendSocket.send(sendEndPacket);
-                Thread.sleep(10);
-                //Elevator.Elevator moves 1 floor towards drop-off
-                assertTrue(elevator.state == ElevatorStates.MOVING);
-                Thread.sleep(2020);
-                assertTrue(elevator.currFloor == 4);
-                // elevator should notify we reached a new floor
-                assertTrue(elevator.state == ElevatorStates.NOTIFY);
-                sendSocket.send(sendEndPacket);
-                Thread.sleep(10);
-                // we are at the destination floor so we should let the passenger off
-                assertTrue(elevator.state == ElevatorStates.STOP);
-                // wait for doors to close
-                Thread.sleep(6001);
-                // Elevator.Elevator should notify of no requests to handle
-                assertTrue(elevator.state == ElevatorStates.NOTIFY);
-                Thread.sleep(1000);
+            //reaches beginning floor
+            assertTrue(elevator.state == ElevatorStates.STOP);
+            Thread.sleep(6000);
 
-                // Iteration 4
-                // Floor.Fault recovery
-                sendSocket.send(sendFaultPacket);
-                Thread.sleep(10);
-                sendSocket.send(sendEndPacket);
-                Thread.sleep(10);
-                assertTrue(elevator.state == ElevatorStates.MOVING);
-                Thread.sleep(2000);
-                assertTrue(elevator.state == ElevatorStates.NOTIFY);
+            //Check that door was stuck
+            assertTrue(elevator.state == ElevatorStates.STOP);
 
-                sendSocket.send(sendEndPacket);
-                Thread.sleep(10);
-                assertTrue(elevator.currFloor == 3);
+            Thread.sleep(3000);
 
-                //reaches beginning floor
-                assertTrue(elevator.state == ElevatorStates.STOP);
-                Thread.sleep(6000);
+            //Check that door is unstuck
+            assertTrue(elevator.state == ElevatorStates.MOVING);
 
-                //Check that door was stuck
-                assertTrue(elevator.state == ElevatorStates.STOP);
-
-                Thread.sleep(3000);
-
-                //Check that door is unstuck
-                assertTrue(elevator.state == ElevatorStates.MOVING);
-
-                Thread.sleep(3000);
+            Thread.sleep(3000);
 
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

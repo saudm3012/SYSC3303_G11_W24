@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.net.*;
 
+// @author editted by Riya Arora for GUI integration (101190033)
+
 /**
  * Tests scheduler state machine through all states.
  **/
@@ -35,10 +37,10 @@ public class SchedulerTest {
     @BeforeEach
     public void setup() throws SocketException {
         sendSocket = new DatagramSocket();
-        schedulerObj = new Scheduler();
+        schedulerObj = new Scheduler(null);
         //data to send as a DataPacket
         data = new FloorRequest("14:05:15.0", "2", "Up", "4", false);
-        elevatorData = new ElevatorData(1, Direction.UP, true, 10);
+        elevatorData = new ElevatorData(1, Direction.UP, true, 10,0);
 
         byte[] sendDataBytes = new byte[0];
         byte[] sendElevatorDataBytes = new byte[0];

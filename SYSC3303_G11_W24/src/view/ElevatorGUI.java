@@ -1,5 +1,10 @@
+package view;
+
+
 import javax.swing.*;
 import java.awt.*;
+
+// @author Riya Arora (101190033)
 
 public class ElevatorGUI extends JFrame {
 
@@ -15,6 +20,7 @@ public class ElevatorGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLayout(new GridLayout(2, 3)); // 2 rows, 3 elevators
+        setLocationRelativeTo(null);
 
         // Create the elevator status panels
         elevatorCurrentFloor = new JLabel[3]; // 3 elevators
@@ -50,12 +56,20 @@ public class ElevatorGUI extends JFrame {
     }
 
     public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor) {
-        elevatorCurrentFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " current floor: " + currentFloor);
-        elevatorDestinationFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " destination floor: " + destinationFloor);
-        elevatorCurrentStatus[elevatorId].setText("Elevator" + (elevatorId + 1)  + " state: " + state);
-        elevatorPassengers[elevatorId].setText("Elevator" + (elevatorId + 1)  + " has " + numPassengers + " passengers");
-        elevatorPanels[elevatorId].setCurrentFloor(currentFloor);
-        elevatorPanels[elevatorId].repaint();
+        if (elevatorId >= 0 && elevatorId < 3) {
+            elevatorCurrentFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " current floor: " + currentFloor);
+            elevatorDestinationFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " destination floor: " + destinationFloor);
+            elevatorCurrentStatus[elevatorId].setText("Elevator" + (elevatorId + 1) + " state: " + state);
+            elevatorPassengers[elevatorId].setText("Elevator" + (elevatorId + 1) + " has " + numPassengers + " passengers");
+            elevatorPanels[elevatorId].setCurrentFloor(currentFloor);
+            elevatorPanels[elevatorId].setDestinationFloor(destinationFloor);
+            elevatorPanels[elevatorId].setNumPassengers(numPassengers);
+            elevatorPanels[elevatorId].repaint();
+        } else {
+            System.err.println("Invalid elevator ID: " + elevatorId);
+        }
+        System.out.println(elevatorId + " " + currentFloor + " " + state + " " + numPassengers + " " + destinationFloor
+        );
     }
 
     public int getCurrentFloor(int elevatorId) {
@@ -109,5 +123,12 @@ public class ElevatorGUI extends JFrame {
             }
         }
 
+        public void setDestinationFloor(int destinationFloor) {
+            this.destinationFloor = destinationFloor;
+        }
+
+        public void setNumPassengers(int numPassengers) {
+            //elevator logic to set the number of passengers in the elevator goes here
+        }
     }
 }
