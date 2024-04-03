@@ -1,13 +1,19 @@
+package Scheduler;
 
+import Floor.FloorRequest;
+import Floor.FloorSubsystem;
+import Scheduler.Scheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import view.ElevatorGUI;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+// @author editted by Riya Arora for GUI integration (101190033)
 
 /**
  * Floor Socket test
@@ -35,7 +41,7 @@ class FloorSocketTest{
     void setUp() throws IOException {
         receiveSocket = new DatagramSocket();
         sendReceiveSocket = new DatagramSocket();
-        sch = new Scheduler();
+        sch = new Scheduler(new ElevatorGUI());
 
         sub = new FloorSubsystem();
         data = new FloorRequest("14:05:15.0","2" , "Up", "4", false); //makes new packet with values

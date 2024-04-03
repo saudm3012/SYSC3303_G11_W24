@@ -1,5 +1,7 @@
+package Elevator;
+
 /**
- * Direction elevator is currently moving
+ * Elevator.Direction elevator is currently moving
  * @author Zakariya Khan 101186641
  */
 public enum Direction {

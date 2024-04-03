@@ -1,3 +1,5 @@
+package Floor;
+
 import java.io.*;
 import java.time.LocalTime;
 
@@ -33,7 +35,7 @@ public class FloorRequest implements Serializable {
      * @param direction String, car direction
      * @param car       String, requested car number
      * @param endPacket boolean, end packet of transmition? true false otherwise
-     * @param fault     Fault, enum specifying fault associated with request
+     * @param fault     Floor.Fault, enum specifying fault associated with request
      */
     public FloorRequest(String time, String floor, String direction, String car, boolean end){
         this.time = LocalTime.parse(time);
@@ -55,7 +57,7 @@ public class FloorRequest implements Serializable {
      * @param direction String, car direction
      * @param car       String, requested car number
      * @param endPacket boolean, end packet of transmition? true false otherwise
-     * @param fault     Fault, enum specifying fault associated with request
+     * @param fault     Floor.Fault, enum specifying fault associated with request
      */
     public FloorRequest(String time, String floor, String direction, String car, boolean end, String fault){
         this.time = LocalTime.parse(time);
@@ -91,7 +93,7 @@ public class FloorRequest implements Serializable {
 
     /**
      * *
-     * @return Fault the fault associated with the request if there is one.
+     * @return Floor.Fault the fault associated with the request if there is one.
      */
     public Fault getFault() {
         return this.fault;
@@ -137,7 +139,7 @@ public class FloorRequest implements Serializable {
      * @return String, all fields of Dataacket in String representation
      */
     public String toString() {
-        return (!endPacket) ? "FloorRequest { \n" +
+        return (!endPacket) ? "Floor.FloorRequest { \n" +
                 "\t time: " + this.time + "\n" +
                 "\t floor: " + this.floor + "\n" +
                 "\t directionIsUp: " + this.goingUp + "\n" +

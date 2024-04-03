@@ -1,5 +1,8 @@
+package Scheduler;
 
-import javax.xml.crypto.Data;
+import Elevator.ElevatorData;
+import Floor.FloorRequest;
+
 import java.io.IOException;
 import java.net.*;
 public class SchedulerElevatorSocket extends Thread implements  AutoCloseable{
@@ -64,7 +67,7 @@ public class SchedulerElevatorSocket extends Thread implements  AutoCloseable{
             System.exit(1);
         }
 
-        System.out.println("Scheduler: Packet sent to [ELEVATOR-" + elevatorNum + "] .\n");
+        System.out.println("Scheduler.Scheduler: Packet sent to [ELEVATOR-" + elevatorNum + "] .\n");
     }
 
     int receiveFromElevator() {
@@ -99,7 +102,7 @@ public class SchedulerElevatorSocket extends Thread implements  AutoCloseable{
      * Outputs sendPacket to the console
      */
     void printSendingInfo(String dataPacket) {
-        System.out.println("\nScheduler: Sending packet to: Elevator");
+        System.out.println("\nScheduler.Scheduler: Sending packet to: Elevator.Elevator");
         System.out.println("To host: " + sendPacket.getAddress());
         System.out.println("Destination host port: " + sendPacket.getPort());
         int len = sendPacket.getLength();
@@ -109,7 +112,7 @@ public class SchedulerElevatorSocket extends Thread implements  AutoCloseable{
     }
 
     /**
-     * Close resources when the Scheduler is no longer needed.
+     * Close resources when the Scheduler.Scheduler is no longer needed.
      */
     @Override
     public void close() {

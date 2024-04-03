@@ -1,3 +1,7 @@
+package Tests;
+
+import Floor.FloorRequest;
+import Floor.InputReader;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import java.util.ArrayList;
@@ -5,7 +9,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * InputReader Test
+ * Floor.InputReader Test
  * will create new packet with same values as first entry in provided data.txt and check if it is the same as
  *  * when getNextPacket() function is initialised
  * @Author Ali Nadim
