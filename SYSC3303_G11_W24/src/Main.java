@@ -2,7 +2,7 @@ import Elevator.ElevatorSubsystem;
 import Floor.FloorSubsystem;
 import Scheduler.Scheduler;
 import Floor.InputReader;
-import view.ElevatorGUI;
+import Gui.ElevatorGUI;
 
 import javax.swing.*;
 

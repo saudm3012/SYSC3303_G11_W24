@@ -11,9 +11,8 @@ package Scheduler;
 
 import Elevator.ElevatorData;
 import Floor.FloorRequest;
-import view.ElevatorGUI;
+import Gui.ElevatorGUI;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;

@@ -11,7 +11,7 @@ package Elevator;
  */
 
 import Floor.FloorRequest;
-import view.ElevatorGUI;
+import Gui.ElevatorGUI;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -68,7 +68,7 @@ public class Elevator extends Thread {
     private ArrayList<ArrayList<FloorRequest>> pickUpRequests;
 
     // counter to keep track of the number of completed floor requests
-    private int completedRequestsCount;
+    public int completedRequestsCount;
 
     // Flag to control printing of state.
     private boolean printLatch;

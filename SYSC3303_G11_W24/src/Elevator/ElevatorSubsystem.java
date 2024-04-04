@@ -1,6 +1,6 @@
 package Elevator;
 
-import view.ElevatorGUI;
+import Gui.ElevatorGUI;
 
 import java.io.IOException;
 

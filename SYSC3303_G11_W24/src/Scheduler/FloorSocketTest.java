@@ -2,10 +2,9 @@ package Scheduler;
 
 import Floor.FloorRequest;
 import Floor.FloorSubsystem;
-import Scheduler.Scheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import view.ElevatorGUI;
+import Gui.ElevatorGUI;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
