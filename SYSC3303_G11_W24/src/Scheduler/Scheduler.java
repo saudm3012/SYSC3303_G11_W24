@@ -163,6 +163,7 @@ public class Scheduler implements Runnable {
         //socket.sendToElevator(); whatever requests we want to give it
         sleep(1000);
         ElevatorData elevatorData;
+        List<Integer> floorList = new ArrayList<>();
         if(!elevatorQueue.isEmpty()) {
             elevatorData = elevatorQueueRemove();
         } else {
@@ -190,8 +191,11 @@ public class Scheduler implements Runnable {
             }
             for(int i=0;i<upQueue.size();i++){
                 if(upQueue.get(i).getFloor() == elevatorData.getFloor()){
-                    elevatorSocket.sendToElevator(upQueue.remove(i), elevatorData.getElevatorNum());
+                    floorList.add(i);
                 }
+            }
+            for(int i=0;i<floorList.size();i++){
+                elevatorSocket.sendToElevator(upQueue.remove(i), elevatorData.getElevatorNum());
             }
         } else {
             if(downQueue.isEmpty()){
@@ -200,8 +204,11 @@ public class Scheduler implements Runnable {
             }
             for(int i=0;i<downQueue.size();i++){
                 if(downQueue.get(i).getFloor() == elevatorData.getFloor()){
-                    elevatorSocket.sendToElevator(downQueue.remove(i), elevatorData.getElevatorNum());
+                    floorList.add(i);
                 }
+            }
+            for(int i=0;i<floorList.size();i++){
+                elevatorSocket.sendToElevator(downQueue.remove(i), elevatorData.getElevatorNum());
             }
         }
         elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
