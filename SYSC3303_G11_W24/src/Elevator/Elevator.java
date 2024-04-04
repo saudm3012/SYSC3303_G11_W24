@@ -98,6 +98,7 @@ public class Elevator extends Thread {
         this.terminate = false;
         this.completedRequestsCount = 0;
         this.gui = ui;
+        if (gui != null)  gui.updateStatus(elevatorData.getElevatorNum(),currFloor, state.toString(), getNumPassengers(), 0);
     }
 
     /**
