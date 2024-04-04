@@ -45,7 +45,7 @@ public class FloorSubsystem implements Runnable
      * @param receivedData
      */
     public void processData(FloorRequest receivedData) {
-        // do nothing for now
+        System.out.println("Received");
     }
 
     /**

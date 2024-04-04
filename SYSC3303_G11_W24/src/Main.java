@@ -1,5 +1,6 @@
 import Elevator.ElevatorSubsystem;
 import Floor.FloorSubsystem;
+import Metrics.Monitor;
 import Scheduler.Scheduler;
 import Floor.InputReader;
 import Gui.ElevatorGUI;
@@ -18,6 +19,8 @@ public class Main {
         ElevatorGUI gui = new ElevatorGUI();
         Thread elevator = new ElevatorSubsystem(22,4, gui);
         Thread scheduler =  new Thread(new Scheduler(gui));
+        Thread monitor = new Thread(new Monitor());
+
 
         while(floor_sys.addPacketToQueue(datafile.getNextPacket())){};
         floor_sys.addPacketToQueue(datafile.getNextPacket());
@@ -25,7 +28,8 @@ public class Main {
         floorSubsystem.start();
         scheduler.start();
         elevator.start();
-
+        monitor.start();
+        
         //show the GUI
         SwingUtilities.invokeLater(() -> {
             gui.setVisible(true);
