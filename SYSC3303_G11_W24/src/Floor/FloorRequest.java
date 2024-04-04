@@ -76,6 +76,22 @@ public class FloorRequest implements Serializable {
     }
 
     /**
+     * Instantiates a new Data packet
+     * with the specified information.
+     *
+     * @param packet    packet which we would like to copy
+     */
+    public FloorRequest(FloorRequest packet){
+        this.time = packet.getTime();
+        this.floor = packet.getFloor();
+        this.goingUp = packet.getDirection();
+        this.car = packet.getCarButton();
+        this.isEmpty = packet.isEmpty();
+        this.endPacket = packet.isEnd();
+        this.fault = packet.getFault();
+    }
+
+    /**
      *
      * @return LocalTime, time of request
      */
