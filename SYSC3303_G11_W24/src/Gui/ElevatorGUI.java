@@ -104,7 +104,7 @@ public class ElevatorGUI extends JFrame {
         } else {
             System.err.println("Invalid elevator ID: " + elevatorId);
         }
-        System.out.println(elevatorId + " " + currentFloor + " " + state + " " + numPassengers);
+        //System.out.println(elevatorId + " " + currentFloor + " " + state + " " + numPassengers);
     }
 
 

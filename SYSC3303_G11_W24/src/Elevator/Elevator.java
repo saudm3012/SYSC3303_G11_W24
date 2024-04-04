@@ -84,9 +84,9 @@ public class Elevator extends Thread {
         this.socket = new ElevatorSocket(2000 + elevatorNum, this);
         this.receiveQueue = new LinkedList<>();
         this.state = ElevatorStates.NOTIFY;
-        this.currFloor = 1;
+        this.currFloor = (elevatorNum % 2 == 0) ? 1 : numFloors;
         this.printLatch = true;
-        this.direction = Direction.UP;
+        this.direction = (elevatorNum % 2 == 0) ? Direction.UP : Direction.DOWN;
         this.numFloors = numFloors;
         this.elevatorButtons = new int[numFloors];
         this.pickUpRequests = new ArrayList<ArrayList<FloorRequest>>(numFloors);
