@@ -134,10 +134,9 @@ public class Scheduler implements Runnable {
     private void process_request() {
         FloorRequest currentReq = receiveQueue.remove();
         if(!emptyElevatorList.isEmpty()){
-            int i;
             int closest_floor = -1; //Index of the closest floor
             int delta = 99999; //Smallest we have had so far
-            for(i = 0;i<emptyElevatorList.size();i++){
+            for(int i = 0;i<emptyElevatorList.size();i++){
                 if(Math.abs(emptyElevatorList.get(i).getFloor() - currentReq.getFloor()) < delta){
                     closest_floor = i;
                     delta = Math.abs(emptyElevatorList.get(i).getFloor() - currentReq.getFloor());
@@ -172,9 +171,28 @@ public class Scheduler implements Runnable {
         if(elevatorData.isEmpty()){
             //Give it any request
             if(upQueue.size() > downQueue.size() && !upQueue.isEmpty()){
-                elevatorSocket.sendToElevator(upQueue.removeFirst(), elevatorData.getElevatorNum());
+                //FInd closest elevator to send
+                int closest_floor = -1; //Index of the closest floor
+                int delta = 99999; //Smallest we have had so far
+                for(int i = 0;i<upQueue.size();i++){
+                    if(Math.abs(upQueue.get(i).getFloor() - elevatorData.getFloor()) < delta){
+                        closest_floor = i;
+                        delta = Math.abs(upQueue.get(i).getFloor() - elevatorData.getFloor());
+                    }
+                }
+                elevatorSocket.sendToElevator(upQueue.remove(closest_floor), elevatorData.getElevatorNum());
             } else if(!downQueue.isEmpty()) {
-                elevatorSocket.sendToElevator(downQueue.removeFirst(), elevatorData.getElevatorNum());
+                //FInd closest elevator to send
+                int closest_floor = -1; //Index of the closest floor
+                int delta = 99999; //Smallest we have had so far
+                for(int i = 0;i<downQueue.size();i++){
+                    if(Math.abs(downQueue.get(i).getFloor() - elevatorData.getFloor()) < delta){
+                        closest_floor = i;
+                        delta = Math.abs(downQueue.get(i).getFloor() - elevatorData.getFloor());
+                    }
+                }
+                elevatorSocket.sendToElevator(downQueue.remove(closest_floor), elevatorData.getElevatorNum());
+                //Find closest elevator to send
             } else {
                 //elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
                 //Store the empty elevator if not already in there
