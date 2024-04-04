@@ -9,7 +9,7 @@ import java.awt.*;
 public class ElevatorGUI extends JFrame {
 
     private static JLabel[] elevatorCurrentFloor;
-    private static JLabel[] elevatorDestinationFloor;
+    // private static JLabel[] elevatorDestinationFloor;
     private static JLabel[] elevatorCurrentStatus;
     private static JLabel[] elevatorPassengers;
     private static ElevatorPanel[] elevatorPanels;
@@ -18,35 +18,35 @@ public class ElevatorGUI extends JFrame {
         // Set up the main window
         super("Elevator GUI");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
-        setLayout(new GridLayout(2, 3)); // 2 rows, 3 elevators
+        setSize(1200, 800);
+        setLayout(new GridLayout(2, 4));// 2 rows 4 elevators
         setLocationRelativeTo(null);
 
         // Create the elevator status panels
-        elevatorCurrentFloor = new JLabel[3]; // 3 elevators
-        elevatorDestinationFloor = new JLabel[3]; // 3 elevators
-        elevatorCurrentStatus = new JLabel[3]; // 3 elevators
-        elevatorPassengers = new JLabel[3]; // 3 elevators
-        JPanel[] elevatorStatusPanels = new JPanel[3]; // 3 elevators
-        for (int i = 0; i < 3; i++) { // 3 elevators
+        elevatorCurrentFloor = new JLabel[4];
+        // elevatorDestinationFloor = new JLabel[3];
+        elevatorCurrentStatus = new JLabel[4];
+        elevatorPassengers = new JLabel[4]; // 4 elevators
+        JPanel[] elevatorStatusPanels = new JPanel[4];
+        for (int i = 0; i < 4; i++) {
             elevatorCurrentFloor[i] = new JLabel("Elevator" + (i + 1) + " current floor: 0");
-            elevatorDestinationFloor[i] = new JLabel("Elevator" + (i + 1) + " destination floor: 0");
+            //elevatorDestinationFloor[i] = new JLabel("Elevator" + (i + 1) + " destination floor: 0");
             elevatorCurrentStatus[i] = new JLabel("Elevator" + (i + 1)  + " state: IDLE");
             elevatorPassengers[i] = new JLabel("Elevator" + (i + 1)  + " has 0 passengers");
             elevatorStatusPanels[i] = new JPanel();
-            elevatorStatusPanels[i].setLayout(new GridLayout(4, 1));
+            elevatorStatusPanels[i].setLayout(new GridLayout(3, 1));
             elevatorStatusPanels[i].setBackground(Color.LIGHT_GRAY);
             elevatorStatusPanels[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
             elevatorStatusPanels[i].add(elevatorCurrentFloor[i]);
-            elevatorStatusPanels[i].add(elevatorDestinationFloor[i]);
+            //elevatorStatusPanels[i].add(elevatorDestinationFloor[i]);
             elevatorStatusPanels[i].add(elevatorCurrentStatus[i]);
             elevatorStatusPanels[i].add(elevatorPassengers[i]);
             add(elevatorStatusPanels[i]);
         }
 
         // Create the elevator panels
-        elevatorPanels = new ElevatorPanel[3]; // 3 elevators
-        for (int i = 0; i < 3; i++) { // 3 elevators
+        elevatorPanels = new ElevatorPanel[4]; // 3 elevators
+        for (int i = 0; i < 4; i++) { // 3 elevators
             elevatorPanels[i] = new ElevatorPanel();
             add(elevatorPanels[i]);
         }
@@ -56,9 +56,9 @@ public class ElevatorGUI extends JFrame {
     }
 
     public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor) {
-        if (elevatorId >= 0 && elevatorId < 3) {
+        if (elevatorId >= 0 && elevatorId < 4) {
             elevatorCurrentFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " current floor: " + currentFloor);
-            elevatorDestinationFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " destination floor: " + destinationFloor);
+            //elevatorDestinationFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " destination floor: " + destinationFloor);
             elevatorCurrentStatus[elevatorId].setText("Elevator" + (elevatorId + 1) + " state: " + state);
             elevatorPassengers[elevatorId].setText("Elevator" + (elevatorId + 1) + " has " + numPassengers + " passengers");
             elevatorPanels[elevatorId].setCurrentFloor(currentFloor);
@@ -101,8 +101,8 @@ public class ElevatorGUI extends JFrame {
             g.setColor(Color.RED); // Elevator color
             int elevatorWidth = 100;
             int elevatorHeight = 20;
-            int elevatorX = 50 + 200 * (getWidth() / 800);
-            int elevatorY = getHeight() - currentFloor * (getHeight() / 6) - 20;
+            int elevatorX = 50 + 200 * (getWidth() / 1200);
+            int elevatorY = getHeight() - currentFloor * (getHeight() / 22) - 20;
             g.fill3DRect(elevatorX, elevatorY, elevatorWidth, elevatorHeight, true); // Fill with 3D effect
             g.setColor(Color.BLACK);
             g.drawRect(elevatorX, elevatorY, elevatorWidth, elevatorHeight); // Draw outline
@@ -117,9 +117,9 @@ public class ElevatorGUI extends JFrame {
             // Draw the floors
             g.setColor(Color.BLUE); // Floor color
             g.setFont(new Font("Arial", Font.PLAIN, 12));
-            for (int i = 0; i < 6; i++) { // 5 floors
-                g.drawString(Integer.toString(i), 5 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 6) + 5);
-                g.drawLine(50 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 6), 150 + 200 * (getWidth() / 800), getHeight() - i * (getHeight() / 6));
+            for (int i = 0; i < 22; i++) { // 5 floors
+                g.drawString(Integer.toString(i), 5 + 200 * (getWidth() / 1200), getHeight() - i * (getHeight() / 22) + 5);
+                g.drawLine(50 + 200 * (getWidth() / 1200), getHeight() - i * (getHeight() / 22), 150 + 200 * (getWidth() / 1200), getHeight() - i * (getHeight() / 22));
             }
         }
 
