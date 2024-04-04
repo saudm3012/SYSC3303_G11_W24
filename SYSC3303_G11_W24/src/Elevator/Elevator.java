@@ -333,6 +333,7 @@ public class Elevator extends Thread {
     private void move() {
         // move to next floor
         // set timer to detect fault
+        if (gui != null) gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0);
         faultTimer.set(2100);
         if (!floorFault){
             sleep(2000); // Traveling between floors is 2 seconds
@@ -361,7 +362,6 @@ public class Elevator extends Thread {
             direction = Direction.UP;
         }
 
-        // public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor)
         if (gui != null) gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0);
         state = ElevatorStates.NOTIFY;
         printLatch = true;
@@ -371,6 +371,7 @@ public class Elevator extends Thread {
      * Handles the stop state of the elevator.
      */
     private void elevatorStop() {
+        if (gui != null) gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0);
         // opening and closing door
         openCloseDoors();
         // update pickup requests and elevator buttons
@@ -380,7 +381,7 @@ public class Elevator extends Thread {
         completedRequestsCount += elevatorButtons[currFloor-1];
         elevatorButtons[currFloor-1] = 0; // update floor button
         state = ElevatorStates.PROCESSING;
-        // public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor)
+
         if (gui != null)  gui.updateStatus(elevatorData.getElevatorNum(),currFloor, state.toString(), getNumPassengers(), 0);
         printLatch = true;
     }
