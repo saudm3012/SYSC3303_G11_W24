@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.List;
+import java.lang.Math;
 
 public class Scheduler implements Runnable {
 
@@ -39,7 +40,7 @@ public class Scheduler implements Runnable {
     List<FloorRequest> downQueue;
     FloorRequest elevatorEndPacket;
     Queue<ElevatorData> elevatorQueue;
-    Queue<Integer> emptyElevatorList;
+    List<ElevatorData> emptyElevatorList;
     private ElevatorGUI elevatorGUI;
 
 
@@ -133,12 +134,22 @@ public class Scheduler implements Runnable {
     private void process_request() {
         FloorRequest currentReq = receiveQueue.remove();
         if(!emptyElevatorList.isEmpty()){
-            int elevNum = emptyElevatorList.remove();
+            int i;
+            int closest_floor = -1; //Index of the closest floor
+            int delta = 99999; //Smallest we have had so far
+            for(i = 0;i<emptyElevatorList.size();i++){
+                if(Math.abs(emptyElevatorList.get(i).getFloor() - currentReq.getFloor()) < delta){
+                    closest_floor = i;
+                    delta = Math.abs(emptyElevatorList.get(i).getFloor() - currentReq.getFloor());
+                }
+            }
+            if(closest_floor == -1){System.out.println("Error in delta calculation");}
+            ElevatorData closestElev = emptyElevatorList.remove(closest_floor);
+            int elevNum = closestElev.getElevatorNum();
             elevatorSocket.sendToElevator(currentReq, elevNum);
             elevatorSocket.sendToElevator(elevatorEndPacket, elevNum);
             updateElevatorGUI(elevNum, currentReq.getFloor(), "MOVING", 1, currentReq.getFloor());
-        }
-        if(currentReq.isUp()){
+        } else if(currentReq.isUp()){
             upQueue.add(currentReq);
         } else {
             downQueue.add(currentReq);
@@ -167,7 +178,7 @@ public class Scheduler implements Runnable {
                 //elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
                 //Store the empty elevator if not already in there
                 if(!emptyElevatorList.contains(elevatorData.getElevatorNum())) {
-                    emptyElevatorList.add(elevatorData.getElevatorNum());
+                    emptyElevatorList.add(elevatorData);
                 }
                 return;
             }
