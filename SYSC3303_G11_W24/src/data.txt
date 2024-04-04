@@ -1,8 +1,8 @@
 Time, Floor, Floor Button, Car Button, (Floor.Fault)
 14:05:15.0 2 Up 4 
-14:06:15.0 1 Up 2
-14:06:16.0 2 Up 3
+14:06:15.0 1 Up 18
+14:06:16.0 15 Down 3
 14:06:17.0 3 Down 2 FLOOR
-14:06:18.0 2 Up 4
+14:06:18.0 18 Up 21
 14:06:19.0 3 Up 4 DOOR
 14:08:20.0 5 Down 9
