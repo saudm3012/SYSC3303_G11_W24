@@ -43,6 +43,7 @@ public class ElevatorSubsystem extends Thread {
             totalRequestsCompleted += e.completedRequestsCount;
         }
         throughput = (float) totalRequestsCompleted / time; // Cast as float to keep decimal
+        gui.updateThroughput(throughput);
     }
 
 
@@ -92,7 +93,7 @@ public class ElevatorSubsystem extends Thread {
     }
 
     public static void main(String args[]) throws IOException {
-        Thread elevatorSubystem = new ElevatorSubsystem(5, 3, gui);
+        Thread elevatorSubystem = new ElevatorSubsystem(22, 4, gui);
         elevatorSubystem.start();
     }
 }

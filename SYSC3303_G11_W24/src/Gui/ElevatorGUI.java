@@ -14,6 +14,8 @@ public class ElevatorGUI extends JFrame {
     private static JLabel[] elevatorPassengers;
     private static ElevatorPanel[] elevatorPanels;
 
+    private JLabel throughputLabel;
+
     public ElevatorGUI() {
         // Set up the main window
         super("Elevator GUI");
@@ -28,6 +30,11 @@ public class ElevatorGUI extends JFrame {
         elevatorCurrentStatus = new JLabel[4];
         elevatorPassengers = new JLabel[4]; // 4 elevators
         JPanel[] elevatorStatusPanels = new JPanel[4];
+
+        //throughputLabel = new JLabel("Throughput: ");
+        //throughputLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        //add(throughputLabel, BorderLayout.NORTH);
+
         for (int i = 0; i < 4; i++) {
             elevatorCurrentFloor[i] = new JLabel("Elevator" + (i + 1) + " current floor: 0");
             //elevatorDestinationFloor[i] = new JLabel("Elevator" + (i + 1) + " destination floor: 0");
@@ -53,6 +60,10 @@ public class ElevatorGUI extends JFrame {
 
         // Show the GUI
         setVisible(true);
+    }
+
+    public void updateThroughput(float throughput) {
+        throughputLabel.setText("Throughput: " + String.format("%.2f", throughput));
     }
 
     public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor) {
