@@ -250,6 +250,7 @@ public class Elevator extends Thread {
                     switch (floorRequest.getFault()) {
                         case FLOOR:
                             this.floorFault = true;
+                            this.state = ElevatorStates.STOP;
                             break;
                         case DOOR:
                             this.doorFault = true;
@@ -345,7 +346,8 @@ public class Elevator extends Thread {
             } catch (InterruptedException e) {
                 System.out.println(name()+ "Floor Floor.Fault Detected! Terminating...");
                 terminate = true;
-                return;
+                this.state = ElevatorStates.TERMINATED;
+                if (gui != null)  gui.updateStatus(elevatorData.getElevatorNum(),currFloor, state.toString(), getNumPassengers(), 0);                return;
             }
         }
         if (direction == Direction.UP) {
