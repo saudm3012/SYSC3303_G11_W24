@@ -36,10 +36,10 @@ public class ElevatorGUI extends JFrame {
         //add(throughputLabel, BorderLayout.NORTH);
 
         for (int i = 0; i < 4; i++) {
-            elevatorCurrentFloor[i] = new JLabel("Elevator" + (i + 1) + " current floor: 0");
+            elevatorCurrentFloor[i] = new JLabel("Current floor: 0");
             //elevatorDestinationFloor[i] = new JLabel("Elevator" + (i + 1) + " destination floor: 0");
-            elevatorCurrentStatus[i] = new JLabel("Elevator" + (i + 1)  + " state: IDLE");
-            elevatorPassengers[i] = new JLabel("Elevator" + (i + 1)  + " has 0 passengers");
+            elevatorCurrentStatus[i] = new JLabel("State: IDLE");
+            elevatorPassengers[i] = new JLabel("0 passengers");
             elevatorStatusPanels[i] = new JPanel();
             elevatorStatusPanels[i].setLayout(new GridLayout(3, 1));
             elevatorStatusPanels[i].setBackground(Color.LIGHT_GRAY);
@@ -68,10 +68,10 @@ public class ElevatorGUI extends JFrame {
 
     public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor) {
         if (elevatorId >= 0 && elevatorId < 4) {
-            elevatorCurrentFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " current floor: " + currentFloor);
+            elevatorCurrentFloor[elevatorId].setText("Current floor: " + currentFloor);
             //elevatorDestinationFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " destination floor: " + destinationFloor);
-            elevatorCurrentStatus[elevatorId].setText("Elevator" + (elevatorId + 1) + " state: " + state);
-            elevatorPassengers[elevatorId].setText("Elevator" + (elevatorId + 1) + " has " + numPassengers + " passengers");
+            elevatorCurrentStatus[elevatorId].setText("State: " + state);
+            elevatorPassengers[elevatorId].setText(numPassengers + " passengers");
             elevatorPanels[elevatorId].setCurrentFloor(currentFloor);
             elevatorPanels[elevatorId].setDestinationFloor(destinationFloor);
             elevatorPanels[elevatorId].setNumPassengers(numPassengers);
