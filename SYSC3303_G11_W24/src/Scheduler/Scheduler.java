@@ -132,19 +132,23 @@ public class Scheduler implements Runnable {
 
     private void process_request() {
         FloorRequest currentReq = receiveQueue.remove();
-        if(!emptyElevatorList.isEmpty()){
+        boolean doorFault = false; // Determine the value based on your logic
+        boolean floorFault = false; // Determine the value based on your logic
+
+        if (!emptyElevatorList.isEmpty()) {
             int elevNum = emptyElevatorList.remove();
             elevatorSocket.sendToElevator(currentReq, elevNum);
             elevatorSocket.sendToElevator(elevatorEndPacket, elevNum);
-            updateElevatorGUI(elevNum, currentReq.getFloor(), "MOVING", 1, currentReq.getFloor());
+            updateElevatorGUI(elevNum, currentReq.getFloor(), "MOVING", 1, currentReq.getFloor(), doorFault, floorFault);
         }
-        if(currentReq.isUp()){
+        if (currentReq.isUp()) {
             upQueue.add(currentReq);
         } else {
             downQueue.add(currentReq);
         }
         this.state = SchedulerState.IDLE;
     }
+
 
     private void select_request() {
         // Give the current elevator a req/ multiple request or nothing.
@@ -227,8 +231,8 @@ public class Scheduler implements Runnable {
         }
     }
 
-    public void updateElevatorGUI(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor) {
-        elevatorGUI.updateStatus(elevatorId, currentFloor, state, numPassengers, destinationFloor);
+    public void updateElevatorGUI(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor, boolean doorFault, boolean floorFault) {
+        elevatorGUI.updateStatus(elevatorId, currentFloor, state, numPassengers, destinationFloor, doorFault, floorFault);
     }
 
 }

@@ -7,15 +7,17 @@ package Elevator;
  *
  * @author Zakariya Khan 101186641
  * @author Jatin Jain 101184197
- * @author editted by Riya Arora for GUI integration (101190033)
+ * @author Riya Arora 101190033
  */
 
 import Floor.FloorRequest;
 import Gui.ElevatorGUI;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.stream.IntStream;
 
 public class Elevator extends Thread {
 
@@ -98,7 +100,6 @@ public class Elevator extends Thread {
         this.terminate = false;
         this.completedRequestsCount = 0;
         this.gui = ui;
-        if (gui != null)  gui.updateStatus(elevatorData.getElevatorNum(),currFloor, state.toString(), getNumPassengers(), 0);
     }
 
     /**
@@ -262,7 +263,7 @@ public class Elevator extends Thread {
                     }
                     // (passenger is being picked up right away at this floor) Add the passengers destination floor to the elevator buttons
                     if (floorRequest.getFloor() == currFloor) {
-                        elevatorButtons[floorRequest.getCarButton()-1] ++;
+                        elevatorButtons[floorRequest.getCarButton()-1]++;
                     } else{
                         // (passenger needs to be picked up) update the pickUpRequests array
                         pickUpRequests.get(floorRequest.getFloor()-1).add(new FloorRequest(floorRequest));
@@ -274,6 +275,11 @@ public class Elevator extends Thread {
         }
         printLatch = true;
         state = ElevatorStates.PROCESSING;
+
+        // Update GUI status including doorFault and floorFault
+        if (gui != null) {
+            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+        }
     }
 
     /**
@@ -335,7 +341,9 @@ public class Elevator extends Thread {
     private void move() {
         // move to next floor
         // set timer to detect fault
-        if (gui != null) gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0);
+        if (gui != null) {
+            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+        }
         faultTimer.set(2100);
         if (!floorFault){
             sleep(2000); // Traveling between floors is 2 seconds
@@ -347,7 +355,10 @@ public class Elevator extends Thread {
                 System.out.println(name()+ "Floor Floor.Fault Detected! Terminating...");
                 terminate = true;
                 this.state = ElevatorStates.TERMINATED;
-                if (gui != null)  gui.updateStatus(elevatorData.getElevatorNum(),currFloor, state.toString(), getNumPassengers(), 0);                return;
+                if (gui != null) {
+                    gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+                }
+                return;
             }
         }
         if (direction == Direction.UP) {
@@ -365,7 +376,10 @@ public class Elevator extends Thread {
             direction = Direction.UP;
         }
 
-        if (gui != null) gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0);
+        if (gui != null) {
+            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+        }
+
         state = ElevatorStates.NOTIFY;
         printLatch = true;
     }
@@ -374,19 +388,22 @@ public class Elevator extends Thread {
      * Handles the stop state of the elevator.
      */
     private void elevatorStop() {
-        if (gui != null) gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0);
+        if (gui != null) {
+            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+        }
         // opening and closing door
         openCloseDoors();
         // update pickup requests and elevator buttons
         for (int reqIdx = pickUpRequests.get(currFloor-1).size()-1; reqIdx >= 0; reqIdx--) {
-           elevatorButtons[pickUpRequests.get(currFloor-1).remove(reqIdx).getCarButton()-1] ++;
-        } 
+            elevatorButtons[pickUpRequests.get(currFloor-1).remove(reqIdx).getCarButton()-1]++;
+        }
         completedRequestsCount += elevatorButtons[currFloor-1];
         elevatorButtons[currFloor-1] = 0; // update floor button
         state = ElevatorStates.PROCESSING;
 
-        if (gui != null)  gui.updateStatus(elevatorData.getElevatorNum(),currFloor, state.toString(), getNumPassengers(), 0);
-        printLatch = true;
+        if (gui != null) {
+            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+        }
     }
 
     /**
