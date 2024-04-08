@@ -80,19 +80,27 @@ public class ElevatorGUI extends JFrame {
             elevatorCurrentFloor[elevatorId].setText("Current floor: " + currentFloor);
             elevatorCurrentStatus[elevatorId].setText("State: " + state);
             elevatorPassengers[elevatorId].setText(numPassengers + " passengers");
-            elevatorFault[elevatorId].setText("Fault: " + fault); 
+            elevatorFault[elevatorId].setText("Fault: " + fault);
+
+            // Apply color changes based on fault
+            if (fault.equals("DOOR")) {
+                elevatorPanels[elevatorId].setBackground(Color.YELLOW); // Change background color to yellow
+            } else if (fault.equals("FLOOR")) {
+                elevatorPanels[elevatorId].setBackground(Color.RED); // Change background color to red
+            } else {
+                // Reset background color to default
+                elevatorPanels[elevatorId].setBackground(null);
+            }
 
             elevatorPanels[elevatorId].setCurrentFloor(currentFloor);
-            //elevatorPanels[elevatorId].setDestinationFloor(destinationFloor);
             elevatorPanels[elevatorId].setNumPassengers(numPassengers);
             elevatorPanels[elevatorId].repaint();
         } else {
             System.err.println("Invalid elevator ID: " + elevatorId);
         }
-        System.out.println(elevatorId + " " + currentFloor + " " + state + " " + numPassengers
-
-        );
+        System.out.println(elevatorId + " " + currentFloor + " " + state + " " + numPassengers);
     }
+
 
     public int getCurrentFloor(int elevatorId) {
         //elevator logic to get the current floor of the elevator with ID elevatorId
