@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.List;
+import java.lang.Math;
 
 public class Scheduler implements Runnable {
 
@@ -39,7 +40,7 @@ public class Scheduler implements Runnable {
     List<FloorRequest> downQueue;
     FloorRequest elevatorEndPacket;
     Queue<ElevatorData> elevatorQueue;
-    Queue<Integer> emptyElevatorList;
+    List<ElevatorData> emptyElevatorList;
     private ElevatorGUI elevatorGUI;
 
 
@@ -132,14 +133,22 @@ public class Scheduler implements Runnable {
 
     private void process_request() {
         FloorRequest currentReq = receiveQueue.remove();
-        boolean doorFault = false; // Determine the value based on your logic
-        boolean floorFault = false; // Determine the value based on your logic
-
-        if (!emptyElevatorList.isEmpty()) {
-            int elevNum = emptyElevatorList.remove();
+        if(!emptyElevatorList.isEmpty()){
+            int closest_floor = -1; //Index of the closest floor
+            int delta = 99999; //Smallest we have had so far
+            for(int i = 0;i<emptyElevatorList.size();i++){
+                if(Math.abs(emptyElevatorList.get(i).getFloor() - currentReq.getFloor()) < delta){
+                    closest_floor = i;
+                    delta = Math.abs(emptyElevatorList.get(i).getFloor() - currentReq.getFloor());
+                }
+            }
+            if(closest_floor == -1){System.out.println("Error in delta calculation");}
+            ElevatorData closestElev = emptyElevatorList.remove(closest_floor);
+            int elevNum = closestElev.getElevatorNum();
             elevatorSocket.sendToElevator(currentReq, elevNum);
             elevatorSocket.sendToElevator(elevatorEndPacket, elevNum);
-        } else if (currentReq.isUp()) {
+            updateElevatorGUI(elevNum, currentReq.getFloor(), "MOVING", 1, currentReq.getFloor());
+        } else if(currentReq.isUp()){
             upQueue.add(currentReq);
         } else {
             downQueue.add(currentReq);
@@ -153,6 +162,7 @@ public class Scheduler implements Runnable {
         //socket.sendToElevator(); whatever requests we want to give it
         sleep(1000);
         ElevatorData elevatorData;
+        List<Integer> floorList = new ArrayList<>();
         if(!elevatorQueue.isEmpty()) {
             elevatorData = elevatorQueueRemove();
         } else {
@@ -162,14 +172,33 @@ public class Scheduler implements Runnable {
         if(elevatorData.isEmpty()){
             //Give it any request
             if(upQueue.size() > downQueue.size() && !upQueue.isEmpty()){
-                elevatorSocket.sendToElevator(upQueue.removeFirst(), elevatorData.getElevatorNum());
+                //FInd closest elevator to send
+                int closest_floor = -1; //Index of the closest floor
+                int delta = 99999; //Smallest we have had so far
+                for(int i = 0;i<upQueue.size();i++){
+                    if(Math.abs(upQueue.get(i).getFloor() - elevatorData.getFloor()) < delta){
+                        closest_floor = i;
+                        delta = Math.abs(upQueue.get(i).getFloor() - elevatorData.getFloor());
+                    }
+                }
+                elevatorSocket.sendToElevator(upQueue.remove(closest_floor), elevatorData.getElevatorNum());
             } else if(!downQueue.isEmpty()) {
-                elevatorSocket.sendToElevator(downQueue.removeFirst(), elevatorData.getElevatorNum());
+                //FInd closest elevator to send
+                int closest_floor = -1; //Index of the closest floor
+                int delta = 99999; //Smallest we have had so far
+                for(int i = 0;i<downQueue.size();i++){
+                    if(Math.abs(downQueue.get(i).getFloor() - elevatorData.getFloor()) < delta){
+                        closest_floor = i;
+                        delta = Math.abs(downQueue.get(i).getFloor() - elevatorData.getFloor());
+                    }
+                }
+                elevatorSocket.sendToElevator(downQueue.remove(closest_floor), elevatorData.getElevatorNum());
+                //Find closest elevator to send
             } else {
                 //elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
                 //Store the empty elevator if not already in there
                 if(!emptyElevatorList.contains(elevatorData.getElevatorNum())) {
-                    emptyElevatorList.add(elevatorData.getElevatorNum());
+                    emptyElevatorList.add(elevatorData);
                 }
                 return;
             }
@@ -180,8 +209,11 @@ public class Scheduler implements Runnable {
             }
             for(int i=0;i<upQueue.size();i++){
                 if(upQueue.get(i).getFloor() == elevatorData.getFloor()){
-                    elevatorSocket.sendToElevator(upQueue.remove(i), elevatorData.getElevatorNum());
+                    floorList.add(i);
                 }
+            }
+            for(int i=0;i<floorList.size();i++){
+                elevatorSocket.sendToElevator(upQueue.remove(i), elevatorData.getElevatorNum());
             }
         } else {
             if(downQueue.isEmpty()){
@@ -190,8 +222,11 @@ public class Scheduler implements Runnable {
             }
             for(int i=0;i<downQueue.size();i++){
                 if(downQueue.get(i).getFloor() == elevatorData.getFloor()){
-                    elevatorSocket.sendToElevator(downQueue.remove(i), elevatorData.getElevatorNum());
+                    floorList.add(i);
                 }
+            }
+            for(int i=0;i<floorList.size();i++){
+                elevatorSocket.sendToElevator(downQueue.remove(i), elevatorData.getElevatorNum());
             }
         }
         elevatorSocket.sendToElevator(elevatorEndPacket, elevatorData.getElevatorNum());
