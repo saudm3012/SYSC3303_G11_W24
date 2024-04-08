@@ -16,6 +16,7 @@ public class ElevatorGUI extends JFrame {
 
     private JLabel throughputLabel;
 
+
     public ElevatorGUI() {
         // Set up the main window
         super("Elevator GUI");
