@@ -1,6 +1,4 @@
 package Gui;
-
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,10 +7,15 @@ import java.awt.*;
 public class ElevatorGUI extends JFrame {
 
     private static JLabel[] elevatorCurrentFloor;
-    // private static JLabel[] elevatorDestinationFloor;
     private static JLabel[] elevatorCurrentStatus;
     private static JLabel[] elevatorPassengers;
+    //private static JLabel[] elevatorDoorFault;
+    //private static JLabel[] elevatorFloorFault;
+    private static JLabel[] elevatorFault; // Combined fault label
     private static ElevatorPanel[] elevatorPanels;
+
+    private JLabel throughputLabel;
+
 
     public ElevatorGUI() {
         // Set up the main window
@@ -24,23 +27,36 @@ public class ElevatorGUI extends JFrame {
 
         // Create the elevator status panels
         elevatorCurrentFloor = new JLabel[4];
-        // elevatorDestinationFloor = new JLabel[3];
         elevatorCurrentStatus = new JLabel[4];
         elevatorPassengers = new JLabel[4]; // 4 elevators
+        elevatorFault = new JLabel[4]; // Combined fault label
         JPanel[] elevatorStatusPanels = new JPanel[4];
+        elevatorStatusPanels = new JPanel[4]; // Initialize elevatorStatusPanels array
+
+
+        //throughputLabel = new JLabel("Throughput: ");
+        //throughputLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        //add(throughputLabel, BorderLayout.NORTH);
+
         for (int i = 0; i < 4; i++) {
-            elevatorCurrentFloor[i] = new JLabel("Elevator" + (i + 1) + " current floor: 0");
-            //elevatorDestinationFloor[i] = new JLabel("Elevator" + (i + 1) + " destination floor: 0");
-            elevatorCurrentStatus[i] = new JLabel("Elevator" + (i + 1)  + " state: IDLE");
-            elevatorPassengers[i] = new JLabel("Elevator" + (i + 1)  + " has 0 passengers");
+            elevatorCurrentFloor[i] = new JLabel("Current floor: 0");
+            elevatorCurrentStatus[i] = new JLabel("State: IDLE");
+            elevatorPassengers[i] = new JLabel("0 passengers");
+            //elevatorDoorFault[i] = new JLabel("Door fault: None");
+            //elevatorFloorFault[i] = new JLabel("Floor fault: None");
+            elevatorFault[i] = new JLabel("Fault: NONE"); // Initialize fault label
+
             elevatorStatusPanels[i] = new JPanel();
-            elevatorStatusPanels[i].setLayout(new GridLayout(3, 1));
+            elevatorStatusPanels[i].setLayout(new GridLayout(4, 1));
             elevatorStatusPanels[i].setBackground(Color.LIGHT_GRAY);
             elevatorStatusPanels[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
             elevatorStatusPanels[i].add(elevatorCurrentFloor[i]);
-            //elevatorStatusPanels[i].add(elevatorDestinationFloor[i]);
             elevatorStatusPanels[i].add(elevatorCurrentStatus[i]);
             elevatorStatusPanels[i].add(elevatorPassengers[i]);
+            //elevatorStatusPanels[i].add(elevatorDoorFault[i]); // Add door fault label
+            //elevatorStatusPanels[i].add(elevatorFloorFault[i]); // Add floor fault label
+            elevatorStatusPanels[i].add(elevatorFault[i]); // Add fault label
+
             add(elevatorStatusPanels[i]);
         }
 
@@ -55,20 +71,26 @@ public class ElevatorGUI extends JFrame {
         setVisible(true);
     }
 
-    public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor) {
+    public void updateThroughput(float throughput) {
+        throughputLabel.setText("Throughput: " + String.format("%.2f", throughput));
+    }
+
+    public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, String fault) {
         if (elevatorId >= 0 && elevatorId < 4) {
-            elevatorCurrentFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " current floor: " + currentFloor);
-            //elevatorDestinationFloor[elevatorId].setText("Elevator" + (elevatorId + 1) + " destination floor: " + destinationFloor);
-            elevatorCurrentStatus[elevatorId].setText("Elevator" + (elevatorId + 1) + " state: " + state);
-            elevatorPassengers[elevatorId].setText("Elevator" + (elevatorId + 1) + " has " + numPassengers + " passengers");
+            elevatorCurrentFloor[elevatorId].setText("Current floor: " + currentFloor);
+            elevatorCurrentStatus[elevatorId].setText("State: " + state);
+            elevatorPassengers[elevatorId].setText(numPassengers + " passengers");
+            elevatorFault[elevatorId].setText("Fault: " + fault); 
+
             elevatorPanels[elevatorId].setCurrentFloor(currentFloor);
-            elevatorPanels[elevatorId].setDestinationFloor(destinationFloor);
+            //elevatorPanels[elevatorId].setDestinationFloor(destinationFloor);
             elevatorPanels[elevatorId].setNumPassengers(numPassengers);
             elevatorPanels[elevatorId].repaint();
         } else {
             System.err.println("Invalid elevator ID: " + elevatorId);
         }
-        System.out.println(elevatorId + " " + currentFloor + " " + state + " " + numPassengers + " " + destinationFloor
+        System.out.println(elevatorId + " " + currentFloor + " " + state + " " + numPassengers
+
         );
     }
 

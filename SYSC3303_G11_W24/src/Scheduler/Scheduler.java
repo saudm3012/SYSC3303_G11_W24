@@ -156,6 +156,7 @@ public class Scheduler implements Runnable {
         this.state = SchedulerState.IDLE;
     }
 
+
     private void select_request() {
         // Give the current elevator a req/ multiple request or nothing.
         //socket.sendToElevator(); whatever requests we want to give it
@@ -261,10 +262,6 @@ public class Scheduler implements Runnable {
         while (true) {
             execute();
         }
-    }
-
-    public void updateElevatorGUI(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor) {
-        elevatorGUI.updateStatus(elevatorId, currentFloor, state, numPassengers, destinationFloor);
     }
 
 }
