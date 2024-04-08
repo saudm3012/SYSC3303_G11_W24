@@ -354,9 +354,8 @@ public class Elevator extends Thread {
             } catch (InterruptedException e) {
                 System.out.println(name()+ "Floor Floor.Fault Detected! Terminating...");
                 terminate = true;
-                this.state = ElevatorStates.TERMINATED;
                 if (gui != null) {
-                    gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+                    gui.updateStatus(elevatorData.getElevatorNum(), currFloor, "TERMINATED", getNumPassengers(), 0, doorFault, floorFault);
                 }
                 return;
             }
