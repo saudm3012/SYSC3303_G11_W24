@@ -223,6 +223,7 @@ public class Elevator extends Thread {
             try {
                 Thread.sleep(Long.MAX_VALUE); // Door fault
             } catch (InterruptedException e) {
+                gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(),"DOOR");
                 System.out.println(name()+ "Door Floor.Fault Detected! Door stuck open.");
                 sleep(2900); // 6 seconds total to handle door fault
             }
@@ -276,9 +277,9 @@ public class Elevator extends Thread {
         printLatch = true;
         state = ElevatorStates.PROCESSING;
 
-        // Update GUI status including doorFault and floorFault
+        // Update GUI status 
         if (gui != null) {
-            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(),"NONE");
         }
     }
 
@@ -342,7 +343,7 @@ public class Elevator extends Thread {
         // move to next floor
         // set timer to detect fault
         if (gui != null) {
-            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(),"NONE");
         }
         faultTimer.set(2100);
         if (!floorFault){
@@ -355,7 +356,7 @@ public class Elevator extends Thread {
                 System.out.println(name()+ "Floor Floor.Fault Detected! Terminating...");
                 terminate = true;
                 if (gui != null) {
-                    gui.updateStatus(elevatorData.getElevatorNum(), currFloor, "TERMINATED", getNumPassengers(), 0, doorFault, floorFault);
+                    gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(),"FLOOR");
                 }
                 return;
             }
@@ -376,7 +377,7 @@ public class Elevator extends Thread {
         }
 
         if (gui != null) {
-            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(),"NONE");
         }
 
         state = ElevatorStates.NOTIFY;
@@ -388,7 +389,7 @@ public class Elevator extends Thread {
      */
     private void elevatorStop() {
         if (gui != null) {
-            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(),"NONE");
         }
         // opening and closing door
         openCloseDoors();
@@ -401,7 +402,7 @@ public class Elevator extends Thread {
         state = ElevatorStates.PROCESSING;
 
         if (gui != null) {
-            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), 0, doorFault, floorFault);
+            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(),"NONE");
         }
     }
 

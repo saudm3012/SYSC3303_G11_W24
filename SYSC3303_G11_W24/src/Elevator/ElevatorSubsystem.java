@@ -78,8 +78,7 @@ public class ElevatorSubsystem extends Thread {
             elevator.start();
         }
 
-        // Start the throughput calculation thread
-        new Thread(() -> {
+        // Start the throughput calculation 
             while (true) {
                 calculateThroughput();
                 try {
@@ -89,7 +88,6 @@ public class ElevatorSubsystem extends Thread {
                     System.exit(1);
                 }
             }
-        }).start();
     }
 
     public static void main(String args[]) throws IOException {

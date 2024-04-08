@@ -139,7 +139,6 @@ public class Scheduler implements Runnable {
             int elevNum = emptyElevatorList.remove();
             elevatorSocket.sendToElevator(currentReq, elevNum);
             elevatorSocket.sendToElevator(elevatorEndPacket, elevNum);
-            updateElevatorGUI(elevNum, currentReq.getFloor(), "MOVING", 1, currentReq.getFloor(), doorFault, floorFault);
         }
         if (currentReq.isUp()) {
             upQueue.add(currentReq);
@@ -229,10 +228,6 @@ public class Scheduler implements Runnable {
         while (true) {
             execute();
         }
-    }
-
-    public void updateElevatorGUI(int elevatorId, int currentFloor, String state, int numPassengers, int destinationFloor, boolean doorFault, boolean floorFault) {
-        elevatorGUI.updateStatus(elevatorId, currentFloor, state, numPassengers, destinationFloor, doorFault, floorFault);
     }
 
 }
