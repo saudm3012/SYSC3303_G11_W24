@@ -261,8 +261,8 @@ public class Scheduler implements Runnable {
     public void run() {
         socket.start();
         elevatorSocket.start();
+        sleep(1000);
         while (true) {
-            sleep(1000);
             execute();
         }
     }
