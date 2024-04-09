@@ -14,6 +14,8 @@ public class ElevatorGUI extends JFrame {
 
     private JLabel throughputLabel;
 
+    private JLabel requestsCompletedLabel;
+
 
     public ElevatorGUI() {
         // Set up the main window
@@ -65,8 +67,7 @@ public class ElevatorGUI extends JFrame {
         setVisible(true);
     }
 
-    public void updateThroughput(float throughput) {
-        // include only when metrics are needed
+    public void updateMetrics(float throughput, int requestsCompleted, int expectedRequests) {
         throughputLabel.setText("Throughput: " + String.format("%.2f", throughput));
     }
 

@@ -12,14 +12,17 @@ import java.io.IOException;
 
 public class Main {
     public static void main (String args[]) throws IOException {
+        int expectedRequests = 0;
         InputReader datafile = new InputReader("data.txt");
         FloorSubsystem floor_sys = new FloorSubsystem();
         Thread floorSubsystem = new Thread(floor_sys);
         ElevatorGUI gui = new ElevatorGUI();
-        Thread elevator = new ElevatorSubsystem(22,4, gui);
         Thread scheduler =  new Thread(new Scheduler());
 
-        while(floor_sys.addPacketToQueue(datafile.getNextPacket())){};
+        while(floor_sys.addPacketToQueue(datafile.getNextPacket())){ 
+            expectedRequests ++;
+        };
+        Thread elevator = new ElevatorSubsystem(22,4, gui, expectedRequests);
         floor_sys.addPacketToQueue(datafile.getNextPacket());
 
         floorSubsystem.start();

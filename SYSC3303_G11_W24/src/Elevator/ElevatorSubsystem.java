@@ -4,6 +4,8 @@ import Gui.ElevatorGUI;
 
 import java.io.IOException;
 
+import Floor.InputReader;
+
 // @author editted by Riya Arora for GUI integration (101190033)
 
 public class ElevatorSubsystem extends Thread {
@@ -16,13 +18,16 @@ public class ElevatorSubsystem extends Thread {
 
     private int time;
 
+    // metrics 
     private float throughput;
+    private int expectedRequests;
+
     /**
      * Create a new elevator subsystem with numElevators and numFloors
      *
      * @param numElevators the number of elevators in the system
      */
-    public ElevatorSubsystem(int numFloors, int numElevators, ElevatorGUI ui) {
+    public ElevatorSubsystem(int numFloors, int numElevators, ElevatorGUI ui, int expectedRequests) {
         elevatorList = new Elevator[numElevators];
         this.gui = ui;
         time = 0;
@@ -30,7 +35,7 @@ public class ElevatorSubsystem extends Thread {
         for (int i = 0; i < numElevators; i++) {
             elevatorList[i] = ((new Elevator(i, numFloors, ui)));
         }
-
+        this.expectedRequests = expectedRequests;
     }
 
     /**
@@ -43,7 +48,7 @@ public class ElevatorSubsystem extends Thread {
             totalRequestsCompleted += e.completedRequestsCount;
         }
         throughput = (float) totalRequestsCompleted / time; // Cast as float to keep decimal
-        gui.updateThroughput(throughput);
+        gui.updateMetrics(throughput, totalRequestsCompleted, expectedRequests);
     }
 
 
@@ -92,7 +97,12 @@ public class ElevatorSubsystem extends Thread {
 
     public static void main(String args[]) throws IOException {
         ElevatorGUI gui = new ElevatorGUI();
-        Thread elevatorSubystem = new ElevatorSubsystem(22, 4, gui);
+        InputReader datafile = new InputReader("data.txt");
+        int expectedRequests = 0;
+        while(datafile.getNextPacket()) {
+            expectedRequests++;
+        };
+        Thread elevatorSubystem = new ElevatorSubsystem(22, 4, gui, expectedRequests);
         elevatorSubystem.start();
     }
 }
