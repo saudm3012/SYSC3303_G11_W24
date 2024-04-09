@@ -40,7 +40,7 @@ class FloorSocketTest{
     void setUp() throws IOException {
         receiveSocket = new DatagramSocket();
         sendReceiveSocket = new DatagramSocket();
-        sch = new Scheduler(new ElevatorGUI());
+        sch = new Scheduler();
 
         sub = new FloorSubsystem();
         data = new FloorRequest("14:05:15.0","2" , "Up", "4", false); //makes new packet with values
