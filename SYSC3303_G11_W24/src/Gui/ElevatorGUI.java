@@ -57,8 +57,13 @@ public class ElevatorGUI extends JFrame {
             //elevatorStatusPanels[i].add(elevatorFloorFault[i]); // Add floor fault label
             elevatorStatusPanels[i].add(elevatorFault[i]); // Add fault label
 
-            add(elevatorStatusPanels[i]);
+            add(elevatorStatusPanels[i], BorderLayout.PAGE_END);
         }
+
+        // Create the throughput label
+        throughputLabel = new JLabel("Throughput: ");
+        throughputLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        add(throughputLabel, BorderLayout.PAGE_START); // Add throughput label to the top
 
         // Create the elevator panels
         elevatorPanels = new ElevatorPanel[4]; // 3 elevators
@@ -73,7 +78,7 @@ public class ElevatorGUI extends JFrame {
 
     public void updateThroughput(float throughput) {
         // include only when metrics are needed
-        // throughputLabel.setText("Throughput: " + String.format("%.2f", throughput));
+        throughputLabel.setText("Throughput: " + String.format("%.2f", throughput));
     }
 
     public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, String fault) {
