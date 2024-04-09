@@ -80,7 +80,7 @@ public class ElevatorSubsystem extends Thread {
 
         // Start the throughput calculation 
             while (true) {
-                //calculateThroughput();
+                calculateThroughput();
                 try {
                     Thread.sleep(1000); // Sleep for 1 second
                 } catch (InterruptedException e) {
