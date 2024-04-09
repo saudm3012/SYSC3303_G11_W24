@@ -350,9 +350,9 @@ public class Elevator extends Thread {
         if (gui != null) {
             gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(),"NONE");
         }
-        faultTimer.set(2100);
+        faultTimer.set(1100);
         if (!floorFault){
-            sleep(2000); // Traveling between floors is 2 seconds
+            sleep(1000); // Traveling between floors is 1 second
             faultTimer.interrupt();
         } else {
             try {
