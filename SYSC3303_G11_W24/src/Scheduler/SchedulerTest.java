@@ -37,7 +37,7 @@ public class SchedulerTest {
     @BeforeEach
     public void setup() throws SocketException {
         sendSocket = new DatagramSocket();
-        schedulerObj = new Scheduler(null);
+        schedulerObj = new Scheduler();
         //data to send as a DataPacket
         data = new FloorRequest("14:05:15.0", "2", "Up", "4", false);
         elevatorData = new ElevatorData(1, Direction.UP, true, 10,0);

@@ -4,7 +4,6 @@ import Floor.FloorRequest;
 import Floor.FloorSubsystem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import Gui.ElevatorGUI;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

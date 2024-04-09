@@ -8,6 +8,7 @@ package Floor; /**
 
 import java.io.IOException;
 import java.util.*;
+import java.time.LocalTime;
 
 public class FloorSubsystem implements Runnable
 {
@@ -57,18 +58,29 @@ public class FloorSubsystem implements Runnable
         return this.inputData;
     }
 
+    public int timeDifference(LocalTime prevTime, LocalTime currTime) {
+        int secDiff = currTime.getSecond() - prevTime.getSecond();
+        int minDiff = currTime.getMinute() - prevTime.getMinute();
+        int hourDiff = currTime.getHour() - prevTime.getHour();
+        return (secDiff + (minDiff * 60) + (hourDiff * 60 * 60))*1000;
+    }
     public void run() {
         numRequests = 0; //Counts number of requests sent by floor
         socket.start();
+        LocalTime prevTime = null;
         while(!inputQueue.isEmpty()) {
-            socket.send(inputQueue.remove());
-            numRequests += 1;
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                System.exit(1);
+            FloorRequest req = inputQueue.remove();
+            if (prevTime != null){
+                try {
+                    Thread.sleep(timeDifference(prevTime, req.getTime()));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
             }
+            prevTime = req.getTime();
+            socket.send(req);
+            numRequests += 1;
         }
         System.out.println("Number of requests sent by Floor.FloorSubsystem: " + numRequests);
 

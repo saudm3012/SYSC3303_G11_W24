@@ -17,7 +17,7 @@ public class Main {
         Thread floorSubsystem = new Thread(floor_sys);
         ElevatorGUI gui = new ElevatorGUI();
         Thread elevator = new ElevatorSubsystem(22,4, gui);
-        Thread scheduler =  new Thread(new Scheduler(gui));
+        Thread scheduler =  new Thread(new Scheduler());
 
         while(floor_sys.addPacketToQueue(datafile.getNextPacket())){};
         floor_sys.addPacketToQueue(datafile.getNextPacket());

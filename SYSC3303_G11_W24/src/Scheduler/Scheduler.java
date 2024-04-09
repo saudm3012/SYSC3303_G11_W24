@@ -11,7 +11,6 @@ package Scheduler;
 
 import Elevator.ElevatorData;
 import Floor.FloorRequest;
-import Gui.ElevatorGUI;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,13 +41,12 @@ public class Scheduler implements Runnable {
     FloorRequest elevatorEndPacket;
     Queue<ElevatorData> elevatorQueue;
     List<ElevatorData> emptyElevatorList;
-    private static ElevatorGUI elevatorGUI;
 
 
     /**
      * The constructor for this class.
      */
-    public Scheduler(ElevatorGUI ui) {
+    public Scheduler() {
         socket = new SchedulerSocket(this);
         elevatorSocket = new SchedulerElevatorSocket(this);
         receiveQueue = new LinkedList<>();
@@ -57,7 +55,6 @@ public class Scheduler implements Runnable {
         elevatorQueue = new LinkedList<>();
         elevatorEndPacket = new FloorRequest();
         emptyElevatorList = new LinkedList<>();
-        this.elevatorGUI = ui;
     }
 
     /**
@@ -271,7 +268,7 @@ public class Scheduler implements Runnable {
     }
 
     public static void main(String args[]) throws IOException {
-        Thread scheduler =  new Thread(new Scheduler(elevatorGUI));
+        Thread scheduler =  new Thread(new Scheduler());
         scheduler.start();
     }
 }

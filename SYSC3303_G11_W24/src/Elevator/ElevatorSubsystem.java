@@ -91,6 +91,7 @@ public class ElevatorSubsystem extends Thread {
     }
 
     public static void main(String args[]) throws IOException {
+        ElevatorGUI gui = new ElevatorGUI();
         Thread elevatorSubystem = new ElevatorSubsystem(22, 4, gui);
         elevatorSubystem.start();
     }
