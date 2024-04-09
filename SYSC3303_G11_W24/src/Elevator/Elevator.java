@@ -228,7 +228,9 @@ public class Elevator extends Thread {
             try {
                 Thread.sleep(Long.MAX_VALUE); // Door fault
             } catch (InterruptedException e) {
-                gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(),"DOOR");
+                if (gui != null) {
+                    gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(), "DOOR");
+                }
                 System.out.println(name()+ "Door Floor.Fault Detected! Door stuck open.");
                 sleep(2900); // 6 seconds total to handle door fault
             }
