@@ -9,59 +9,64 @@ public class ElevatorGUI extends JFrame {
     private static JLabel[] elevatorCurrentFloor;
     private static JLabel[] elevatorCurrentStatus;
     private static JLabel[] elevatorPassengers;
-    private static JLabel[] elevatorFault; // Combined fault label
+    private static JLabel[] elevatorFault;
     private static ElevatorPanel[] elevatorPanels;
 
     private JLabel throughputLabel;
-
     private JLabel requestsCompletedLabel;
-
+    private JLabel expectedRequestsLabel;
 
     public ElevatorGUI() {
         // Set up the main window
         super("Elevator GUI");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 800);
-        setLayout(new GridLayout(2, 4));// 2 rows 4 elevators
+        setLayout(new GridLayout(3, 1)); // 3 rows, 1 column
         setLocationRelativeTo(null);
 
-        // Create the elevator status panels
+        // Create panel for elevator status
+        JPanel elevatorStatusPanel = new JPanel(new GridLayout(1, 4)); // 1 row, 4 columns
         elevatorCurrentFloor = new JLabel[4];
         elevatorCurrentStatus = new JLabel[4];
-        elevatorPassengers = new JLabel[4]; // 4 elevators
-        elevatorFault = new JLabel[4]; // Combined fault label
-        JPanel[] elevatorStatusPanels = new JPanel[4];
-        elevatorStatusPanels = new JPanel[4]; // Initialize elevatorStatusPanels array
-
+        elevatorPassengers = new JLabel[4];
+        elevatorFault = new JLabel[4];
         for (int i = 0; i < 4; i++) {
             elevatorCurrentFloor[i] = new JLabel("Current floor: 0");
             elevatorCurrentStatus[i] = new JLabel("State: IDLE");
             elevatorPassengers[i] = new JLabel("0 passengers");
-            elevatorFault[i] = new JLabel("Fault: NONE"); // Initialize fault label
+            elevatorFault[i] = new JLabel("Fault: NONE");
 
-            elevatorStatusPanels[i] = new JPanel();
-            elevatorStatusPanels[i].setLayout(new GridLayout(4, 1));
-            elevatorStatusPanels[i].setBackground(Color.LIGHT_GRAY);
-            elevatorStatusPanels[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            elevatorStatusPanels[i].add(elevatorCurrentFloor[i]);
-            elevatorStatusPanels[i].add(elevatorCurrentStatus[i]);
-            elevatorStatusPanels[i].add(elevatorPassengers[i]);
-            elevatorStatusPanels[i].add(elevatorFault[i]); // Add fault label
+            JPanel elevatorStatusPanelSingle = new JPanel(new GridLayout(4, 1)); // 4 rows, 1 column
+            elevatorStatusPanelSingle.setBackground(Color.LIGHT_GRAY);
+            elevatorStatusPanelSingle.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            elevatorStatusPanelSingle.add(elevatorCurrentFloor[i]);
+            elevatorStatusPanelSingle.add(elevatorCurrentStatus[i]);
+            elevatorStatusPanelSingle.add(elevatorPassengers[i]);
+            elevatorStatusPanelSingle.add(elevatorFault[i]);
 
-            add(elevatorStatusPanels[i], BorderLayout.PAGE_END);
+            elevatorStatusPanel.add(elevatorStatusPanelSingle);
         }
+        add(elevatorStatusPanel);
 
-        // Create the throughput label
+        // Create panel for metrics
+        JPanel metricsPanel = new JPanel(new GridLayout(1, 3)); // 1 row, 3 columns
+        metricsPanel.setMaximumSize(new Dimension(1200, 50));
         throughputLabel = new JLabel("Throughput: ");
-        throughputLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        add(throughputLabel, BorderLayout.PAGE_START); // Add throughput label to the top
+        requestsCompletedLabel = new JLabel("Requests Completed: ");
+        expectedRequestsLabel = new JLabel("Expected Requests: ");
+        metricsPanel.add(throughputLabel);
+        metricsPanel.add(requestsCompletedLabel);
+        metricsPanel.add(expectedRequestsLabel);
+        add(metricsPanel);
 
-        // Create the elevator panels
-        elevatorPanels = new ElevatorPanel[4]; // 3 elevators
-        for (int i = 0; i < 4; i++) { // 3 elevators
+        // Create panel for elevator visualization
+        JPanel elevatorVisualizationPanel = new JPanel(new GridLayout(1, 4)); // 1 row, 4 columns
+        elevatorPanels = new ElevatorPanel[4];
+        for (int i = 0; i < 4; i++) {
             elevatorPanels[i] = new ElevatorPanel();
-            add(elevatorPanels[i]);
+            elevatorVisualizationPanel.add(elevatorPanels[i]);
         }
+        add(elevatorVisualizationPanel);
 
         // Show the GUI
         setVisible(true);
@@ -69,6 +74,8 @@ public class ElevatorGUI extends JFrame {
 
     public void updateMetrics(float throughput, int requestsCompleted, int expectedRequests) {
         throughputLabel.setText("Throughput: " + String.format("%.2f", throughput));
+        requestsCompletedLabel.setText("Requests Completed: " + requestsCompleted);
+        expectedRequestsLabel.setText("Expected Requests: " + expectedRequests);
     }
 
     public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, String fault) {
@@ -80,11 +87,10 @@ public class ElevatorGUI extends JFrame {
 
             // Apply color changes based on fault
             if (fault.equals("DOOR")) {
-                elevatorPanels[elevatorId].setBackground(Color.YELLOW); // Change background color to yellow
+                elevatorPanels[elevatorId].setBackground(Color.YELLOW);
             } else if (fault.equals("FLOOR")) {
-                elevatorPanels[elevatorId].setBackground(Color.RED); // Change background color to red
+                elevatorPanels[elevatorId].setBackground(Color.RED);
             } else {
-                // Reset background color to default
                 elevatorPanels[elevatorId].setBackground(null);
             }
 
@@ -94,12 +100,9 @@ public class ElevatorGUI extends JFrame {
         } else {
             System.err.println("Invalid elevator ID: " + elevatorId);
         }
-        //System.out.println(elevatorId + " " + currentFloor + " " + state + " " + numPassengers);
     }
 
-
     public int getCurrentFloor(int elevatorId) {
-        //elevator logic to get the current floor of the elevator with ID elevatorId
         return elevatorPanels[elevatorId].currentFloor;
     }
 
@@ -108,7 +111,6 @@ public class ElevatorGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        // Create and show the GUI with 3 elevators and 5 floors
         SwingUtilities.invokeLater(ElevatorGUI::new);
     }
 
@@ -124,26 +126,26 @@ public class ElevatorGUI extends JFrame {
             super.paintComponent(g);
 
             // Draw the elevator cabin
-            g.setColor(Color.MAGENTA); // Elevator color
+            g.setColor(Color.MAGENTA);
             int elevatorWidth = 100;
             int elevatorHeight = 20;
             int elevatorX = 50 + 200 * (getWidth() / 1200);
             int elevatorY = getHeight() - currentFloor * (getHeight() / 22) - elevatorHeight / 2;
-            g.fill3DRect(elevatorX, elevatorY, elevatorWidth, elevatorHeight, true); // Fill with 3D effect
+            g.fill3DRect(elevatorX, elevatorY, elevatorWidth, elevatorHeight, true);
             g.setColor(Color.BLACK);
-            g.drawRect(elevatorX, elevatorY, elevatorWidth, elevatorHeight); // Draw outline
+            g.drawRect(elevatorX, elevatorY, elevatorWidth, elevatorHeight);
 
             // Draw the rope
             g.setColor(Color.GRAY);
             int ropeX = elevatorX + elevatorWidth / 2;
             int ropeY = 0;
             int ropeEndY = elevatorY;
-            g.drawLine(ropeX, ropeY, ropeX, ropeEndY); // Draw rope
+            g.drawLine(ropeX, ropeY, ropeX, ropeEndY);
 
             // Draw the floors
-            g.setColor(Color.BLACK); // Floor color
+            g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.PLAIN, 12));
-            for (int i = 0; i <= 22; i++) { // 5 floors
+            for (int i = 0; i <= 22; i++) {
                 g.drawString(Integer.toString(i), 5 + 200 * (getWidth() / 1200), getHeight() - i * (getHeight() / 22) + 5);
                 g.drawLine(50 + 200 * (getWidth() / 1200), getHeight() - i * (getHeight() / 22), 150 + 200 * (getWidth() / 1200), getHeight() - i * (getHeight() / 22));
             }
