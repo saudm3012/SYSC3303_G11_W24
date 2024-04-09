@@ -147,7 +147,7 @@ public class Scheduler implements Runnable {
             int elevNum = closestElev.getElevatorNum();
             elevatorSocket.sendToElevator(currentReq, elevNum);
             for(int i = 0; i<receiveQueue.size(); i++){
-                if(receiveQueue.get(i).getFloor() == currentReq.getFloor()){
+                if(receiveQueue.get(i).getFloor() == currentReq.getFloor() && receiveQueue.get(i).getDirection() == currentReq.getDirection()){
                     elevatorSocket.sendToElevator(receiveQueue.remove(i), elevNum);
                 }
             }
