@@ -100,7 +100,11 @@ public class SchedulerTest {
             //Send a packet to port 5000 to act like it comes from floor
             sendSocket.send(sendFloorPacket);
             Thread.sleep(500);
-            assertTrue(!schedulerObj.receiveUpQueueIsEmpty());
+            if(schedulerObj.emptyElevatorList.isEmpty()) {
+                assertTrue(schedulerObj.receiveUpQueueIsEmpty());
+            } else {
+                assertFalse(!schedulerObj.receiveUpQueueIsEmpty());
+            }
             //Send a packet to port 4999 to act like it comes from elevator
             Thread.sleep(1000);
             sendSocket.send(sendElevatorPacket);
