@@ -134,7 +134,6 @@ public class Scheduler implements Runnable {
     private void process_request() {
         FloorRequest currentReq = receiveQueue.removeFirst();
         if(!emptyElevatorList.isEmpty()){
-            //sleep(1000);
             int closest_floor = -1; //Index of the closest floor
             int delta = 99999; //Smallest we have had so far
             for(int i = 0;i<emptyElevatorList.size();i++){
