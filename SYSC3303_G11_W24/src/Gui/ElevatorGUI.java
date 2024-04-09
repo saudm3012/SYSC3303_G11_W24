@@ -72,7 +72,8 @@ public class ElevatorGUI extends JFrame {
     }
 
     public void updateThroughput(float throughput) {
-        throughputLabel.setText("Throughput: " + String.format("%.2f", throughput));
+        // include only when metrics are needed
+        // throughputLabel.setText("Throughput: " + String.format("%.2f", throughput));
     }
 
     public void updateStatus(int elevatorId, int currentFloor, String state, int numPassengers, String fault) {
