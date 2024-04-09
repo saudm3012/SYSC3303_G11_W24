@@ -147,13 +147,11 @@ public class Scheduler implements Runnable {
             ElevatorData closestElev = emptyElevatorList.remove(closest_floor);
             int elevNum = closestElev.getElevatorNum();
             elevatorSocket.sendToElevator(currentReq, elevNum);
-            /**
             for(int i = 0; i<receiveQueue.size(); i++){
                 if(receiveQueue.get(i).getFloor() == currentReq.getFloor()){
                     elevatorSocket.sendToElevator(receiveQueue.remove(i), elevNum);
                 }
             }
-             */
             elevatorSocket.sendToElevator(elevatorEndPacket, elevNum);
         } else if(currentReq.isUp()){
             upQueue.add(currentReq);
@@ -167,7 +165,7 @@ public class Scheduler implements Runnable {
     private void select_request() {
         // Give the current elevator a req/ multiple request or nothing.
         //socket.sendToElevator(); whatever requests we want to give it
-        sleep(1000);
+        //sleep(1000);
         ElevatorData elevatorData;
         List<Integer> floorList = new ArrayList<>();
         if(!elevatorQueue.isEmpty()) {
@@ -267,7 +265,7 @@ public class Scheduler implements Runnable {
         socket.start();
         elevatorSocket.start();
         while (true) {
-            //sleep(1000);
+            sleep(1000);
             execute();
         }
     }
