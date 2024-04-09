@@ -242,7 +242,9 @@ public class Elevator extends Thread {
      */
     private void notifyScheduler() {
         FloorRequest floorRequest;
-
+        if (gui != null) {
+            gui.updateStatus(this.elevatorData.getElevatorNum(), this.currFloor, this.state.toString(), getNumPassengers(),"NONE");
+        }
         elevatorData.setIsEmpty(isEmpty()&!hasPickUpRequest());
         elevatorData.setDirection(direction);
         elevatorData.setFloor(currFloor);
@@ -281,17 +283,15 @@ public class Elevator extends Thread {
         }
         printLatch = true;
         state = ElevatorStates.PROCESSING;
-
-        // Update GUI status 
-        if (gui != null) {
-            gui.updateStatus(elevatorData.getElevatorNum(), currFloor, state.toString(), getNumPassengers(),"NONE");
-        }
     }
 
     /**
      * Handles the PROCESSING state of the elevator.
      */
     private void processRequests() {
+        if (gui != null) {
+            gui.updateStatus(this.elevatorData.getElevatorNum(), this.currFloor, this.state.toString(), getNumPassengers(),"NONE");
+        }
         if ((elevatorButtons[currFloor-1] != 0 ) || !pickUpRequests.get(currFloor-1).isEmpty()){
             // stop to pick/drop off passenger(s)
             state = ElevatorStates.STOP;
