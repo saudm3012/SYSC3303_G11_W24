@@ -99,7 +99,7 @@ public class ElevatorSubsystem extends Thread {
         ElevatorGUI gui = new ElevatorGUI();
         InputReader datafile = new InputReader("data.txt");
         int expectedRequests = 0;
-        while(datafile.getNextPacket()) {
+        while(datafile.getNextPacket() != null) {
             expectedRequests++;
         };
         Thread elevatorSubystem = new ElevatorSubsystem(22, 4, gui, expectedRequests);
