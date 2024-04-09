@@ -35,7 +35,7 @@ public class Scheduler implements Runnable {
     /**
      * Queue for storing received data packets.
      */
-    Queue<FloorRequest> receiveQueue;
+    List<FloorRequest> receiveQueue;
     List<FloorRequest> upQueue;
     List<FloorRequest> downQueue;
     FloorRequest elevatorEndPacket;
@@ -132,7 +132,7 @@ public class Scheduler implements Runnable {
     }
 
     private void process_request() {
-        FloorRequest currentReq = receiveQueue.remove();
+        FloorRequest currentReq = receiveQueue.removeFirst();
         if(!emptyElevatorList.isEmpty()){
             int closest_floor = -1; //Index of the closest floor
             int delta = 99999; //Smallest we have had so far
@@ -146,6 +146,11 @@ public class Scheduler implements Runnable {
             ElevatorData closestElev = emptyElevatorList.remove(closest_floor);
             int elevNum = closestElev.getElevatorNum();
             elevatorSocket.sendToElevator(currentReq, elevNum);
+            for(int i = 0; i<receiveQueue.size(); i++){
+                if(receiveQueue.get(i).getFloor() == currentReq.getFloor()){
+                    elevatorSocket.sendToElevator(receiveQueue.remove(i), elevNum);
+                }
+            }
             elevatorSocket.sendToElevator(elevatorEndPacket, elevNum);
         } else if(currentReq.isUp()){
             upQueue.add(currentReq);
@@ -159,7 +164,7 @@ public class Scheduler implements Runnable {
     private void select_request() {
         // Give the current elevator a req/ multiple request or nothing.
         //socket.sendToElevator(); whatever requests we want to give it
-        sleep(1000);
+        //sleep(1000);
         ElevatorData elevatorData;
         List<Integer> floorList = new ArrayList<>();
         if(!elevatorQueue.isEmpty()) {
@@ -259,6 +264,7 @@ public class Scheduler implements Runnable {
         socket.start();
         elevatorSocket.start();
         while (true) {
+            sleep(1000);
             execute();
         }
     }
