@@ -17,12 +17,23 @@ public class ElevatorGUI extends JFrame {
     private JLabel expectedRequestsLabel;
 
     public ElevatorGUI() {
-        // Set up the main window
         super("Elevator GUI");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 800);
-        setLayout(new GridLayout(3, 1)); // 3 rows, 1 column
+        setLayout(new GridLayout(2, 4)); // 2 rows, 4 columns
         setLocationRelativeTo(null);
+
+        // Create panel for metrics
+        JPanel metricsPanel = new JPanel();
+        metricsPanel.setLayout(new BoxLayout(metricsPanel, BoxLayout.Y_AXIS)); // Vertical layout
+        metricsPanel.setPreferredSize(new Dimension(20, getHeight())); // Set preferred width
+        throughputLabel = new JLabel("Throughput: ");
+        requestsCompletedLabel = new JLabel("Requests Completed: ");
+        expectedRequestsLabel = new JLabel("Expected Requests: ");
+        metricsPanel.add(throughputLabel);
+        metricsPanel.add(requestsCompletedLabel);
+        metricsPanel.add(expectedRequestsLabel);
+        add(metricsPanel);
 
         // Create panel for elevator status
         JPanel elevatorStatusPanel = new JPanel(new GridLayout(1, 4)); // 1 row, 4 columns
@@ -48,16 +59,8 @@ public class ElevatorGUI extends JFrame {
         }
         add(elevatorStatusPanel);
 
-        // Create panel for metrics
-        JPanel metricsPanel = new JPanel(new GridLayout(1, 3)); // 1 row, 3 columns
-        metricsPanel.setMaximumSize(new Dimension(1200, 50));
-        throughputLabel = new JLabel("Throughput: ");
-        requestsCompletedLabel = new JLabel("Requests Completed: ");
-        expectedRequestsLabel = new JLabel("Expected Requests: ");
-        metricsPanel.add(throughputLabel);
-        metricsPanel.add(requestsCompletedLabel);
-        metricsPanel.add(expectedRequestsLabel);
-        add(metricsPanel);
+        // Add empty panel for spacing
+        add(new JPanel());
 
         // Create panel for elevator visualization
         JPanel elevatorVisualizationPanel = new JPanel(new GridLayout(1, 4)); // 1 row, 4 columns
